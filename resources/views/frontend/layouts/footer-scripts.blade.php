@@ -5,5 +5,9 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="{{ asset('frontend/assets/js/main.js') }}"></script>
+@php
+    $mainJsPath = public_path('frontend/assets/js/main.js');
+    $jsVersion = file_exists($mainJsPath) ? filemtime($mainJsPath) : time();
+@endphp
+<script src="{{ asset('frontend/assets/js/main.js') }}?v={{ $jsVersion }}"></script>
 @stack('scripts')
