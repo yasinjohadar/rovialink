@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر إديو ستور - تأكيد الطلب</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-bar d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-4 align-items-center">
+                <span class="top-bar-item"><i class="fas fa-envelope me-2"></i>support@ediostore.com</span>
+                <span class="top-bar-item"><i class="fas fa-phone me-2"></i>+971 50 123 4567</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <a href="#" class="top-bar-social"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg main-nav glass-nav py-1">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold fs-4 position-relative" href="index.html">
+                <i class="fas fa-store me-2" style="color: var(--accent-color);"></i>
+                <span class="ms-2">إديو</span><span style="color: var(--accent-color);">ستور</span>
+            </a>
+            <button class="navbar-toggler btn-glass border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-0">
+                    <li class="nav-item"><a class="nav-link ps-3" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="products.html">المنتجات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="categories.html">التصنيفات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="blog.html">المدونة</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="who-we-are.html">من نحن</a></li>
+                    <li class="nav-item"><a class="nav-link ps-3" href="about.html">حول</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 me-lg-4">
+                    <button class="theme-toggle" aria-label="Toggle Dark Mode"><i class="fas fa-sun"></i></button>
+                    <a href="wishlist.html" class="text-white text-decoration-none position-relative"><i class="fas fa-heart fs-5"></i><span class="wishlist-badge">0</span></a>
+                    <a href="cart.html" class="text-white text-decoration-none position-relative"><i class="fas fa-shopping-cart fs-5"></i><span class="cart-badge">0</span></a>
+                    <a href="login.html" class="btn btn-glass btn-sm px-4">تسجيل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-hero">
+        <div class="page-hero-content container">
+            <div class="page-hero-icon"><i class="fas fa-check-circle"></i></div>
+            <h1 class="page-hero-title">تم تأكيد طلبك</h1>
+            <p class="page-hero-subtitle">شكراً لك! تم استلام طلبك بنجاح وسيتم شحنه قريباً.</p>
+        </div>
+        <div class="page-hero-wave">
+            <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,30 C360,65 1080,0 1440,30 L1440,65 L0,65 Z" style="fill:var(--page-bg)"/>
+            </svg>
+        </div>
+    </div>
+
+    <main class="container py-5">
+        <div id="toast-container"></div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="text-center mb-5 section-fade-up">
+                    <div class="order-success-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <h2 class="fw-bold text-white mb-2">تم تأكيد الطلب بنجاح!</h2>
+                    <p class="text-secondary">رقم الطلب: <span class="en-text text-accent fw-bold">#EDU-2026-48592</span></p>
+                    <p class="text-secondary">سيتم إرسال تفاصيل الطلب على بريدك الإلكتروني.</p>
+                </div>
+
+                <div class="glass-card p-4 mb-5 section-fade-up">
+                    <h5 class="fw-bold text-white mb-4"><i class="fas fa-route text-accent me-2"></i> حالة الطلب</h5>
+                    <div class="tracking-progress">
+                        <div class="progress-line" style="width: 25%;"></div>
+                        <div class="tracking-step completed">
+                            <div class="step-icon"><i class="fas fa-check"></i></div>
+                            <span class="step-label">تم التأكيد</span>
+                        </div>
+                        <div class="tracking-step active">
+                            <div class="step-icon"><i class="fas fa-box"></i></div>
+                            <span class="step-label">قيد التجهيز</span>
+                        </div>
+                        <div class="tracking-step">
+                            <div class="step-icon"><i class="fas fa-truck"></i></div>
+                            <span class="step-label">تم الشحن</span>
+                        </div>
+                        <div class="tracking-step">
+                            <div class="step-icon"><i class="fas fa-home"></i></div>
+                            <span class="step-label">تم التوصيل</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-details-card mb-5 section-fade-up">
+                    <h5 class="fw-bold text-white mb-4"><i class="fas fa-receipt text-accent me-2"></i> تفاصيل الطلب</h5>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h6 class="text-secondary small mb-2">معلومات الشحن</h6>
+                            <p class="text-white mb-1">أحمد سعيد</p>
+                            <p class="text-secondary small mb-1">دبي، الإمارات العربية المتحدة</p>
+                            <p class="text-secondary small">+971 50 123 4567</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-secondary small mb-2">معلومات الدفع</h6>
+                            <p class="text-white mb-1">بطاقة ائتمان</p>
+                            <p class="text-secondary small">**** **** **** 3456</p>
+                        </div>
+                    </div>
+                    <hr class="border-secondary border-opacity-25 my-4">
+                    <div class="d-flex justify-content-between text-secondary mb-2">
+                        <span>المجموع الفرعي:</span>
+                        <span class="en-text">$448.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-success mb-2">
+                        <span>الخصم:</span>
+                        <span class="en-text">-$100.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-secondary mb-2">
+                        <span>الشحن:</span>
+                        <span class="en-text text-success">مجاني</span>
+                    </div>
+                    <hr class="border-secondary border-opacity-25 my-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold text-white m-0">الإجمالي:</h5>
+                        <h3 class="fw-bold text-accent m-0 en-text">$348.00</h3>
+                    </div>
+                </div>
+
+                <div class="text-center section-fade-up">
+                    <a href="products.html" class="btn btn-accent px-5 py-3 fs-5 rounded-pill me-3">
+                        <i class="fas fa-bag-shopping me-2"></i> متابعة التسوق
+                    </a>
+                    <a href="index.html" class="btn btn-glass px-5 py-3 fs-5 rounded-pill">
+                        <i class="fas fa-home me-2"></i> الرئيسية
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel mt-5 pt-5 pb-3">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-store me-2 text-accent"></i> إديو ستور</h5>
+                    <p class="text-secondary text-sm pe-md-4">متجرك الإلكتروني الأول للتسوق الذكي.</p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="products.html" class="text-secondary text-decoration-none nav-link d-inline-block">المنتجات</a></li>
+                        <li class="mb-2"><a href="categories.html" class="text-secondary text-decoration-none nav-link d-inline-block">التصنيفات</a></li>
+                        <li class="mb-2"><a href="who-we-are.html" class="text-secondary text-decoration-none nav-link d-inline-block">من نحن</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h5 class="fw-bold mb-3">تواصل معنا</h5>
+                    <ul class="list-unstyled text-secondary">
+                        <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> support@ediostore.com</li>
+                        <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +971 50 123 4567</li>
+                        <li class="mt-4">
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4 border-opacity-25">
+            <div class="text-center text-secondary small">&copy; 2026 إديو ستور. جميع الحقوق محفوظة.</div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أفضل 5 تقنيات لتطوير الويب - إديو ستور</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Top Contact Bar -->
+    <div class="top-bar d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-4 align-items-center">
+                <span class="top-bar-item"><i class="fas fa-envelope me-2"></i>support@ediostore.com</span>
+                <span class="top-bar-item"><i class="fas fa-phone me-2"></i>+971 50 123 4567</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <a href="#" class="top-bar-social"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navbar -->
+    <nav class="navbar navbar-expand-lg main-nav glass-nav py-1">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand text-white fw-bold fs-4 position-relative" href="index.html">
+                <i class="fas fa-store me-2" style="color: var(--accent-color);"></i>
+                <span class="ms-2">إديو</span><span style="color: var(--accent-color);">ستور</span>
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler btn-glass border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+
+            <!-- Navbar Links -->
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-0">
+                    <li class="nav-item">
+                        <a class="nav-link ps-3" href="index.html">الرئيسية</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link px-3" href="products.html">المنتجات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="categories.html">التصنيفات</a></li>
+                    <li class="nav-item"><a class="nav-link active px-3" href="blog.html">المدونة</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="who-we-are.html">من نحن</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link ps-3" href="about.html">حول</a>
+                    </li>
+                </ul>
+
+                <!-- Navbar Actions -->
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 me-lg-4">
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle" aria-label="Toggle Dark Mode">
+                        <i class="fas fa-sun"></i>
+                    </button>
+
+                    <!-- Wishlist Icon -->
+                    <a href="wishlist.html" class="text-white text-decoration-none position-relative"><i class="fas fa-heart fs-5"></i><span class="wishlist-badge">0</span></a>
+
+                    <!-- Cart Icon -->
+                    <a href="cart.html" class="text-white text-decoration-none position-relative">
+                        <i class="fas fa-shopping-cart fs-5"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+
+                    <!-- Login Button -->
+                    <a href="login.html" class="btn btn-glass btn-sm px-4">تسجيل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Hero (Simple for detail) -->
+    <div class="page-hero">
+        <div class="page-hero-content container">
+            <div class="page-hero-icon"><i class="fas fa-file-alt"></i></div>
+            <h1 class="page-hero-title">أفضل 5 تقنيات لتطوير الويب في عام 2026</h1>
+            <div class="blog-meta justify-content-center mt-3 text-white opacity-75">
+                <span><i class="far fa-user ms-1"></i> م. أحمد سعيد</span>
+                <span><i class="far fa-calendar-alt ms-1"></i> 15 مارس 2026</span>
+                <span><i class="far fa-eye ms-1"></i> 1,540 مشاهدة</span>
+            </div>
+            <nav class="page-hero-breadcrumb">
+                <a href="index.html">الرئيسية</a>
+                <i class="fas fa-chevron-left sep"></i>
+                <a href="blog.html">المدونة</a>
+                <i class="fas fa-chevron-left sep"></i>
+                <span class="current">تفاصيل المقال</span>
+            </nav>
+        </div>
+        <div class="page-hero-wave">
+            <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,30 C360,65 1080,0 1440,30 L1440,65 L0,65 Z" style="fill:var(--page-bg)"/>
+            </svg>
+        </div>
+    </div>
+
+    <main class="container py-5">
+        <div class="row g-5">
+            <!-- Content Area -->
+            <div class="col-lg-8">
+                <article class="glass-panel p-4 p-md-5 rounded-4">
+                    <img src="https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" alt="Main" class="w-100 rounded-4 mb-5">
+                    
+                    <div class="blog-post-content section-fade-up">
+                        <p>تتسارع التقنيات في عالم الويب بشكل مذهل، وفي عام 2026 نرى تحولاً جذرياً في كيفية بناء المواقع. في هذا المقال سنستعرض أهم 5 تقنيات يجب على كل مطور ويب الإلمام بها ليكون مواكباً لهذا التطور.</p>
+                        
+                        <h2>1. تطبيقات الويب اللامركزية (dApps)</h2>
+                        <p>مع تطور تقنيات الـ Blockchain، أصبحت تطبيقات الويب اللامركزية جزءاً لا يتجزأ من الإنترنت الجديد (Web3). هذه التقنية توفر أماناً أعلى وخصوصية أكبر للمستخدمين.</p>
+                        
+                        <h2>2. الحوسبة الطرفية (Edge Computing)</h2>
+                        <p>لم يعد الأمر مقتصراً على السحب المركزية، بل أصبحت معالجة البيانات تحدث بالقرب من المستخدم لتقليل وقت الاستجابة (Latency) وزيادة السرعة بشكل غير مسبوق.</p>
+                        
+                        <div class="glass-panel p-4 my-5 border-start border-accent border-4 bg-glass-light text-white italic">
+                            "السر في مواكبة التطور ليس في تعلم كل شيء، بل في تعلم الأساسيات القوية التي تمكنك من فهم أي تقنية جديدة بسرعة."
+                        </div>
+
+                        <h2>3. الذكاء الاصطناعي التوليدي في الواجهات</h2>
+                        <p>لم يعد الذكاء الاصطناعي مجرد واجهة خلفية، بل أصبح يساعد في إنشاء واجهات مستخدم ديناميكية تتغير بناءً على سلوك المستخدم وتفضيلاته في الوقت الفعلي.</p>
+                    </div>
+
+                    <hr class="my-5 border-secondary opacity-25">
+
+                    <!-- Sharing & Tags -->
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                        <div class="d-flex gap-2">
+                            <span class="badge bg-glass border border-secondary text-secondary p-2 px-3">برمجة</span>
+                            <span class="badge bg-glass border border-secondary text-secondary p-2 px-3">تكنولوجيا</span>
+                            <span class="badge bg-glass border border-secondary text-secondary p-2 px-3">2026</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-secondary small">شارك المقال:</span>
+                            <a href="#" class="team-social-btn"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="team-social-btn"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="team-social-btn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Comments Section Placeholder -->
+                <div class="glass-panel p-4 p-md-5 rounded-4 mt-5">
+                    <h4 class="fw-bold text-white mb-4">اترك تعليقاً</h4>
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <input type="text" class="form-control bg-transparent border-secondary text-white" placeholder="الاسم الكامل">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" class="form-control bg-transparent border-secondary text-white" placeholder="البريد الإلكتروني">
+                            </div>
+                            <div class="col-12">
+                                <textarea class="form-control bg-transparent border-secondary text-white" rows="4" placeholder="اكتب تعليقك هنا..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-accent px-5 py-2 rounded-pill">إرسال التعليق</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Search -->
+                <div class="blog-sidebar-card">
+                    <h5 class="fw-bold text-white mb-4">ابحث في المدونة</h5>
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-transparent border-secondary text-white" placeholder="كلمة البحث...">
+                        <button class="btn btn-accent"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+
+                <!-- Recent Posts -->
+                <div class="blog-sidebar-card">
+                    <h5 class="fw-bold text-white mb-4">أحدث المقالات</h5>
+                    <a href="#" class="sidebar-post-item">
+                        <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=150" class="sidebar-post-img">
+                        <div>
+                            <h6 class="sidebar-post-title">كيف تبدأ مسيرتك في مجال UX؟</h6>
+                            <span class="text-secondary x-small">12 مارس 2026</span>
+                        </div>
+                    </a>
+                    <a href="#" class="sidebar-post-item">
+                        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-1.2.1&auto=format&fit=crop&w=150" class="sidebar-post-img">
+                        <div>
+                            <h6 class="sidebar-post-title">مستقبل التعليم والذكاء الاصطناعي</h6>
+                            <span class="text-secondary x-small">10 مارس 2026</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="blog-sidebar-card bg-accent text-white border-0">
+                    <h5 class="fw-bold mb-3">اشترك في النشرة</h5>
+                    <p class="small mb-4 opacity-75">احصل على آخر المقالات والكورسات مباشرة في بريدك الإلكتروني.</p>
+                    <input type="email" class="form-control bg-white bg-opacity-25 border-0 text-white placeholder-white mb-3" placeholder="بريدك الإلكتروني">
+                    <button class="btn btn-white w-100 text-accent fw-bold border-0">اشترك الآن</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <!-- Footer -->
+    <footer class="glass-panel mt-5 pt-5 pb-3">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-store me-2 text-accent"></i> إديو ستور</h5>
+                    <p class="text-secondary text-sm pe-md-4">
+                        متجرك الإلكتروني الأول للتسوق الذكي.
+                    </p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="products.html" class="text-secondary text-decoration-none nav-link d-inline-block">المنتجات</a></li>
+                        <li class="mb-2"><a href="blog.html" class="text-secondary text-decoration-none nav-link d-inline-block">المدونة</a></li>
+                        <li class="mb-2"><a href="about.html" class="text-secondary text-decoration-none nav-link d-inline-block">حول المنصة</a></li>
+                        <li class="mb-2"><a href="categories.html" class="text-secondary text-decoration-none nav-link d-inline-block">التصنيفات</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h5 class="fw-bold mb-3">تواصل معنا</h5>
+                    <ul class="list-unstyled text-secondary">
+                        <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> support@ediostore.com</li>
+                        <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +971 50 123 4567</li>
+                        <li class="mt-4">
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4 border-opacity-25">
+            <div class="text-center text-secondary small">
+                &copy; 2026 إديو ستور. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

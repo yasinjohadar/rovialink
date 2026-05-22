@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر إديو ستور - تفاصيل المنتج</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-bar d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-4 align-items-center">
+                <span class="top-bar-item"><i class="fas fa-envelope me-2"></i>support@ediostore.com</span>
+                <span class="top-bar-item"><i class="fas fa-phone me-2"></i>+971 50 123 4567</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <a href="#" class="top-bar-social"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg main-nav glass-nav py-1">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold fs-4 position-relative" href="index.html">
+                <i class="fas fa-store me-2" style="color: var(--accent-color);"></i>
+                <span class="ms-2">إديو</span><span style="color: var(--accent-color);">ستور</span>
+            </a>
+            <button class="navbar-toggler btn-glass border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-0">
+                    <li class="nav-item"><a class="nav-link ps-3" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="products.html">المنتجات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="categories.html">التصنيفات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="blog.html">المدونة</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="who-we-are.html">من نحن</a></li>
+                    <li class="nav-item"><a class="nav-link ps-3" href="about.html">حول</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 me-lg-4">
+                    <button class="theme-toggle" aria-label="Toggle Dark Mode"><i class="fas fa-sun"></i></button>
+                    <a href="wishlist.html" class="text-white text-decoration-none position-relative">
+                        <i class="fas fa-heart fs-5"></i><span class="wishlist-badge">0</span>
+                    </a>
+                    <a href="cart.html" class="text-white text-decoration-none position-relative">
+                        <i class="fas fa-shopping-cart fs-5"></i><span class="cart-badge">0</span>
+                    </a>
+                    <a href="login.html" class="btn btn-glass btn-sm px-4">تسجيل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-gradient-opacity pt-5 pb-3 mt-5">
+        <div class="container mt-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent p-0 m-0 text-secondary">
+                    <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none text-secondary">الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a href="products.html" class="text-decoration-none text-secondary">المنتجات</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">تفاصيل المنتج</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <main class="container py-4">
+        <div id="toast-container"></div>
+        <div class="row g-5">
+            <div class="col-lg-6">
+                <div class="section-fade-up">
+                    <div class="product-gallery">
+                        <div class="glass-card p-3">
+                            <div class="swiper product-image-swiper mb-3">
+                                <div class="swiper-wrapper" id="product-swiper-wrapper">
+                                </div>
+                                <div class="swiper-button-next product-img-next"></div>
+                                <div class="swiper-button-prev product-img-prev"></div>
+                            </div>
+                            <div thumbsSlider="" class="swiper product-thumbs-swiper">
+                                <div class="swiper-wrapper" id="product-thumbs-wrapper">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="section-fade-up product-info">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <span class="badge bg-glass text-accent px-3 py-2 rounded-pill" id="detail-category">إلكترونيات</span>
+                        <span class="badge bg-danger px-3 py-2 rounded-pill" id="detail-badge">الأكثر مبيعاً</span>
+                    </div>
+                    <h1 class="product-title mb-3" id="detail-title">سماعات لاسلكية بتقنية إلغاء الضوضاء</h1>
+                    
+                    <div class="product-meta-info">
+                        <div class="product-meta-item">
+                            <i class="fas fa-tag"></i>
+                            <span class="en-text" id="detail-brand">Sony</span>
+                        </div>
+                        <div class="product-meta-item">
+                            <span class="stars en-text text-warning" id="detail-stars">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </span>
+                            <span class="en-text text-secondary" id="detail-reviews">(3,240 تقييم)</span>
+                        </div>
+                        <div class="product-meta-item">
+                            <i class="fas fa-box"></i>
+                            <span id="detail-stock" class="text-success">متوفر</span>
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary border-opacity-25">
+
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <h2 class="fw-bold text-accent m-0 en-text" id="detail-new-price">$149</h2>
+                        <h4 class="text-secondary text-decoration-line-through opacity-75 m-0 en-text" id="detail-old-price">$299</h4>
+                        <span class="badge bg-danger" id="detail-discount">خصم 50%</span>
+                    </div>
+
+                    <p class="text-secondary lh-lg mb-4">استمتع بتجربة صوت استثنائية مع سماعات إلغاء الضوضاء الرائدة من Sony. تصميم مريح وبطارية تدوم حتى 30 ساعة مع خاصية الشحن السريع.</p>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-white mb-3">اللون:</h6>
+                        <div class="color-options" id="color-options">
+                            <div class="color-option active" style="background: #1a1a1a;" data-color="black"></div>
+                            <div class="color-option" style="background: #ffffff;" data-color="white"></div>
+                            <div class="color-option" style="background: #2563eb;" data-color="blue"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-white mb-3">الكمية:</h6>
+                        <div class="quantity-selector">
+                            <button onclick="changeQty(-1)">-</button>
+                            <input type="number" id="qty-input" value="1" min="1" max="10">
+                            <button onclick="changeQty(1)">+</button>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row gap-3 mb-4">
+                        <button class="btn btn-accent py-3 fw-bold fs-5 shadow flex-grow-1" id="add-to-cart-btn">
+                            <i class="fas fa-cart-plus ms-2"></i> أضف إلى السلة
+                        </button>
+                        <button class="btn btn-glass py-3 fw-bold text-white" style="width: 55px;" id="wishlist-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+
+                    <hr class="border-secondary border-opacity-25 my-4">
+
+                    <h6 class="fw-bold text-white mb-3">مميزات المنتج:</h6>
+                    <ul class="list-unstyled text-secondary small lh-lg m-0">
+                        <li class="mb-2 d-flex align-items-center gap-3"><i class="fas fa-check text-accent w-20px text-center"></i> تقنية إلغاء الضوضاء المتقدمة</li>
+                        <li class="mb-2 d-flex align-items-center gap-3"><i class="fas fa-check text-accent w-20px text-center"></i> بطارية تدوم حتى 30 ساعة</li>
+                        <li class="mb-2 d-flex align-items-center gap-3"><i class="fas fa-check text-accent w-20px text-center"></i> شحن سريع - 10 دقائق = 5 ساعات</li>
+                        <li class="mb-2 d-flex align-items-center gap-3"><i class="fas fa-check text-accent w-20px text-center"></i> اتصال Bluetooth 5.3</li>
+                        <li class="mb-2 d-flex align-items-center gap-3"><i class="fas fa-check text-accent w-20px text-center"></i> ضمان سنتين من الشركة المصنعة</li>
+                    </ul>
+
+                    <hr class="border-secondary border-opacity-25 my-4">
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-decoration-none text-secondary small fw-bold"><i class="fas fa-share-alt me-2"></i> مشاركة المنتج</a>
+                        <a href="#" class="text-decoration-none text-secondary small fw-bold"><i class="fas fa-truck me-2"></i> تتبع الشحنة</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel p-0 overflow-hidden mb-5 mt-5 section-fade-up">
+            <ul class="nav nav-tabs course-tabs border-0 flex-nowrap overflow-auto" id="productTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active w-100 text-nowrap" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc" type="button">الوصف</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link w-100 text-nowrap" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs" type="button">المواصفات</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link w-100 text-nowrap" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button">التقييمات</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="productTabContent">
+            <div class="tab-pane fade show active section-fade-up" id="desc" role="tabpanel">
+                <div class="glass-panel p-4">
+                    <h4 class="fw-bold text-white mb-4">وصف المنتج</h4>
+                    <p class="text-secondary lh-lg">سماعات لاسلكية متطورة من Sony بتقنية إلغاء الضوضاء الرائدة في العالم. مصممة لتوفر لك تجربة صوت استثنائية سواء كنت في المنزل أو في السفر.</p>
+                    <p class="text-secondary lh-lg">تتميز هذه السماعات بتصميم مريح يسمح بارتدائها لساعات طويلة دون أي إزعاج، مع وسائد أذن من الجلد الصناعي الفاخر.</p>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="specs" role="tabpanel">
+                <div class="glass-panel p-4">
+                    <h4 class="fw-bold text-white mb-4">المواصفات التقنية</h4>
+                    <table class="table table-borderless text-secondary">
+                        <tbody>
+                            <tr><td class="fw-bold text-white" style="width: 200px;">العلامة التجارية</td><td>Sony</td></tr>
+                            <tr><td class="fw-bold text-white">نوع الاتصال</td><td>Bluetooth 5.3</td></tr>
+                            <tr><td class="fw-bold text-white">عمر البطارية</td><td>حتى 30 ساعة</td></tr>
+                            <tr><td class="fw-bold text-white">الوزن</td><td>250 جرام</td></tr>
+                            <tr><td class="fw-bold text-white">إلغاء الضوضاء</td><td>نعم - متقدم</td></tr>
+                            <tr><td class="fw-bold text-white">مقاومة الماء</td><td>IPX4</td></tr>
+                            <tr><td class="fw-bold text-white">الضمان</td><td>سنتان</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="reviews" role="tabpanel">
+                <div class="glass-panel p-4">
+                    <div class="row mb-4 align-items-center">
+                        <div class="col-md-4 text-center mb-3 mb-md-0">
+                            <h1 class="display-1 fw-bold text-accent en-text m-0">4.8</h1>
+                            <div class="text-warning fs-5 my-2 en-text">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <p class="text-secondary m-0">متوسط التقييم</p>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="text-warning en-text" style="width: 80px">5 <i class="fas fa-star small"></i></div>
+                                <div class="rating-bar"><div class="rating-fill" style="width: 75%"></div></div>
+                                <div class="text-secondary en-text small" style="width: 30px">75%</div>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="text-warning en-text" style="width: 80px">4 <i class="fas fa-star small"></i></div>
+                                <div class="rating-bar"><div class="rating-fill" style="width: 15%"></div></div>
+                                <div class="text-secondary en-text small" style="width: 30px">15%</div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="text-warning en-text" style="width: 80px">3 <i class="fas fa-star small"></i></div>
+                                <div class="rating-bar"><div class="rating-fill" style="width: 10%"></div></div>
+                                <div class="text-secondary en-text small" style="width: 30px">10%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary border-opacity-25 mb-4">
+                    
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 50px; height: 50px;">
+                            <span class="text-white fw-bold en-text">AM</span>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-white m-0 mb-1">أحمد محمد</h6>
+                            <div class="text-warning small en-text mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                            <p class="text-secondary">سماعات رائعة جداً! جودة الصوت ممتازة وإلغاء الضوضاء يعمل بشكل مذهل. أنصح بها بشدة.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex gap-3 mb-4">
+                        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 50px; height: 50px;">
+                            <span class="text-white fw-bold en-text">SK</span>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold text-white m-0 mb-1">سارة خالد</h6>
+                            <div class="text-warning small en-text mb-2"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div>
+                            <p class="text-secondary">مريحة جداً للاستخدام الطويل. البطارية تدوم فعلاً طويلاً. فقط أتمنى لو كانت مقاومة للماء بشكل أفضل.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="border-secondary border-opacity-25 my-5">
+        <div class="mb-5 section-fade-up">
+            <h3 class="fw-bold mb-4 text-white">منتجات قد تعجبك أيضاً</h3>
+            <div class="row g-4" id="related-products">
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel mt-5 pt-5 pb-3">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-store me-2 text-accent"></i> إديو ستور</h5>
+                    <p class="text-secondary text-sm pe-md-4">متجرك الإلكتروني الأول للتسوق الذكي.</p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="products.html" class="text-secondary text-decoration-none nav-link d-inline-block">المنتجات</a></li>
+                        <li class="mb-2"><a href="categories.html" class="text-secondary text-decoration-none nav-link d-inline-block">التصنيفات</a></li>
+                        <li class="mb-2"><a href="who-we-are.html" class="text-secondary text-decoration-none nav-link d-inline-block">من نحن</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h5 class="fw-bold mb-3">تواصل معنا</h5>
+                    <ul class="list-unstyled text-secondary">
+                        <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> support@ediostore.com</li>
+                        <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +971 50 123 4567</li>
+                        <li class="mt-4">
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4 border-opacity-25">
+            <div class="text-center text-secondary small">&copy; 2026 إديو ستور. جميع الحقوق محفوظة.</div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        function changeQty(delta) {
+            const input = document.getElementById('qty-input');
+            let val = parseInt(input.value) + delta;
+            if (val < 1) val = 1;
+            if (val > 10) val = 10;
+            input.value = val;
+        }
+
+        document.querySelectorAll('.color-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+                opt.classList.add('active');
+            });
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id')) || 1;
+        const product = productsData.find(p => p.id === productId) || productsData[0];
+
+        document.getElementById('detail-title').textContent = product.title;
+        document.getElementById('detail-category').textContent = product.categoryName;
+        document.getElementById('detail-brand').textContent = product.brand;
+        document.getElementById('detail-new-price').textContent = '$' + product.newPrice;
+        document.getElementById('detail-old-price').textContent = '$' + product.oldPrice;
+        document.getElementById('detail-stock').textContent = product.stockText;
+
+        const discount = Math.round((1 - product.newPrice / product.oldPrice) * 100);
+        document.getElementById('detail-discount').textContent = 'خصم ' + discount + '%';
+
+        if (product.badge) {
+            document.getElementById('detail-badge').textContent = product.badge;
+        } else {
+            document.getElementById('detail-badge').style.display = 'none';
+        }
+
+        document.getElementById('detail-reviews').textContent = '(' + product.reviews.toLocaleString() + ' تقييم)';
+
+        const colorContainer = document.getElementById('color-options');
+        if (product.colors && product.colors.length > 0) {
+            colorContainer.innerHTML = product.colors.map((c, i) => 
+                '<div class="color-option ' + (i === 0 ? 'active' : '') + '" style="background: ' + c + ';" data-color="' + i + '"></div>'
+            ).join('');
+        } else {
+            colorContainer.parentElement.style.display = 'none';
+        }
+
+        document.getElementById('add-to-cart-btn').addEventListener('click', () => {
+            const qty = parseInt(document.getElementById('qty-input').value);
+            for (let i = 0; i < qty; i++) addToCart(product);
+        });
+
+        document.getElementById('wishlist-btn').addEventListener('click', () => {
+            toggleWishlist(product);
+            const btn = document.getElementById('wishlist-btn');
+            const icon = btn.querySelector('i');
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            if (icon.classList.contains('fas')) {
+                icon.style.color = '#ef4444';
+            } else {
+                icon.style.color = '';
+            }
+        });
+
+        const related = productsData.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+        const relatedContainer = document.getElementById('related-products');
+        relatedContainer.innerHTML = related.map(p => renderProductCard(p, 'grid')).join('');
+
+        // Initialize Product Image Gallery Swiper
+        const thumbsSwiper = new Swiper('.product-thumbs-swiper', {
+            spaceBetween: 10,
+            slidesPerView: 4,
+            freeMode: true,
+            watchSlidesProgress: true,
+        });
+
+        const mainSwiper = new Swiper('.product-image-swiper', {
+            spaceBetween: 10,
+            loop: true,
+            navigation: {
+                nextEl: '.product-img-next',
+                prevEl: '.product-img-prev',
+            },
+            thumbs: {
+                swiper: thumbsSwiper,
+            },
+        });
+
+        // Populate images
+        const mainWrapper = document.getElementById('product-swiper-wrapper');
+        const thumbsWrapper = document.getElementById('product-thumbs-wrapper');
+        
+        if (product.images && product.images.length > 0) {
+            let mainHtml = '';
+            let thumbsHtml = '';
+            
+            product.images.forEach((img, i) => {
+                mainHtml += `
+                <div class="swiper-slide">
+                    <div class="product-img text-white text-center rounded-3" style="height: 400px;">
+                        <img src="${img}" alt="${product.title}" class="w-100 h-100 object-fit-cover" style="border-radius: 12px;">
+                    </div>
+                </div>`;
+                
+                thumbsHtml += `
+                <div class="swiper-slide">
+                    <div class="product-img text-white text-center rounded-3" style="height: 80px; cursor: pointer;">
+                        <img src="${img}" alt="thumb" class="w-100 h-100 object-fit-cover" style="border-radius: 8px;">
+                    </div>
+                </div>`;
+            });
+            
+            mainWrapper.innerHTML = mainHtml;
+            thumbsWrapper.innerHTML = thumbsHtml;
+            
+            mainSwiper.update();
+            thumbsSwiper.update();
+        } else {
+            mainWrapper.innerHTML = `<div class="swiper-slide"><div class="product-img text-white text-center rounded-3" style="height: 400px;"><i class="fas ${product.imgIcon} fa-6x opacity-50"></i></div></div>`;
+            thumbsWrapper.innerHTML = '';
+            document.querySelector('.product-thumbs-swiper').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر إديو ستور - جميع المنتجات</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="top-bar d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-4 align-items-center">
+                <span class="top-bar-item"><i class="fas fa-envelope me-2"></i>support@ediostore.com</span>
+                <span class="top-bar-item"><i class="fas fa-phone me-2"></i>+971 50 123 4567</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <a href="#" class="top-bar-social"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg main-nav glass-nav py-1">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold fs-4 position-relative" href="index.html">
+                <i class="fas fa-store me-2" style="color: var(--accent-color);"></i>
+                <span class="ms-2">إديو</span><span style="color: var(--accent-color);">ستور</span>
+            </a>
+
+            <button class="navbar-toggler btn-glass border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-0">
+                    <li class="nav-item">
+                        <a class="nav-link ps-3" href="index.html">الرئيسية</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active px-3" href="products.html">المنتجات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="categories.html">التصنيفات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="blog.html">المدونة</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="who-we-are.html">من نحن</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link ps-3" href="about.html">حول</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 me-lg-4">
+                    <button class="theme-toggle" aria-label="Toggle Dark Mode">
+                        <i class="fas fa-sun"></i>
+                    </button>
+
+                    <a href="wishlist.html" class="text-white text-decoration-none position-relative">
+                        <i class="fas fa-heart fs-5"></i>
+                        <span class="wishlist-badge">0</span>
+                    </a>
+
+                    <a href="cart.html" class="text-white text-decoration-none position-relative">
+                        <i class="fas fa-shopping-cart fs-5"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+
+                    <a href="login.html" class="btn btn-glass btn-sm px-4">تسجيل الدخول</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-hero">
+        <div class="page-hero-content container">
+            <div class="page-hero-icon"><i class="fas fa-bag-shopping"></i></div>
+            <h1 class="page-hero-title">تصفح جميع المنتجات</h1>
+            <p class="page-hero-subtitle">اكتشف مئات المنتجات في مجالات الإلكترونيات والأزياء والمنزل والرياضة.</p>
+            <nav class="page-hero-breadcrumb" aria-label="breadcrumb">
+                <a href="index.html">الرئيسية</a>
+                <i class="fas fa-chevron-left sep"></i>
+                <span class="current">المنتجات</span>
+            </nav>
+        </div>
+        <div class="page-hero-wave">
+            <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,30 C360,65 1080,0 1440,30 L1440,65 L0,65 Z" style="fill:var(--page-bg)"/>
+            </svg>
+        </div>
+    </div>
+
+    <main class="container py-4">
+        <div id="toast-container"></div>
+        <div class="row g-4">
+            <aside class="col-lg-3">
+                <div class="glass-panel p-4 sticky-top section-fade-up" style="top: 100px; z-index: 10;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold m-0"><i class="fas fa-filter text-accent me-2"></i> تصفية</h5>
+                        <button class="btn btn-sm btn-outline-secondary py-0 border-0" id="reset-filters" style="font-size: 0.85rem">إعادة ضبط</button>
+                    </div>
+
+                    <div class="mb-4">
+                        <input type="text" id="search-input" class="form-control bg-glass text-white rounded-3 border-secondary" placeholder="ابحث عن منتج...">
+                    </div>
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-3">التصنيف</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-glass border-secondary filter-checkbox" type="checkbox" value="electronics" id="cat-electronics">
+                            <label class="form-check-label text-secondary" for="cat-electronics">إلكترونيات</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-glass border-secondary filter-checkbox" type="checkbox" value="fashion" id="cat-fashion">
+                            <label class="form-check-label text-secondary" for="cat-fashion">أزياء</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-glass border-secondary filter-checkbox" type="checkbox" value="home" id="cat-home">
+                            <label class="form-check-label text-secondary" for="cat-home">المنزل</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-glass border-secondary filter-checkbox" type="checkbox" value="sports" id="cat-sports">
+                            <label class="form-check-label text-secondary" for="cat-sports">رياضة</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-glass border-secondary filter-checkbox" type="checkbox" value="beauty" id="cat-beauty">
+                            <label class="form-check-label text-secondary" for="cat-beauty">الجمال</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input bg-glass border-secondary filter-checkbox" type="checkbox" value="accessories" id="cat-accessories">
+                            <label class="form-check-label text-secondary" for="cat-accessories">إكسسوارات</label>
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary border-opacity-25 mb-4">
+
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-3">السعر (أقل من: <span id="price-val" class="text-accent en-text fw-bold">$2000</span>)</h6>
+                        <input type="range" class="form-range" min="0" max="2000" value="2000" id="price-range">
+                    </div>
+
+                </div>
+            </aside>
+
+            <div class="col-lg-9">
+                <div class="glass-panel p-3 mb-4 section-fade-up d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <div class="text-secondary small">
+                        عرض <span id="products-count" class="text-white fw-bold en-text">0</span> نتيجة
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <label class="text-secondary whitespace-nowrap mb-0 small text-nowrap">ترتيب حسب:</label>
+                            <select class="form-select form-select-sm bg-glass text-white border-secondary rounded-3" id="sort-select" style="min-width: 150px">
+                                <option value="popular">الأكثر شعبية</option>
+                                <option value="newest">الأحدث</option>
+                                <option value="price-asc">السعر: من الأقل للأعلى</option>
+                                <option value="price-desc">السعر: من الأعلى للأقل</option>
+                                <option value="rating">الأعلى تقييماً</option>
+                            </select>
+                        </div>
+                        <div class="d-none d-md-flex gap-1 border border-secondary border-opacity-25 rounded-3 p-1">
+                            <button class="btn btn-sm btn-glass border-0 active toggle-view" data-view="grid"><i class="fas fa-th-large"></i></button>
+                            <button class="btn btn-sm btn-glass border-0 toggle-view" data-view="list"><i class="fas fa-list"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 section-fade-up" id="all-products-container">
+                </div>
+
+                <nav class="mt-5 section-fade-up">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link bg-glass border-secondary text-white rounded-start-pill px-3" href="#" tabindex="-1">السابق</a>
+                        </li>
+                        <li class="page-item active" aria-current="page">
+                            <a class="page-link border-secondary" style="background-color: var(--accent-color); color: white" href="#">1</a>
+                        </li>
+                        <li class="page-item"><a class="page-link bg-glass border-secondary text-white" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link bg-glass border-secondary text-white" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link bg-glass border-secondary text-white rounded-end-pill px-3" href="#">التالي</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </main>
+
+    <footer class="glass-panel mt-5 pt-5 pb-3">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-store me-2 text-accent"></i> إديو ستور</h5>
+                    <p class="text-secondary text-sm pe-md-4">
+                        متجرك الإلكتروني الأول للتسوق الذكي. نقدم لك أفضل المنتجات بأسعار تنافسية.
+                    </p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="products.html" class="text-secondary text-decoration-none nav-link d-inline-block">المنتجات</a></li>
+                        <li class="mb-2"><a href="categories.html" class="text-secondary text-decoration-none nav-link d-inline-block">التصنيفات</a></li>
+                        <li class="mb-2"><a href="blog.html" class="text-secondary text-decoration-none nav-link d-inline-block">المدونة</a></li>
+                        <li class="mb-2"><a href="who-we-are.html" class="text-secondary text-decoration-none nav-link d-inline-block">من نحن</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h5 class="fw-bold mb-3">تواصل معنا</h5>
+                    <ul class="list-unstyled text-secondary">
+                        <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> support@ediostore.com</li>
+                        <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +971 50 123 4567</li>
+                        <li class="mt-4">
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4 border-opacity-25">
+            <div class="text-center text-secondary small">
+                &copy; 2026 إديو ستور. جميع الحقوق محفوظة.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Quick View Modal -->
+    <div class="modal fade quick-view-modal" id="quickViewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body p-0">
+                    <div class="row g-0">
+                        <div class="col-lg-6">
+                            <div class="quick-view-gallery p-4 h-100 d-flex flex-column justify-content-center" style="background: linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(59,130,246,0.03) 100%);">
+                                <div class="swiper quick-view-swiper mb-3">
+                                    <div class="swiper-wrapper" id="qv-swiper-wrapper">
+                                    </div>
+                                    <div class="swiper-button-next qv-img-next"></div>
+                                    <div class="swiper-button-prev qv-img-prev"></div>
+                                </div>
+                                <div thumbsSlider="" class="swiper quick-view-thumbs-swiper">
+                                    <div class="swiper-wrapper" id="qv-thumbs-wrapper">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="p-4 p-lg-5 h-100 d-flex flex-column">
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <span class="badge bg-glass text-accent px-3 py-1 rounded-pill" id="qv-category"></span>
+                                    <span class="badge bg-accent px-2 py-1 rounded-pill en-text" id="qv-brand"></span>
+                                </div>
+                                <h2 class="fw-bold text-white mb-3 lh-base" id="qv-title" style="font-size: 1.5rem;"></h2>
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <div class="product-rating">
+                                        <span class="stars en-text text-warning" id="qv-stars"></span>
+                                        <span class="count en-text" id="qv-reviews"></span>
+                                    </div>
+                                    <span class="text-success small" id="qv-stock"><i class="fas fa-check-circle me-1"></i></span>
+                                </div>
+                                <hr class="border-secondary border-opacity-25 my-2">
+                                <div class="d-flex align-items-center gap-3 mb-3">
+                                    <h3 class="fw-bold text-accent m-0 en-text" id="qv-price" style="font-size: 2rem;"></h3>
+                                    <h5 class="text-secondary text-decoration-line-through opacity-75 m-0 en-text" id="qv-old-price"></h5>
+                                    <span class="badge bg-danger px-3 py-2" id="qv-discount"></span>
+                                </div>
+                                <p class="text-secondary lh-lg mb-4">منتج عالي الجودة يتميز بتصميم عصري وأداء ممتاز يلبي جميع احتياجاتك.</p>
+                                <div class="mb-4" id="qv-color-section">
+                                    <h6 class="fw-bold text-white mb-3">اللون:</h6>
+                                    <div class="color-options" id="qv-colors"></div>
+                                </div>
+                                <div class="mb-4">
+                                    <h6 class="fw-bold text-white mb-3">الكمية:</h6>
+                                    <div class="quantity-selector">
+                                        <button type="button" onclick="qvChangeQty(-1)">-</button>
+                                        <input type="number" id="qv-qty" value="1" min="1" max="10">
+                                        <button type="button" onclick="qvChangeQty(1)">+</button>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-3 mt-auto">
+                                    <button class="btn btn-accent py-3 fw-bold flex-grow-1" id="qv-add-cart">
+                                        <i class="fas fa-cart-plus ms-2"></i> أضف إلى السلة
+                                    </button>
+                                    <button class="btn btn-glass py-3" style="width: 55px;" id="qv-wishlist">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                                <div class="row g-2 mt-4">
+                                    <div class="col-4 text-center">
+                                        <div class="glass-panel p-2 rounded-3"><i class="fas fa-truck text-accent mb-1 d-block"></i><small class="text-secondary">شحن مجاني</small></div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <div class="glass-panel p-2 rounded-3"><i class="fas fa-shield-halved text-accent mb-1 d-block"></i><small class="text-secondary">ضمان سنتين</small></div>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <div class="glass-panel p-2 rounded-3"><i class="fas fa-undo text-accent mb-1 d-block"></i><small class="text-secondary">إرجاع 30 يوم</small></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

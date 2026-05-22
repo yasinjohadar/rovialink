@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر إديو ستور - لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="top-bar d-none d-md-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="d-flex gap-4 align-items-center">
+                <span class="top-bar-item"><i class="fas fa-envelope me-2"></i>support@ediostore.com</span>
+                <span class="top-bar-item"><i class="fas fa-phone me-2"></i>+971 50 123 4567</span>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+                <a href="#" class="top-bar-social"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="top-bar-social"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg main-nav glass-nav py-1">
+        <div class="container">
+            <a class="navbar-brand text-white fw-bold fs-4 position-relative" href="index.html">
+                <i class="fas fa-store me-2" style="color: var(--accent-color);"></i>
+                <span class="ms-2">إديو</span><span style="color: var(--accent-color);">ستور</span>
+            </a>
+            <button class="navbar-toggler btn-glass border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 pe-0">
+                    <li class="nav-item"><a class="nav-link ps-3" href="index.html">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="products.html">المنتجات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="categories.html">التصنيفات</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="blog.html">المدونة</a></li>
+                    <li class="nav-item"><a class="nav-link px-3" href="who-we-are.html">من نحن</a></li>
+                    <li class="nav-item"><a class="nav-link ps-3" href="about.html">حول</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0 me-lg-4">
+                    <button class="theme-toggle" aria-label="Toggle Dark Mode"><i class="fas fa-sun"></i></button>
+                    <a href="wishlist.html" class="text-white text-decoration-none position-relative"><i class="fas fa-heart fs-5"></i><span class="wishlist-badge">0</span></a>
+                    <a href="cart.html" class="text-white text-decoration-none position-relative"><i class="fas fa-shopping-cart fs-5"></i><span class="cart-badge">0</span></a>
+                    <div class="dropdown">
+                        <a href="#" class="text-white text-decoration-none d-flex align-items-center gap-2" data-bs-toggle="dropdown">
+                            <div class="rounded-circle bg-accent d-flex align-items-center justify-content-center" style="width:32px;height:32px;">
+                                <span class="fw-bold small">أح</span>
+                            </div>
+                            <span class="d-none d-lg-inline small">أحمد سعيد</span>
+                            <i class="fas fa-chevron-down small"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end glass-panel border-0 mt-2" style="min-width: 200px;">
+                            <li><a class="dropdown-item text-white" href="dashboard.html"><i class="fas fa-tachometer-alt me-2 text-accent"></i> لوحة التحكم</a></li>
+                            <li><a class="dropdown-item text-white" href="dashboard.html#orders"><i class="fas fa-box me-2 text-accent"></i> طلباتي</a></li>
+                            <li><a class="dropdown-item text-white" href="wishlist.html"><i class="fas fa-heart me-2 text-accent"></i> المفضلة</a></li>
+                            <li><hr class="dropdown-divider border-secondary"></li>
+                            <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-sign-out-alt me-2"></i> تسجيل الخروج</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="page-hero">
+        <div class="page-hero-content container">
+            <div class="page-hero-icon"><i class="fas fa-tachometer-alt"></i></div>
+            <h1 class="page-hero-title">لوحة التحكم</h1>
+            <p class="page-hero-subtitle">مرحباً أحمد! تابع طلباتك وإعدادات حسابك من مكان واحد.</p>
+        </div>
+        <div class="page-hero-wave">
+            <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,30 C360,65 1080,0 1440,30 L1440,65 L0,65 Z" style="fill:var(--page-bg)"/>
+            </svg>
+        </div>
+    </div>
+
+    <main class="container py-4">
+        <div id="toast-container"></div>
+
+        <div class="row g-4">
+            <!-- Sidebar -->
+            <aside class="col-lg-3">
+                <div class="glass-panel p-0 sticky-top section-fade-up" style="top: 100px; z-index: 10; overflow: hidden;">
+                    <!-- User Profile Card -->
+                    <div class="p-4 text-center border-bottom border-secondary border-opacity-25">
+                        <div class="position-relative d-inline-block mb-3">
+                            <div class="rounded-circle bg-accent d-flex align-items-center justify-content-center mx-auto" style="width:80px;height:80px;font-size:2rem;">
+                                <span class="fw-bold">أح</span>
+                            </div>
+                            <button class="btn btn-sm btn-accent rounded-circle position-absolute bottom-0 start-100 translate-middle" style="width:28px;height:28px;padding:0;">
+                                <i class="fas fa-camera small"></i>
+                            </button>
+                        </div>
+                        <h5 class="fw-bold text-white mb-1">أحمد سعيد</h5>
+                        <p class="text-secondary small mb-2">ahmed@example.com</p>
+                        <span class="badge bg-accent px-3 py-1 rounded-pill">عضو ذهبي <i class="fas fa-crown ms-1"></i></span>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="p-3">
+                        <ul class="nav flex-column gap-1" id="dashboard-nav">
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center gap-3 px-3 py-2 rounded-3 active" href="#overview" data-section="overview">
+                                    <i class="fas fa-home text-accent" style="width:20px;text-align:center;"></i>
+                                    <span>نظرة عامة</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center gap-3 px-3 py-2 rounded-3" href="#orders" data-section="orders">
+                                    <i class="fas fa-box text-accent" style="width:20px;text-align:center;"></i>
+                                    <span>طلباتي</span>
+                                    <span class="badge bg-accent ms-auto en-text">5</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center gap-3 px-3 py-2 rounded-3" href="#wishlist" data-section="wishlist">
+                                    <i class="fas fa-heart text-accent" style="width:20px;text-align:center;"></i>
+                                    <span>المفضلة</span>
+                                    <span class="badge bg-danger ms-auto en-text">3</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center gap-3 px-3 py-2 rounded-3" href="#addresses" data-section="addresses">
+                                    <i class="fas fa-map-marker-alt text-accent" style="width:20px;text-align:center;"></i>
+                                    <span>العناوين</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center gap-3 px-3 py-2 rounded-3" href="#profile" data-section="profile">
+                                    <i class="fas fa-user-edit text-accent" style="width:20px;text-align:center;"></i>
+                                    <span>الملف الشخصي</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center gap-3 px-3 py-2 rounded-3" href="#security" data-section="security">
+                                    <i class="fas fa-shield-alt text-accent" style="width:20px;text-align:center;"></i>
+                                    <span>الأمان</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white d-flex align-items-center gap-3 px-3 py-2 rounded-3" href="#notifications" data-section="notifications">
+                                    <i class="fas fa-bell text-accent" style="width:20px;text-align:center;"></i>
+                                    <span>الإشعارات</span>
+                                    <span class="badge bg-warning text-dark ms-auto en-text">2</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <hr class="border-secondary border-opacity-25 my-3">
+
+                        <a href="index.html" class="nav-link text-danger d-flex align-items-center gap-3 px-3 py-2 rounded-3">
+                            <i class="fas fa-store" style="width:20px;text-align:center;"></i>
+                            <span>العودة للمتجر</span>
+                        </a>
+                        <a href="#" class="nav-link text-danger d-flex align-items-center gap-3 px-3 py-2 rounded-3">
+                            <i class="fas fa-sign-out-alt" style="width:20px;text-align:center;"></i>
+                            <span>تسجيل الخروج</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+
+                <!-- Overview Section -->
+                <div class="dashboard-section active" id="section-overview">
+                    <!-- Stats Cards -->
+                    <div class="row g-3 mb-4 section-fade-up">
+                        <div class="col-6 col-md-3">
+                            <div class="glass-card p-3 text-center h-100">
+                                <div class="bg-accent bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;">
+                                    <i class="fas fa-box text-accent fs-5"></i>
+                                </div>
+                                <h3 class="fw-bold text-white m-0 en-text">12</h3>
+                                <p class="text-secondary small m-0">إجمالي الطلبات</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="glass-card p-3 text-center h-100">
+                                <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;">
+                                    <i class="fas fa-truck text-success fs-5"></i>
+                                </div>
+                                <h3 class="fw-bold text-white m-0 en-text">3</h3>
+                                <p class="text-secondary small m-0">قيد الشحن</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="glass-card p-3 text-center h-100">
+                                <div class="bg-warning bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;">
+                                    <i class="fas fa-heart text-warning fs-5"></i>
+                                </div>
+                                <h3 class="fw-bold text-white m-0 en-text">3</h3>
+                                <p class="text-secondary small m-0">المفضلة</p>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="glass-card p-3 text-center h-100">
+                                <div class="bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:48px;height:48px;">
+                                    <i class="fas fa-coins text-info fs-5"></i>
+                                </div>
+                                <h3 class="fw-bold text-white m-0 en-text">450</h3>
+                                <p class="text-secondary small m-0">نقاط المكافآت</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Orders -->
+                    <div class="glass-card p-4 mb-4 section-fade-up">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold text-white m-0"><i class="fas fa-clock text-accent me-2"></i> آخر الطلبات</h5>
+                            <a href="#orders" class="btn btn-sm btn-outline-light rounded-pill px-3" data-section-link="orders">عرض الكل</a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-borderless text-secondary mb-0">
+                                <thead>
+                                    <tr class="border-bottom border-secondary border-opacity-25">
+                                        <th class="text-secondary small pb-3">رقم الطلب</th>
+                                        <th class="text-secondary small pb-3">التاريخ</th>
+                                        <th class="text-secondary small pb-3">الحالة</th>
+                                        <th class="text-secondary small pb-3">الإجمالي</th>
+                                        <th class="text-secondary small pb-3"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-bottom border-secondary border-opacity-10">
+                                        <td class="py-3 en-text text-white fw-bold">#EDU-48592</td>
+                                        <td class="py-3 en-text">2026-05-06</td>
+                                        <td class="py-3"><span class="badge bg-warning text-dark">قيد الشحن</span></td>
+                                        <td class="py-3 en-text text-accent fw-bold">$348.00</td>
+                                        <td class="py-3"><a href="#" class="btn btn-sm btn-glass rounded-pill px-3">التفاصيل</a></td>
+                                    </tr>
+                                    <tr class="border-bottom border-secondary border-opacity-10">
+                                        <td class="py-3 en-text text-white fw-bold">#EDU-48401</td>
+                                        <td class="py-3 en-text">2026-04-28</td>
+                                        <td class="py-3"><span class="badge bg-success">تم التوصيل</span></td>
+                                        <td class="py-3 en-text text-accent fw-bold">$149.00</td>
+                                        <td class="py-3"><a href="#" class="btn btn-sm btn-glass rounded-pill px-3">التفاصيل</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3 en-text text-white fw-bold">#EDU-48215</td>
+                                        <td class="py-3 en-text">2026-04-15</td>
+                                        <td class="py-3"><span class="badge bg-success">تم التوصيل</span></td>
+                                        <td class="py-3 en-text text-accent fw-bold">$299.00</td>
+                                        <td class="py-3"><a href="#" class="btn btn-sm btn-glass rounded-pill px-3">التفاصيل</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Active Tracking -->
+                    <div class="glass-card p-4 mb-4 section-fade-up">
+                        <h5 class="fw-bold text-white mb-4"><i class="fas fa-route text-accent me-2"></i> تتبع شحنتك الحالية</h5>
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <div class="d-flex align-items-center gap-3 mb-3 p-3 rounded-3" style="background: rgba(37,99,235,0.1);">
+                                    <div class="rounded-circle bg-accent d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                        <i class="fas fa-box text-white"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-white fw-bold mb-0">طلب #EDU-48592</p>
+                                        <p class="text-secondary small mb-0">سماعات Sony + ساعة Samsung</p>
+                                    </div>
+                                </div>
+                                <div class="tracking-progress">
+                                    <div class="progress-line" style="width: 50%;"></div>
+                                    <div class="tracking-step completed">
+                                        <div class="step-icon"><i class="fas fa-check"></i></div>
+                                        <span class="step-label">تم التأكيد</span>
+                                    </div>
+                                    <div class="tracking-step active">
+                                        <div class="step-icon"><i class="fas fa-truck"></i></div>
+                                        <span class="step-label">قيد الشحن</span>
+                                    </div>
+                                    <div class="tracking-step">
+                                        <div class="step-icon"><i class="fas fa-home"></i></div>
+                                        <span class="step-label">تم التوصيل</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5 text-center">
+                                <div class="glass-panel p-3 rounded-3">
+                                    <p class="text-secondary small mb-1">التوصيل المتوقع</p>
+                                    <h4 class="fw-bold text-accent en-text m-0">09 مايو 2026</h4>
+                                    <p class="text-success small mt-2 mb-0"><i class="fas fa-clock me-1"></i> خلال 3 أيام</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row g-3 section-fade-up">
+                        <div class="col-md-4">
+                            <a href="#orders" class="glass-card p-4 text-center text-decoration-none d-block h-100" data-section-link="orders">
+                                <i class="fas fa-redo text-accent fs-3 mb-3 d-block"></i>
+                                <h6 class="fw-bold text-white">إعادة طلب</h6>
+                                <p class="text-secondary small m-0">أعد طلب منتجات سابقة بسهولة</p>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" class="glass-card p-4 text-center text-decoration-none d-block h-100">
+                                <i class="fas fa-undo text-warning fs-3 mb-3 d-block"></i>
+                                <h6 class="fw-bold text-white">إرجاع منتج</h6>
+                                <p class="text-secondary small m-0">قدم طلب إرجاع لمنتج سابق</p>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#profile" class="glass-card p-4 text-center text-decoration-none d-block h-100" data-section-link="profile">
+                                <i class="fas fa-gift text-success fs-3 mb-3 d-block"></i>
+                                <h6 class="fw-bold text-white">نقاط المكافآت</h6>
+                                <p class="text-secondary small m-0">استبدل 450 نقطة بخصم حصري</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Section -->
+                <div class="dashboard-section d-none" id="section-orders">
+                    <div class="glass-card p-4 section-fade-up">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold text-white m-0"><i class="fas fa-box text-accent me-2"></i> جميع الطلبات</h5>
+                            <div class="d-flex gap-2">
+                                <select class="form-select form-select-sm bg-glass text-white border-secondary rounded-pill" style="min-width: 140px;">
+                                    <option>جميع الحالات</option>
+                                    <option>قيد الشحن</option>
+                                    <option>تم التوصيل</option>
+                                    <option>ملغي</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Order Card 1 -->
+                        <div class="glass-panel p-3 mb-3">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <h6 class="fw-bold text-white mb-1">طلب <span class="en-text">#EDU-48592</span></h6>
+                                    <p class="text-secondary small mb-0"><i class="fas fa-calendar-alt me-1"></i> 06 مايو 2026</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="badge bg-warning text-dark px-3 py-2">قيد الشحن</span>
+                                    <span class="en-text text-accent fw-bold fs-5">$348.00</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3 mb-3">
+                                <div class="product-img text-white text-center flex-shrink-0 rounded-3" style="width:70px;height:70px;">
+                                    <i class="fas fa-headphones fa-lg mt-3 opacity-50"></i>
+                                </div>
+                                <div class="product-img text-white text-center flex-shrink-0 rounded-3" style="width:70px;height:70px;">
+                                    <i class="fas fa-clock fa-lg mt-3 opacity-50"></i>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="text-secondary small">+1 منتج آخر</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a href="order-success.html" class="btn btn-sm btn-accent rounded-pill px-3">تتبع الشحنة</a>
+                                <button class="btn btn-sm btn-glass rounded-pill px-3">عرض التفاصيل</button>
+                            </div>
+                        </div>
+
+                        <!-- Order Card 2 -->
+                        <div class="glass-panel p-3 mb-3">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <h6 class="fw-bold text-white mb-1">طلب <span class="en-text">#EDU-48401</span></h6>
+                                    <p class="text-secondary small mb-0"><i class="fas fa-calendar-alt me-1"></i> 28 أبريل 2026</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="badge bg-success px-3 py-2">تم التوصيل</span>
+                                    <span class="en-text text-accent fw-bold fs-5">$149.00</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3 mb-3">
+                                <div class="product-img text-white text-center flex-shrink-0 rounded-3" style="width:70px;height:70px;">
+                                    <i class="fas fa-headphones fa-lg mt-3 opacity-50"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-glass rounded-pill px-3">عرض التفاصيل</button>
+                                <button class="btn btn-sm btn-outline-success rounded-pill px-3"><i class="fas fa-redo me-1"></i> إعادة طلب</button>
+                                <button class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="fas fa-star me-1"></i> تقييم</button>
+                            </div>
+                        </div>
+
+                        <!-- Order Card 3 -->
+                        <div class="glass-panel p-3 mb-3">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <h6 class="fw-bold text-white mb-1">طلب <span class="en-text">#EDU-48215</span></h6>
+                                    <p class="text-secondary small mb-0"><i class="fas fa-calendar-alt me-1"></i> 15 أبريل 2026</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="badge bg-success px-3 py-2">تم التوصيل</span>
+                                    <span class="en-text text-accent fw-bold fs-5">$299.00</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3 mb-3">
+                                <div class="product-img text-white text-center flex-shrink-0 rounded-3" style="width:70px;height:70px;">
+                                    <i class="fas fa-clock fa-lg mt-3 opacity-50"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-glass rounded-pill px-3">عرض التفاصيل</button>
+                                <button class="btn btn-sm btn-outline-success rounded-pill px-3"><i class="fas fa-redo me-1"></i> إعادة طلب</button>
+                            </div>
+                        </div>
+
+                        <!-- Order Card 4 -->
+                        <div class="glass-panel p-3 mb-3">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
+                                <div>
+                                    <h6 class="fw-bold text-white mb-1">طلب <span class="en-text">#EDU-47890</span></h6>
+                                    <p class="text-secondary small mb-0"><i class="fas fa-calendar-alt me-1"></i> 02 أبريل 2026</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="badge bg-danger px-3 py-2">ملغي</span>
+                                    <span class="en-text text-accent fw-bold fs-5">$79.00</span>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-3 mb-3">
+                                <div class="product-img text-white text-center flex-shrink-0 rounded-3" style="width:70px;height:70px;">
+                                    <i class="fas fa-bag-shopping fa-lg mt-3 opacity-50"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-glass rounded-pill px-3">عرض التفاصيل</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wishlist Section -->
+                <div class="dashboard-section d-none" id="section-wishlist">
+                    <div class="glass-card p-4 section-fade-up">
+                        <h5 class="fw-bold text-white mb-4"><i class="fas fa-heart text-accent me-2"></i> قائمة المفضلة</h5>
+                        <div class="row g-3" id="dashboard-wishlist-items">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Addresses Section -->
+                <div class="dashboard-section d-none" id="section-addresses">
+                    <div class="glass-card p-4 section-fade-up">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold text-white m-0"><i class="fas fa-map-marker-alt text-accent me-2"></i> عناوين الشحن</h5>
+                            <button class="btn btn-sm btn-accent rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                <i class="fas fa-plus me-1"></i> إضافة عنوان
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="glass-panel p-4 position-relative h-100">
+                                    <span class="badge bg-accent position-absolute top-0 start-0 m-3">الافتراضي</span>
+                                    <div class="d-flex justify-content-end gap-2 mb-3">
+                                        <button class="btn btn-sm btn-glass rounded-circle" style="width:32px;height:32px;padding:0;"><i class="fas fa-edit small"></i></button>
+                                        <button class="btn btn-sm btn-glass rounded-circle text-danger" style="width:32px;height:32px;padding:0;"><i class="fas fa-trash small"></i></button>
+                                    </div>
+                                    <h6 class="fw-bold text-white mb-2">أحمد سعيد</h6>
+                                    <p class="text-secondary small mb-1">شارع الشيخ زايد، برج الأعمال</p>
+                                    <p class="text-secondary small mb-1">الطابق 15، شقة 1502</p>
+                                    <p class="text-secondary small mb-2">دبي، الإمارات العربية المتحدة</p>
+                                    <p class="text-secondary small mb-0 en-text"><i class="fas fa-phone me-1"></i> +971 50 123 4567</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="glass-panel p-4 position-relative h-100">
+                                    <div class="d-flex justify-content-end gap-2 mb-3">
+                                        <button class="btn btn-sm btn-glass rounded-circle" style="width:32px;height:32px;padding:0;"><i class="fas fa-edit small"></i></button>
+                                        <button class="btn btn-sm btn-glass rounded-circle text-danger" style="width:32px;height:32px;padding:0;"><i class="fas fa-trash small"></i></button>
+                                    </div>
+                                    <h6 class="fw-bold text-white mb-2">أحمد سعيد</h6>
+                                    <p class="text-secondary small mb-1">شارع التحلية، حي الروضة</p>
+                                    <p class="text-secondary small mb-1">عمارة 42، الطابق 3</p>
+                                    <p class="text-secondary small mb-2">جدة، المملكة العربية السعودية</p>
+                                    <p class="text-secondary small mb-0 en-text"><i class="fas fa-phone me-1"></i> +966 55 987 6543</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div class="dashboard-section d-none" id="section-profile">
+                    <div class="glass-card p-4 section-fade-up">
+                        <h5 class="fw-bold text-white mb-4"><i class="fas fa-user-edit text-accent me-2"></i> الملف الشخصي</h5>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">الاسم الأول</label>
+                                    <input type="text" class="form-control bg-glass text-white border-secondary" value="أحمد">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">الاسم الأخير</label>
+                                    <input type="text" class="form-control bg-glass text-white border-secondary" value="سعيد">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">البريد الإلكتروني</label>
+                                    <input type="email" class="form-control bg-glass text-white border-secondary" value="ahmed@example.com">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">رقم الهاتف</label>
+                                    <input type="tel" class="form-control bg-glass text-white border-secondary" value="+971 50 123 4567">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">تاريخ الميلاد</label>
+                                    <input type="date" class="form-control bg-glass text-white border-secondary" value="1990-05-15">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">الجنس</label>
+                                    <select class="form-select bg-glass text-white border-secondary">
+                                        <option selected>ذكر</option>
+                                        <option>أنثى</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <hr class="border-secondary border-opacity-25 my-4">
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-glass px-4">إلغاء</button>
+                                <button type="submit" class="btn btn-accent px-4">حفظ التغييرات</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security Section -->
+                <div class="dashboard-section d-none" id="section-security">
+                    <div class="glass-card p-4 mb-4 section-fade-up">
+                        <h5 class="fw-bold text-white mb-4"><i class="fas fa-lock text-accent me-2"></i> تغيير كلمة المرور</h5>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label text-secondary small">كلمة المرور الحالية</label>
+                                    <input type="password" class="form-control bg-glass text-white border-secondary" placeholder="أدخل كلمة المرور الحالية">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">كلمة المرور الجديدة</label>
+                                    <input type="password" class="form-control bg-glass text-white border-secondary" placeholder="كلمة المرور الجديدة">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-secondary small">تأكيد كلمة المرور</label>
+                                    <input type="password" class="form-control bg-glass text-white border-secondary" placeholder="أعد كتابة كلمة المرور">
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end mt-4">
+                                <button type="submit" class="btn btn-accent px-4">تحديث كلمة المرور</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="glass-card p-4 section-fade-up">
+                        <h5 class="fw-bold text-white mb-4"><i class="fas fa-shield-alt text-accent me-2"></i> إعدادات الأمان</h5>
+                        <div class="d-flex justify-content-between align-items-center p-3 mb-3 glass-panel rounded-3">
+                            <div>
+                                <h6 class="fw-bold text-white mb-1">المصادقة الثنائية</h6>
+                                <p class="text-secondary small mb-0">أضف طبقة حماية إضافية لحسابك</p>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="twoFactor" style="width: 3em; height: 1.5em;">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center p-3 mb-3 glass-panel rounded-3">
+                            <div>
+                                <h6 class="fw-bold text-white mb-1">إشعارات تسجيل الدخول</h6>
+                                <p class="text-secondary small mb-0">استلم إشعار عند تسجيل الدخول من جهاز جديد</p>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="loginNotif" checked style="width: 3em; height: 1.5em;">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center p-3 glass-panel rounded-3">
+                            <div>
+                                <h6 class="fw-bold text-white mb-1">الأجهزة النشطة</h6>
+                                <p class="text-secondary small mb-0">إدارة الأجهزة المتصلة بحسابك</p>
+                            </div>
+                            <button class="btn btn-sm btn-glass rounded-pill px-3">إدارة</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Section -->
+                <div class="dashboard-section d-none" id="section-notifications">
+                    <div class="glass-card p-4 section-fade-up">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold text-white m-0"><i class="fas fa-bell text-accent me-2"></i> الإشعارات</h5>
+                            <button class="btn btn-sm btn-glass rounded-pill px-3">تحديد الكل كمقروء</button>
+                        </div>
+
+                        <div class="glass-panel p-3 mb-3 d-flex gap-3 align-items-start" style="border-right: 3px solid var(--accent-color);">
+                            <div class="rounded-circle bg-accent bg-opacity-10 d-flex align-items-center justify-content-center flex-shrink-0" style="width:42px;height:42px;">
+                                <i class="fas fa-truck text-accent"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold text-white mb-1">تم شحن طلبك!</h6>
+                                <p class="text-secondary small mb-1">طلب #EDU-48592 في الطريق إليك. التوصيل المتوقع خلال 3 أيام.</p>
+                                <span class="text-accent small en-text">منذ ساعتين</span>
+                            </div>
+                            <span class="badge bg-accent">جديد</span>
+                        </div>
+
+                        <div class="glass-panel p-3 mb-3 d-flex gap-3 align-items-start" style="border-right: 3px solid var(--accent-color);">
+                            <div class="rounded-circle bg-warning bg-opacity-10 d-flex align-items-center justify-content-center flex-shrink-0" style="width:42px;height:42px;">
+                                <i class="fas fa-tag text-warning"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold text-white mb-1">عرض خاص لك!</h6>
+                                <p class="text-secondary small mb-1">احصل على خصم 30% على جميع الإلكترونيات. استخدم كود: TECH30</p>
+                                <span class="text-accent small en-text">منذ 5 ساعات</span>
+                            </div>
+                            <span class="badge bg-accent">جديد</span>
+                        </div>
+
+                        <div class="glass-panel p-3 mb-3 d-flex gap-3 align-items-start">
+                            <div class="rounded-circle bg-success bg-opacity-10 d-flex align-items-center justify-content-center flex-shrink-0" style="width:42px;height:42px;">
+                                <i class="fas fa-check text-success"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold text-white mb-1">تم توصيل طلبك</h6>
+                                <p class="text-secondary small mb-1">طلب #EDU-48401 تم توصيله بنجاح. نتمنى أن ينال إعجابك!</p>
+                                <span class="text-secondary small en-text">منذ 8 أيام</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-panel p-3 d-flex gap-3 align-items-start">
+                            <div class="rounded-circle bg-info bg-opacity-10 d-flex align-items-center justify-content-center flex-shrink-0" style="width:42px;height:42px;">
+                                <i class="fas fa-coins text-info"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <h6 class="fw-bold text-white mb-1">تم إضافة نقاط مكافآت</h6>
+                                <p class="text-secondary small mb-1">تم إضافة 50 نقطة مكافآت لحسابك من طلب #EDU-48401.</p>
+                                <span class="text-secondary small en-text">منذ 8 أيام</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Address Modal -->
+    <div class="modal fade quick-view-modal" id="addAddressModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-white fw-bold"><i class="fas fa-map-marker-alt text-accent me-2"></i> إضافة عنوان جديد</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label text-secondary small">الاسم الكامل</label>
+                                <input type="text" class="form-control bg-glass text-white border-secondary" placeholder="أحمد سعيد">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-secondary small">رقم الهاتف</label>
+                                <input type="tel" class="form-control bg-glass text-white border-secondary" placeholder="+971 50 123 4567">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-secondary small">العنوان</label>
+                                <input type="text" class="form-control bg-glass text-white border-secondary" placeholder="شارع الشيخ زايد، برج الأعمال">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary small">المدينة</label>
+                                <input type="text" class="form-control bg-glass text-white border-secondary" placeholder="دبي">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-secondary small">الدولة</label>
+                                <select class="form-select bg-glass text-white border-secondary">
+                                    <option>الإمارات العربية المتحدة</option>
+                                    <option>المملكة العربية السعودية</option>
+                                    <option>مصر</option>
+                                    <option>الأردن</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-secondary small">الرمز البريدي</label>
+                                <input type="text" class="form-control bg-glass text-white border-secondary" placeholder="00000">
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input bg-glass border-secondary" type="checkbox" id="defaultAddress">
+                                    <label class="form-check-label text-secondary" for="defaultAddress">اجعله العنوان الافتراضي</label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-glass px-4" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="button" class="btn btn-accent px-4">حفظ العنوان</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="glass-panel mt-5 pt-5 pb-3">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-store me-2 text-accent"></i> إديو ستور</h5>
+                    <p class="text-secondary text-sm pe-md-4">متجرك الإلكتروني الأول للتسوق الذكي.</p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="fw-bold mb-3">روابط سريعة</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="products.html" class="text-secondary text-decoration-none nav-link d-inline-block">المنتجات</a></li>
+                        <li class="mb-2"><a href="categories.html" class="text-secondary text-decoration-none nav-link d-inline-block">التصنيفات</a></li>
+                        <li class="mb-2"><a href="who-we-are.html" class="text-secondary text-decoration-none nav-link d-inline-block">من نحن</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <h5 class="fw-bold mb-3">تواصل معنا</h5>
+                    <ul class="list-unstyled text-secondary">
+                        <li class="mb-2"><i class="fas fa-envelope text-accent me-2"></i> support@ediostore.com</li>
+                        <li class="mb-2"><i class="fas fa-phone text-accent me-2"></i> +971 50 123 4567</li>
+                        <li class="mt-4">
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm me-2"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="btn btn-glass btn-sm"><i class="fab fa-linkedin-in"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4 border-opacity-25">
+            <div class="text-center text-secondary small">&copy; 2026 إديو ستور. جميع الحقوق محفوظة.</div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#dashboard-nav .nav-link[data-section]');
+            const sections = document.querySelectorAll('.dashboard-section');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = link.getAttribute('data-section');
+
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+
+                    sections.forEach(s => s.classList.add('d-none'));
+                    const target = document.getElementById('section-' + section);
+                    if (target) {
+                        target.classList.remove('d-none');
+                    }
+                });
+            });
+
+            document.querySelectorAll('[data-section-link]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = link.getAttribute('data-section-link');
+                    const targetNav = document.querySelector(`#dashboard-nav .nav-link[data-section="${section}"]`);
+                    if (targetNav) targetNav.click();
+                });
+            });
+
+            const wl = getWishlist();
+            const container = document.getElementById('dashboard-wishlist-items');
+            if (wl.length === 0) {
+                container.innerHTML = '<div class="col-12 text-center py-5"><i class="far fa-heart fa-3x text-secondary opacity-50 mb-3 d-block"></i><p class="text-secondary">قائمة المفضلة فارغة</p><a href="products.html" class="btn btn-sm btn-accent rounded-pill px-3">تصفح المنتجات</a></div>';
+            } else {
+                let html = '';
+                wl.forEach(product => {
+                    html += `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="glass-card h-100 d-flex flex-column product-card wishlist-item position-relative">
+                            <button class="wishlist-remove-btn" onclick='toggleWishlist(${JSON.stringify(product).replace(/'/g, "&#39;")})'>
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="product-img text-white text-center">
+                                <i class="fas ${product.imgIcon} fa-3x opacity-50"></i>
+                            </div>
+                            <div class="p-3 d-flex flex-column flex-grow-1">
+                                <h6 class="fw-bold text-white mb-2" style="font-size:0.9rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${product.title}</h6>
+                                <div class="product-price mt-auto">
+                                    <span class="current-price" style="font-size:1.1rem;">$${product.newPrice}</span>
+                                    <span class="original-price ms-2">$${product.oldPrice}</span>
+                                </div>
+                                <button class="btn btn-sm btn-accent rounded-pill w-100 mt-2" onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&#39;")})'>
+                                    <i class="fas fa-cart-plus me-1"></i> أضف للسلة
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+                container.innerHTML = html;
+            }
+        });
+    </script>
+</body>
+</html>
