@@ -83,7 +83,7 @@ class SiteSettingsService
             ],
             self::KEY_SITE_ACCENT_COLOR => [
                 'type' => 'color',
-                'default' => '#00D8E4',
+                'default' => '#387e99',
                 'label' => 'لون التمييز (الفرونت اند)',
                 'section' => 'branding',
                 'hint' => 'يُطبَّق على الأزرار، الروابط النشطة، والهيدر. الافتراضي: تركوازي.',

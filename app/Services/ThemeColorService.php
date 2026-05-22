@@ -4,7 +4,7 @@ namespace App\Services;
 
 class ThemeColorService
 {
-    public const DEFAULT_ACCENT = '#00D8E4';
+    public const DEFAULT_ACCENT = '#387e99';
 
     public function __construct(
         protected SiteSettingsService $siteSettings

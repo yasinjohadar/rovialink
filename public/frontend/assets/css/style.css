@@ -165,19 +165,19 @@ body {
 
 
 :root {
-  /* Default: Astra neon cyan (#00D8E4) — overridden by theme-variables from admin */
-  --accent-color: #00D8E4;
-  --accent-hover: #00bec9;
-  --accent-light: #33e8f0;
-  --accent-lighter: #66eff3;
-  --accent-muted: #99f5f7;
-  --accent-rgb: 0, 216, 228;
+  /* Default brand (#387e99) — overridden by theme-variables from admin */
+  --accent-color: #387e99;
+  --accent-hover: #316f87;
+  --accent-light: #7eabbd;
+  --accent-lighter: #a5c5d1;
+  --accent-muted: #cddfe6;
+  --accent-rgb: 56, 126, 153;
 
-  --bg-gradient-1: #ccf9fc;
-  --bg-gradient-2: #e8fdfe;
-  --bg-gradient-3: #99eff5;
+  --bg-gradient-1: #dbe8ed;
+  --bg-gradient-2: #eff5f7;
+  --bg-gradient-3: #bfd6de;
 
-  --text-primary: #004d56;
+  --text-primary: #193945;
   --text-secondary: rgba(0, 77, 86, 0.65);
 
   --glass-bg: rgba(255, 255, 255, 0.55);
@@ -187,7 +187,7 @@ body {
   --glass-hover-bg: rgba(255, 255, 255, 0.75);
   --glass-hover-border: rgba(var(--accent-rgb), 0.4);
 
-  --page-bg: #e8fdfe;
+  --page-bg: #eff5f7;
 }
 
 .text-accent {
@@ -3213,7 +3213,7 @@ html[data-theme="dark"] .phone-code {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #22c55e;
+  background: var(--accent-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3289,7 +3289,7 @@ html[data-theme="dark"] .phone-code {
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-light) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3577,8 +3577,8 @@ html[data-theme="dark"] .phone-code {
 }
 
 .product-badge.new {
-  background: linear-gradient(135deg, #22c55e, #10b981);
-  box-shadow: 0 2px 10px rgba(34, 197, 94, 0.4);
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+  box-shadow: 0 2px 10px rgba(var(--accent-rgb), 0.4);
 }
 
 .product-badge.hot {
@@ -3643,7 +3643,7 @@ html[data-theme="dark"] .phone-code {
 }
 
 .product-stock-badge.in-stock {
-  background: rgba(34, 197, 94, 0.9);
+  background: rgba(var(--accent-rgb), 0.9);
   color: #fff;
 }
 
@@ -3920,7 +3920,7 @@ html[data-theme="dark"] .phone-code {
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #22c55e, #10b981);
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -4168,8 +4168,8 @@ html[data-theme="dark"] .phone-code {
 }
 
 .checkout-step.completed .step-num {
-  background: #22c55e;
-  border-color: #22c55e;
+  background: var(--accent-color);
+  border-color: var(--accent-color);
   color: #fff;
 }
 

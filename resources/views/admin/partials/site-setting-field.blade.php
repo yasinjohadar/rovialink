@@ -112,9 +112,9 @@
         <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
         <div class="d-flex align-items-center gap-2 flex-wrap">
             <input type="color" class="form-control form-control-color @error($key) is-invalid @enderror"
-                   id="color-picker-{{ $key }}" value="{{ $value ?: '#00D8E4' }}" style="width: 3.5rem; height: 2.5rem;">
+                   id="color-picker-{{ $key }}" value="{{ $value ?: '#387e99' }}" style="width: 3.5rem; height: 2.5rem;">
             <input type="text" class="form-control @error($key) is-invalid @enderror" name="{{ $key }}"
-                   id="input-{{ $key }}" value="{{ $value }}" placeholder="#00D8E4" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" maxlength="7" style="max-width: 8rem;">
+                   id="input-{{ $key }}" value="{{ $value }}" placeholder="#387e99" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$" maxlength="7" style="max-width: 8rem;">
         </div>
         @if (!empty($def['hint']))<small class="text-muted d-block mt-1">{{ $def['hint'] }}</small>@endif
         @error($key)<div class="invalid-feedback d-block">{{ $message }}</div>@enderror

@@ -34,7 +34,7 @@ class UpdateSiteSettingsRequest extends FormRequest
             'site_logo_file.max' => 'حجم صورة الشعار يجب ألا يتجاوز 2 ميجابايت.',
             'site_favicon_file.image' => 'يجب أن تكون أيقونة الموقع صورة.',
             'site_favicon_file.max' => 'حجم أيقونة الموقع يجب ألا يتجاوز 512 كيلوبايت.',
-            'site_accent_color.regex' => 'لون التمييز يجب أن يكون بصيغة hex مثل #00D8E4.',
+            'site_accent_color.regex' => 'لون التمييز يجب أن يكون بصيغة hex مثل #387e99.',
         ];
     }
 }
