@@ -438,6 +438,29 @@ function clearCart() {
   }
 }
 
+function refreshWishlistPageAfterToggle(productId, wishlisted) {
+  if (wishlisted || !document.querySelector('.wishlist-page__grid')) {
+    return;
+  }
+  const btn = document.querySelector(
+    `.wishlist-page__grid .product-action-btn[data-wishlist-id="${productId}"]`
+  );
+  if (!btn) {
+    return;
+  }
+  const col = btn.closest('[class*="col-"]');
+  col?.remove();
+  const remaining = document.querySelectorAll('.wishlist-page__grid .product-card').length;
+  if (remaining === 0) {
+    window.location.reload();
+    return;
+  }
+  const countNum = document.querySelector('.wishlist-page__count .en-text');
+  if (countNum) {
+    countNum.textContent = String(remaining);
+  }
+}
+
 async function toggleWishlist(product, event) {
   if (event) {
     event.preventDefault();
@@ -476,6 +499,7 @@ async function toggleWishlist(product, event) {
       syncAuthWishlistProductIds(resolved.id, wishlisted);
       updateWishlistBadge(Number(data.wishlist_count));
       updateWishlistHeartButtons(resolved.id, wishlisted);
+      refreshWishlistPageAfterToggle(resolved.id, wishlisted);
       showToast(data.message || (wishlisted ? 'تمت الإضافة للمفضلة!' : 'تم الإزالة من المفضلة'), wishlisted ? 'success' : 'warning');
     } catch (err) {
       showToast('تعذر تحديث المفضلة', 'error');

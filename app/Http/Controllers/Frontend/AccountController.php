@@ -63,8 +63,11 @@ class AccountController extends Controller
         $statusSteps = $orderStatuses;
         $addresses = $user->addresses()->orderByDesc('is_default')->get();
         $wishlistProducts = $user->wishlistProducts()
-            ->with('images')
+            ->with(['images', 'category', 'brand'])
+            ->withAvg(['reviews' => fn ($q) => $q->where('status', 'approved')], 'rating')
+            ->withCount(['reviews' => fn ($q) => $q->where('status', 'approved')])
             ->visible()
+            ->orderByPivot('wishlists.created_at', 'desc')
             ->get();
 
         $notifications = $this->buildNotifications($user->id);

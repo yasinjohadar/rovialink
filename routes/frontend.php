@@ -83,9 +83,13 @@ Route::prefix('')->name('frontend.')->group(function () {
     });
 
     Route::get('wishlist', function () {
-        $wishlistItems = auth()->check()
-            ? auth()->user()->wishlistProducts()->with('images')->visible()->get()
-            : collect();
+        $wishlistItems = auth()->user()->wishlistProducts()
+            ->with(['images', 'category', 'brand'])
+            ->withAvg(['reviews' => fn ($q) => $q->where('status', 'approved')], 'rating')
+            ->withCount(['reviews' => fn ($q) => $q->where('status', 'approved')])
+            ->visible()
+            ->orderByPivot('wishlists.created_at', 'desc')
+            ->get();
         return view('frontend.pages.wishlist.index', compact('wishlistItems'));
     })->name('wishlist')->middleware('auth');
 
