@@ -203,7 +203,7 @@
   }
 
   document.addEventListener('click', (e) => {
-    const link = e.target.closest('#shop-results-root .pagination a');
+    const link = e.target.closest('#shop-results-root .catalog-pagination__btn[href], #shop-results-root .pagination a');
     if (!link || !link.href) return;
     e.preventDefault();
     fetchFromUrl(link.href);

@@ -27,6 +27,10 @@
   }
 
   function updateHeaderBadge(count) {
+    if (typeof window.updateCartBadge === 'function') {
+      window.updateCartBadge(count);
+      return;
+    }
     document.querySelectorAll('.cart-badge').forEach((badge) => {
       badge.textContent = count;
       if (count > 0) {

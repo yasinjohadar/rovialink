@@ -4,8 +4,6 @@
     @include('frontend.partials.checkout-hero')
 
     <main class="container py-4">
-        <div id="toast-container"></div>
-
         <div class="row g-5">
             <div class="col-lg-7">
                 @include('frontend.partials.checkout-form')

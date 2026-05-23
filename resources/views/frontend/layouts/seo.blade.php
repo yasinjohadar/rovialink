@@ -34,7 +34,7 @@
 @endif
 <meta property="og:type" content="{{ $seo->ogType }}">
 <meta property="og:locale" content="{{ $seo->ogLocale ?? config('seo.locale') }}">
-<meta property="og:site_name" content="{{ $seo->ogSiteName ?? config('seo.site_name') }}">
+<meta property="og:site_name" content="{{ $seo->ogSiteName ?? site_brand_name() }}">
 
 @if($seo->articlePublishedTime)
 <meta property="article:published_time" content="{{ $seo->articlePublishedTime }}">

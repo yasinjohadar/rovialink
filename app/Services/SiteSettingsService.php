@@ -55,10 +55,10 @@ class SiteSettingsService
         return [
             self::KEY_SITE_NAME => [
                 'type' => 'string',
-                'default' => config('app.name', 'المتجر'),
+                'default' => 'RoviaLink',
                 'label' => 'اسم الموقع',
                 'section' => 'general',
-                'hint' => 'يظهر في الهيدر والعنوان والبريد.',
+                'hint' => 'يظهر في الهيدر والفوتر وعناوين الصفحات.',
             ],
             self::KEY_SITE_DESCRIPTION => [
                 'type' => 'string',

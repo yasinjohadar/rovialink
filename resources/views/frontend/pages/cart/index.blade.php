@@ -4,8 +4,6 @@
     @include('frontend.partials.cart-hero')
 
     <main class="container py-4">
-        <div id="toast-container"></div>
-
         <div class="row g-5 section-fade-up">
             <div class="col-lg-8">
                 @include('frontend.partials.cart-items')

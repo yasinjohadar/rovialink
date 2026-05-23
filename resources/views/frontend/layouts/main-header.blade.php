@@ -1,6 +1,9 @@
 @php
     $headerCartCount = collect(session('cart', []))->sum('quantity');
+    $headerWishlistCount = auth()->check() ? auth()->user()->wishlists()->count() : 0;
     $headerSearchQuery = request()->routeIs('frontend.shop.*') ? request('search', '') : '';
+    $siteName = site_brand_name();
+    $siteLogoUrl = site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_LOGO);
 @endphp
 
 <div class="top-bar d-none d-md-block">
@@ -22,9 +25,13 @@
 <nav class="navbar navbar-expand-lg main-nav glass-nav" id="siteMainNav" aria-label="التنقل الرئيسي">
     <div class="container main-nav__container">
         <a class="navbar-brand main-nav__brand" href="{{ url('/') }}">
-            <span class="main-nav__brand-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
+            @if($siteLogoUrl)
+                <img src="{{ $siteLogoUrl }}" alt="{{ $siteName }}" class="main-nav__brand-logo" width="40" height="40">
+            @else
+                <span class="main-nav__brand-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
+            @endif
             <span class="main-nav__brand-text">
-                <span class="main-nav__brand-name">إديو</span><span class="main-nav__brand-accent">ستور</span>
+                <span class="main-nav__brand-name">{{ $siteName }}</span>
             </span>
         </a>
 
@@ -66,7 +73,6 @@
                         value="{{ $headerSearchQuery }}"
                         autocomplete="off"
                     >
-                    <kbd class="main-nav__search-kbd d-none d-xl-inline-flex" aria-hidden="true">Ctrl K</kbd>
                     <button type="submit" class="main-nav__search-submit" aria-label="بحث">
                         <i class="fas fa-arrow-left"></i>
                     </button>
@@ -80,12 +86,12 @@
 
                 <a href="{{ route('frontend.wishlist') }}" class="main-nav__icon-btn" aria-label="المفضلة">
                     <i class="fas fa-heart"></i>
-                    <span class="wishlist-badge">{{ auth()->check() ? auth()->user()->wishlists()->count() : 0 }}</span>
+                    <span class="wishlist-badge" data-initial-count="{{ $headerWishlistCount }}">{{ $headerWishlistCount }}</span>
                 </a>
 
                 <a href="{{ route('frontend.cart.index') }}" class="main-nav__icon-btn {{ request()->routeIs('frontend.cart.*', 'frontend.checkout.*') ? 'is-active' : '' }}" aria-label="سلة التسوق">
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge">{{ $headerCartCount }}</span>
+                    <span class="cart-badge" data-initial-count="{{ $headerCartCount }}">{{ $headerCartCount }}</span>
                 </a>
 
                 @auth
@@ -96,7 +102,7 @@
                     <div class="dropdown main-nav__user">
                         <a href="#" class="main-nav__user-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="main-nav__avatar">{{ $headerInitials }}</span>
-                            <span class="main-nav__user-name d-none d-xl-inline">{{ Str::limit($headerUser->name, 18) }}</span>
+                            <span class="main-nav__user-name d-none d-xl-inline">حسابي</span>
                             <i class="fas fa-chevron-down main-nav__user-chevron"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end main-nav__dropdown">

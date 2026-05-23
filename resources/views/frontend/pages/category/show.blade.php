@@ -6,7 +6,6 @@
     @include('frontend.partials.category-hero', ['category' => $category])
 
     <main class="container py-4">
-        <div id="toast-container"></div>
         <div class="row g-4">
             @include('frontend.partials.shop-sidebar', [
                 'filterAction' => route('frontend.category.show', $category->slug),

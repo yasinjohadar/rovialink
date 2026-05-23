@@ -42,7 +42,10 @@
             @if($hero['image_url'])
                 <div class="col-lg-6 position-relative d-none d-lg-block">
                     <div class="hero-image-wrapper ms-auto">
-                        <img src="{{ $hero['image_url'] }}" alt="{{ $hero['title_prefix'] }}" class="hero-main-image rounded-4 shadow-lg" loading="eager">
+                        <img src="{{ $hero['image_url'] }}"
+                             alt="{{ site_brand_name() }}"
+                             class="hero-main-image"
+                             loading="eager">
                     </div>
                 </div>
             @endif

@@ -5,7 +5,7 @@
 <title>{{ $seo->title }}</title>
 @include('frontend.layouts.seo', ['seo' => $seo])
 @else
-<title>@yield('title', 'متجر إديو ستور - تسوق أونلاين')</title>
+<title>@yield('title', site_brand_name() . ' - تسوق أونلاين')</title>
 @endisset
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">

@@ -8,31 +8,11 @@
             <a href="{{ route('frontend.blog.index') }}" class="btn btn-outline-light rounded-pill px-4 d-none d-md-block">جميع المقالات</a>
         </div>
 
-        <div class="swiper blog-swiper position-relative pb-5">
+        <div class="swiper blog-swiper home-catalog-swiper position-relative">
             <div class="swiper-wrapper">
                 @forelse($blogPosts as $post)
-                <div class="swiper-slide">
-                    <article class="blog-card rounded-4 overflow-hidden h-100">
-                        <div class="blog-image-wrapper">
-                            @if($post->category)
-                            <span class="blog-category-badge">{{ $post->category->name }}</span>
-                            @endif
-                            @if($post->featured_image)
-                            <img src="{{ asset('storage/' . $post->featured_image) }}" alt="{{ $post->title }}" class="w-100 h-100 object-fit-cover">
-                            @else
-                            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="{{ $post->title }}" class="w-100 h-100 object-fit-cover">
-                            @endif
-                        </div>
-                        <div class="p-4">
-                            <div class="blog-meta">
-                                <span><i class="far fa-calendar-alt"></i> {{ $post->published_at ? $post->published_at->format('d F Y') : 'غير محدد' }}</span>
-                                <span><i class="far fa-comment"></i> {{ $post->comments_count ?? 0 }}</span>
-                            </div>
-                            <h3 class="blog-title">{{ $post->title }}</h3>
-                            <p class="text-secondary small mb-4">{{ Str::limit(strip_tags($post->content), 100) }}</p>
-                            <a href="{{ route('frontend.blog.show', $post->slug) }}" class="read-more-link">اقرأ المزيد <i class="fas fa-arrow-left"></i></a>
-                        </div>
-                    </article>
+                <div class="swiper-slide h-auto">
+                    @include('frontend.partials.blog-card', ['post' => $post, 'inSwiper' => true])
                 </div>
                 @empty
                 <div class="swiper-slide">
@@ -44,9 +24,9 @@
                 @endforelse
             </div>
 
-            <div class="swiper-pagination blog-pagination mt-4"></div>
-            <div class="swiper-button-next blog-next"></div>
-            <div class="swiper-button-prev blog-prev"></div>
+            <div class="swiper-pagination home-catalog-pagination blog-pagination"></div>
+            <div class="swiper-button-next home-catalog-next blog-next"></div>
+            <div class="swiper-button-prev home-catalog-prev blog-prev"></div>
         </div>
 
         <div class="text-center mt-4 d-md-none">

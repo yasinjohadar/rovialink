@@ -6,46 +6,48 @@
     @include('frontend.partials.product-detail')
     @include('frontend.partials.product-tabs')
     @include('frontend.partials.related-products')
-</main>
+    </main>
+</div>
 @endsection
 
 @push('scripts')
 <script>
-    function changeQty(delta) {
+    function syncProductQtyStepper() {
         const input = document.getElementById('qty-input');
+        const minus = document.getElementById('product-qty-minus');
+        const plus = document.getElementById('product-qty-plus');
         const cartQty = document.getElementById('cart-qty-input');
         if (!input) return;
-        let val = parseInt(input.value, 10) + delta;
-        const max = parseInt(input.max, 10) || 10;
-        if (val < 1) val = 1;
-        if (val > max) val = max;
+
+        const min = parseInt(input.min, 10) || 1;
+        const max = parseInt(input.max, 10) || 99;
+        let val = parseInt(input.value, 10);
+        if (Number.isNaN(val)) val = min;
+        val = Math.min(max, Math.max(min, val));
         input.value = val;
         if (cartQty) cartQty.value = val;
+        if (minus) minus.disabled = val <= min;
+        if (plus) plus.disabled = val >= max;
     }
 
-    document.getElementById('qty-input')?.addEventListener('change', function () {
-        const cartQty = document.getElementById('cart-qty-input');
-        if (cartQty) cartQty.value = this.value;
-    });
+    function changeQty(delta) {
+        const input = document.getElementById('qty-input');
+        if (!input) return;
+        input.value = parseInt(input.value, 10) + delta;
+        syncProductQtyStepper();
+    }
 
-    document.querySelectorAll('.color-option').forEach(opt => {
+    window.changeQty = changeQty;
+
+    document.getElementById('qty-input')?.addEventListener('change', syncProductQtyStepper);
+    document.getElementById('qty-input')?.addEventListener('input', syncProductQtyStepper);
+    syncProductQtyStepper();
+
+    document.querySelectorAll('.product-page__colors .color-option').forEach(opt => {
         opt.addEventListener('click', () => {
-            document.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+            document.querySelectorAll('.product-page__colors .color-option').forEach(o => o.classList.remove('active'));
             opt.classList.add('active');
         });
-    });
-
-    document.getElementById('wishlist-btn')?.addEventListener('click', function () {
-        const icon = this.querySelector('i');
-        icon.classList.toggle('far');
-        icon.classList.toggle('fas');
-        if (icon.classList.contains('fas')) {
-            icon.style.color = '#ef4444';
-            showToast('تمت إضافة المنتج إلى قائمة الرغبات', 'success');
-        } else {
-            icon.style.color = '';
-            showToast('تمت إزالة المنتج من قائمة الرغبات', 'info');
-        }
     });
 
     const thumbsEl = document.querySelector('.product-thumbs-swiper');
@@ -56,11 +58,14 @@
             slidesPerView: 4,
             freeMode: true,
             watchSlidesProgress: true,
+            breakpoints: {
+                576: { slidesPerView: 5 },
+            },
         });
     }
 
     new Swiper('.product-image-swiper', {
-        spaceBetween: 10,
+        spaceBetween: 0,
         loop: {{ $product->images->count() > 1 ? 'true' : 'false' }},
         navigation: {
             nextEl: '.product-img-next',

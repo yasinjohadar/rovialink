@@ -1,169 +1,218 @@
-<div class="bg-gradient-opacity pt-5 pb-3 mt-5">
-    <div class="container mt-4">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent p-0 m-0 text-secondary">
-                <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}" class="text-decoration-none text-secondary">الرئيسية</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('frontend.shop.index') }}" class="text-decoration-none text-secondary">المنتجات</a></li>
-                @if($product->category)
-                <li class="breadcrumb-item"><a href="{{ route('frontend.category.show', $product->category->slug) }}" class="text-decoration-none text-secondary">{{ $product->category->name }}</a></li>
-                @endif
-                <li class="breadcrumb-item active text-white" aria-current="page">{{ $product->name }}</li>
-            </ol>
-        </nav>
+@php
+    $reviewCount = $product->reviews->count();
+    $avgRating = $product->reviews_avg_rating ?? 0;
+@endphp
+<div class="product-page">
+    <div class="product-page__breadcrumb-wrap">
+        <div class="container">
+            <nav class="product-page__breadcrumb" aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="{{ route('frontend.home') }}">الرئيسية</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('frontend.shop.index') }}">المنتجات</a></li>
+                    @if($product->category)
+                    <li class="breadcrumb-item"><a href="{{ route('frontend.category.show', $product->category->slug) }}">{{ $product->category->name }}</a></li>
+                    @endif
+                    <li class="breadcrumb-item active" aria-current="page">{{ Str::limit($product->name, 48) }}</li>
+                </ol>
+            </nav>
+        </div>
     </div>
-</div>
 
-<main class="container py-4">
-    <div id="toast-container"></div>
-    <div class="row g-5">
-        <div class="col-lg-6">
-            <div class="section-fade-up">
-                <div class="product-gallery">
-                    <div class="glass-card p-3">
-                        <div class="swiper product-image-swiper mb-3">
+    <main class="container product-page__main py-3 py-md-4">
+        <div class="row g-3 g-lg-4 align-items-start">
+            <div class="col-lg-6">
+                <div class="product-page__gallery section-fade-up">
+                    <div class="product-page__media">
+                        <div class="swiper product-image-swiper">
                             <div class="swiper-wrapper" id="product-swiper-wrapper">
                                 @forelse($product->images as $image)
                                 <div class="swiper-slide">
-                                    <div class="product-img text-white text-center rounded-3" style="height: 400px;">
-                                        <img src="{{ product_image_url($image->path, $product->id) }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover" style="border-radius: 12px;">
+                                    <div class="product-page__image-frame">
+                                        <img src="{{ product_image_url($image->path, $product->id) }}"
+                                             alt="{{ $product->name }}"
+                                             class="product-page__image"
+                                             loading="lazy">
                                     </div>
                                 </div>
                                 @empty
                                 <div class="swiper-slide">
-                                    <div class="product-img text-white text-center rounded-3" style="height: 400px;">
-                                        <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover" style="border-radius: 12px;">
+                                    <div class="product-page__image-frame">
+                                        <img src="{{ $product->primary_image_url }}"
+                                             alt="{{ $product->name }}"
+                                             class="product-page__image"
+                                             loading="eager">
                                     </div>
                                 </div>
                                 @endforelse
                             </div>
+                            @if($product->images->count() > 1)
                             <div class="swiper-button-next product-img-next"></div>
                             <div class="swiper-button-prev product-img-prev"></div>
+                            @endif
                         </div>
-                        @if($product->images->count() > 1)
-                        <div thumbsSlider="" class="swiper product-thumbs-swiper">
+                    </div>
+
+                    @if($product->images->count() > 1)
+                    <div class="product-page__thumbs">
+                        <div class="swiper product-thumbs-swiper">
                             <div class="swiper-wrapper" id="product-thumbs-wrapper">
                                 @foreach($product->images as $image)
                                 <div class="swiper-slide">
-                                    <div class="product-img text-white text-center rounded-3" style="height: 80px; cursor: pointer;">
-                                        <img src="{{ product_image_url($image->path, $product->id) }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover" style="border-radius: 8px;">
+                                    <div class="product-page__thumb-frame">
+                                        <img src="{{ product_image_url($image->path, $product->id) }}"
+                                             alt="{{ $product->name }}"
+                                             class="product-page__thumb-image"
+                                             loading="lazy">
                                     </div>
                                 </div>
                                 @endforeach
                             </div>
                         </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="product-page__info section-fade-up">
+                    <div class="product-page__badges">
+                        @if($product->category)
+                        <span class="product-page__badge product-page__badge--category">{{ $product->category->name }}</span>
+                        @endif
+                        @if($product->is_bestseller)
+                        <span class="product-page__badge product-page__badge--hot">الأكثر مبيعاً</span>
+                        @elseif($product->is_new)
+                        <span class="product-page__badge product-page__badge--new">جديد</span>
+                        @endif
+                    </div>
+
+                    <h1 class="product-page__title">{{ $product->name }}</h1>
+
+                    <div class="product-page__meta">
+                        @if($product->brand)
+                        <span class="product-page__meta-item">
+                            <i class="fas fa-tag" aria-hidden="true"></i>
+                            <span class="en-text">{{ $product->brand->name }}</span>
+                        </span>
+                        @endif
+                        <span class="product-page__meta-item">
+                            <span class="stars en-text text-warning">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= floor($avgRating))
+                                        <i class="fas fa-star" aria-hidden="true"></i>
+                                    @elseif($i - 0.5 <= $avgRating)
+                                        <i class="fas fa-star-half-alt" aria-hidden="true"></i>
+                                    @else
+                                        <i class="far fa-star" aria-hidden="true"></i>
+                                    @endif
+                                @endfor
+                            </span>
+                            <span class="en-text">({{ $reviewCount }} تقييم)</span>
+                        </span>
+                        <span class="product-page__meta-item product-page__meta-item--stock {{ $product->in_stock ? 'is-in-stock' : 'is-out-stock' }}">
+                            <i class="fas {{ $product->in_stock ? 'fa-check-circle' : 'fa-times-circle' }}" aria-hidden="true"></i>
+                            {{ $product->in_stock ? 'متاح للشراء' : 'غير متاح' }}
+                        </span>
+                    </div>
+
+                    <div class="product-page__pricing">
+                        <span class="product-page__price en-text">{{ number_format($product->price, 2) }} ر.س</span>
+                        @if($product->compare_at_price && $product->compare_at_price > $product->price)
+                        <span class="product-page__price-old en-text">{{ number_format($product->compare_at_price, 2) }} ر.س</span>
+                        <span class="product-page__discount">خصم {{ $product->discount_percentage }}%</span>
+                        @endif
+                    </div>
+
+                    @if($product->short_description || $product->description)
+                    <p class="product-page__excerpt">{{ $product->short_description ?? Str::limit(strip_tags($product->description), 200) }}</p>
+                    @endif
+
+                    @if($product->colors)
+                    <div class="product-page__field">
+                        <h2 class="product-page__field-label">اللون:</h2>
+                        <div class="color-options product-page__colors" id="color-options">
+                            @foreach(explode(',', $product->colors) as $index => $color)
+                            <div class="color-option {{ $index === 0 ? 'active' : '' }}"
+                                 style="background: {{ trim($color) }};"
+                                 data-color="{{ trim($color) }}"
+                                 role="button"
+                                 tabindex="0"
+                                 aria-label="لون"></div>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+
+                    <div class="product-page__field">
+                        <h2 class="product-page__field-label">الكمية:</h2>
+                        <div class="qty-stepper quantity-selector" role="group" aria-label="اختيار الكمية">
+                            <button type="button" id="product-qty-minus" onclick="changeQty(-1)" aria-label="تقليل الكمية">
+                                <i class="fas fa-minus" aria-hidden="true"></i>
+                            </button>
+                            <input type="number" id="qty-input" value="1" min="1" max="99" inputmode="numeric" aria-label="الكمية">
+                            <button type="button" id="product-qty-plus" onclick="changeQty(1)" aria-label="زيادة الكمية">
+                                <i class="fas fa-plus" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="product-page__actions">
+                        <form method="POST"
+                              action="{{ route('frontend.cart.store') }}"
+                              class="js-add-to-cart-form product-page__cart-form"
+                              id="product-add-to-cart-form">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="quantity" id="cart-qty-input" value="1">
+                            <button type="submit"
+                                    class="btn btn-accent product-page__add-cart"
+                                    @disabled(! $product->in_stock)>
+                                <i class="fas fa-cart-plus ms-2" aria-hidden="true"></i>
+                                أضف إلى السلة
+                            </button>
+                        </form>
+                        <div class="product-page__wishlist-wrap">
+                            @include('frontend.partials.wishlist-button', ['product' => $product])
+                        </div>
+                    </div>
+
+                    <div class="product-page__highlights">
+                        <div class="product-page__highlight">
+                            <i class="fas fa-download" aria-hidden="true"></i>
+                            <span>تسليم رقمي</span>
+                        </div>
+                        <div class="product-page__highlight">
+                            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+                            <span>ضمان سنتين</span>
+                        </div>
+                        <div class="product-page__highlight">
+                            <i class="fas fa-undo" aria-hidden="true"></i>
+                            <span>إرجاع 30 يوم</span>
+                        </div>
+                    </div>
+
+                    @if($product->features)
+                    <div class="product-page__features">
+                        <h2 class="product-page__field-label">مميزات المنتج</h2>
+                        <ul class="product-page__features-list">
+                            @foreach(explode("\n", $product->features) as $feature)
+                                @if(trim($feature) !== '')
+                                <li>
+                                    <i class="fas fa-check" aria-hidden="true"></i>
+                                    {{ trim($feature) }}
+                                </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+
+                    <div class="product-page__footer-meta">
+                        <span><i class="fas fa-share-alt" aria-hidden="true"></i> مشاركة المنتج</span>
+                        @if($product->is_digital ?? true)
+                        <span><i class="fas fa-bolt" aria-hidden="true"></i> منتج رقمي — تسليم فوري</span>
                         @endif
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-6">
-            <div class="section-fade-up product-info">
-                <div class="d-flex align-items-center gap-3 mb-3">
-                    @if($product->category)
-                    <span class="badge bg-glass text-accent px-3 py-2 rounded-pill">{{ $product->category->name }}</span>
-                    @endif
-                    @if($product->is_bestseller)
-                    <span class="badge bg-danger px-3 py-2 rounded-pill">الأكثر مبيعاً</span>
-                    @elseif($product->is_new)
-                    <span class="badge bg-success px-3 py-2 rounded-pill">جديد</span>
-                    @endif
-                </div>
-                <h1 class="product-title mb-3">{{ $product->name }}</h1>
-                
-                <div class="product-meta-info">
-                    @if($product->brand)
-                    <div class="product-meta-item">
-                        <i class="fas fa-tag"></i>
-                        <span class="en-text">{{ $product->brand->name }}</span>
-                    </div>
-                    @endif
-                    <div class="product-meta-item">
-                        <span class="stars en-text text-warning">
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= floor($product->reviews_avg_rating ?? 0))
-                                    <i class="fas fa-star"></i>
-                                @elseif($i - 0.5 <= ($product->reviews_avg_rating ?? 0))
-                                    <i class="fas fa-star-half-alt"></i>
-                                @else
-                                    <i class="far fa-star"></i>
-                                @endif
-                            @endfor
-                        </span>
-                        <span class="en-text text-secondary">({{ $product->reviews->count() }} تقييم)</span>
-                    </div>
-                    <div class="product-meta-item">
-                        <i class="fas fa-download"></i>
-                        <span class="{{ $product->in_stock ? 'text-success' : 'text-danger' }}">
-                            {{ $product->in_stock ? 'متاح للشراء' : 'غير متاح' }}
-                        </span>
-                    </div>
-                </div>
-
-                <hr class="border-secondary border-opacity-25">
-
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    <h2 class="fw-bold text-accent m-0 en-text">{{ $product->price }} ر.س</h2>
-                    @if($product->compare_at_price && $product->compare_at_price > $product->price)
-                    <h4 class="text-secondary text-decoration-line-through opacity-75 m-0 en-text">{{ $product->compare_at_price }} ر.س</h4>
-                    <span class="badge bg-danger">خصم {{ $product->discount_percentage }}%</span>
-                    @endif
-                </div>
-
-                <p class="text-secondary lh-lg mb-4">{{ $product->short_description ?? $product->description }}</p>
-
-                @if($product->colors)
-                <div class="mb-4">
-                    <h6 class="fw-bold text-white mb-3">اللون:</h6>
-                    <div class="color-options" id="color-options">
-                        @foreach(explode(',', $product->colors) as $index => $color)
-                        <div class="color-option {{ $index === 0 ? 'active' : '' }}" style="background: {{ trim($color) }};" data-color="{{ trim($color) }}"></div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-
-                <div class="mb-4">
-                    <h6 class="fw-bold text-white mb-3">الكمية:</h6>
-                    <div class="quantity-selector">
-                        <button onclick="changeQty(-1)">-</button>
-                        <input type="number" id="qty-input" value="1" min="1" max="99">
-                        <button onclick="changeQty(1)">+</button>
-                    </div>
-                </div>
-
-                <div class="d-flex flex-column flex-sm-row gap-3 mb-4 align-items-stretch">
-                    <form method="POST" action="{{ route('frontend.cart.store') }}" class="flex-grow-1 d-flex" id="product-add-to-cart-form">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="quantity" id="cart-qty-input" value="1">
-                        <button type="submit" class="btn btn-accent py-3 fw-bold fs-5 shadow flex-grow-1 w-100" @disabled(! $product->in_stock)>
-                            <i class="fas fa-cart-plus ms-2"></i> أضف إلى السلة
-                        </button>
-                    </form>
-                    <button type="button" class="btn btn-glass py-3 fw-bold text-white" style="width: 55px;" id="wishlist-btn" data-product-id="{{ $product->id }}">
-                        <i class="far fa-heart"></i>
-                    </button>
-                </div>
-
-                <hr class="border-secondary border-opacity-25 my-4">
-
-                @if($product->features)
-                <h6 class="fw-bold text-white mb-3">مميزات المنتج:</h6>
-                <ul class="list-unstyled text-secondary small lh-lg m-0">
-                    @foreach(explode("\n", $product->features) as $feature)
-                    <li class="mb-2 d-flex align-items-center gap-3"><i class="fas fa-check text-accent w-20px text-center"></i> {{ trim($feature) }}</li>
-                    @endforeach
-                </ul>
-                @endif
-
-                <hr class="border-secondary border-opacity-25 my-4">
-                <div class="d-flex gap-3">
-                    <a href="#" class="text-decoration-none text-secondary small fw-bold"><i class="fas fa-share-alt me-2"></i> مشاركة المنتج</a>
-                    @if($product->is_digital ?? true)
-                        <span class="text-secondary small fw-bold"><i class="fas fa-download me-2"></i> منتج رقمي — تسليم فوري</span>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>

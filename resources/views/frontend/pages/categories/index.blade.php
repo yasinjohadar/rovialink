@@ -6,7 +6,6 @@
     @include('frontend.partials.categories-hero')
 
     <main class="container py-4">
-        <div id="toast-container"></div>
         @include('frontend.partials.categories-grid')
     </main>
 @endsection

@@ -25,7 +25,7 @@
                             <span class="original-price ms-2 text-secondary text-decoration-line-through small">{{ number_format($product->compare_at_price, 2) }}</span>
                             @endif
                         </div>
-                        <form method="POST" action="{{ route('frontend.cart.store') }}" class="mt-2">
+                        <form method="POST" action="{{ route('frontend.cart.store') }}" class="js-add-to-cart-form mt-2">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <button type="submit" class="btn btn-sm btn-accent rounded-pill w-100">

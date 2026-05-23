@@ -16,6 +16,18 @@ if (!function_exists('site_setting')) {
     }
 }
 
+if (!function_exists('site_brand_name')) {
+    /**
+     * Display name of the site (header, footer, titles).
+     */
+    function site_brand_name(): string
+    {
+        $name = trim((string) site_setting(SiteSettingsService::KEY_SITE_NAME, ''));
+
+        return $name !== '' ? $name : 'RoviaLink';
+    }
+}
+
 if (!function_exists('site_setting_url')) {
     /**
      * Get the full URL for a site setting that stores a file path (e.g. site_logo, site_favicon).

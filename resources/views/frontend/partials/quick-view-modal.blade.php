@@ -41,7 +41,33 @@
                             <p class="qv-muted lh-lg mb-4" id="qv-description"></p>
                             <a href="#" class="text-accent small mb-3 d-inline-block" id="qv-details-link">عرض التفاصيل الكاملة <i class="fas fa-arrow-left ms-1"></i></a>
                             <div class="mb-4" id="qv-color-section"><h6 class="fw-bold qv-heading mb-3">اللون:</h6><div class="color-options" id="qv-colors"></div></div>
-                            <div class="mb-4"><h6 class="fw-bold qv-heading mb-3">الكمية:</h6><div class="quantity-selector"><button type="button" onclick="qvChangeQty(-1)">-</button><input type="number" id="qv-qty" value="1" min="1" max="10"><button type="button" onclick="qvChangeQty(1)">+</button></div></div>
+                            <div class="mb-4 qv-qty-block">
+                                <h6 class="fw-bold qv-heading qv-qty-block__label mb-2">الكمية:</h6>
+                                <div class="qty-stepper" role="group" aria-label="اختيار الكمية">
+                                    <button type="button"
+                                            class="qty-stepper__btn"
+                                            id="qv-qty-minus"
+                                            onclick="qvChangeQty(-1)"
+                                            aria-label="تقليل الكمية">
+                                        <i class="fas fa-minus" aria-hidden="true"></i>
+                                    </button>
+                                    <input type="number"
+                                           class="qty-stepper__input"
+                                           id="qv-qty"
+                                           value="1"
+                                           min="1"
+                                           max="10"
+                                           inputmode="numeric"
+                                           aria-label="الكمية">
+                                    <button type="button"
+                                            class="qty-stepper__btn"
+                                            id="qv-qty-plus"
+                                            onclick="qvChangeQty(1)"
+                                            aria-label="زيادة الكمية">
+                                        <i class="fas fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <div class="d-flex gap-3 mt-auto"><button class="btn btn-accent py-3 fw-bold flex-grow-1" id="qv-add-cart"><i class="fas fa-cart-plus ms-2"></i> أضف إلى السلة</button><button class="btn btn-glass py-3" style="width: 55px;" id="qv-wishlist"><i class="far fa-heart"></i></button></div>
                             <div class="row g-2 mt-3"><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2"><i class="fas fa-download text-accent mb-1 d-block"></i><small class="qv-muted">تسليم رقمي</small></div></div><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2"><i class="fas fa-shield-halved text-accent mb-1 d-block"></i><small class="qv-muted">ضمان سنتين</small></div></div><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2"><i class="fas fa-undo text-accent mb-1 d-block"></i><small class="qv-muted">إرجاع 30 يوم</small></div></div></div>
                         </div>

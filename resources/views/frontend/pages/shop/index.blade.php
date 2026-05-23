@@ -3,9 +3,8 @@
 @section('content')
     @include('frontend.partials.shop-hero')
 
-    <main class="container py-4">
-        <div id="toast-container"></div>
-        <div class="row g-4">
+    <main class="container shop-page py-3 py-md-4">
+        <div class="row g-3 g-lg-4 shop-page__layout">
             @include('frontend.partials.shop-sidebar')
 
             <div class="col-lg-9">

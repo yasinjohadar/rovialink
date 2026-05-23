@@ -1,7 +1,6 @@
-<hr class="border-secondary border-opacity-25 my-5">
-<div class="mb-5 section-fade-up product-page-related">
-    <h3 class="fw-bold mb-4 text-accent">منتجات قد تعجبك أيضاً</h3>
-    <div class="row g-4">
+<section class="product-page__related section-fade-up">
+    <h2 class="product-page__related-title">منتجات قد تعجبك أيضاً</h2>
+    <div class="row g-3">
         @forelse($relatedProducts as $related)
             @include('frontend.partials.product-card', [
                 'product' => $related,
@@ -13,4 +12,4 @@
         </div>
         @endforelse
     </div>
-</div>
+</section>

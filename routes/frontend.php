@@ -78,6 +78,10 @@ Route::prefix('')->name('frontend.')->group(function () {
         Route::delete('wishlist/{product}', [AccountController::class, 'removeWishlist'])->name('account.wishlist.remove');
     });
 
+    Route::middleware('auth')->group(function () {
+        Route::post('wishlist/{product}/toggle', [AccountController::class, 'toggleWishlist'])->name('wishlist.toggle');
+    });
+
     Route::get('wishlist', function () {
         $wishlistItems = auth()->check()
             ? auth()->user()->wishlistProducts()->with('images')->visible()->get()

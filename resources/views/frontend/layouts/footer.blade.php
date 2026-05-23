@@ -13,7 +13,7 @@
                 <div class="row align-items-center g-4 g-lg-5">
                     <div class="col-lg-5 col-xl-5">
                         <span class="footer-cta-badge"><i class="fas fa-bolt"></i> عروض حصرية</span>
-                        <h3 class="footer-cta-title mb-2">انضم لنشرة إديو ستور</h3>
+                        <h3 class="footer-cta-title mb-2">انضم لنشرة {{ site_brand_name() }}</h3>
                         <p class="footer-cta-text mb-0">احصل على خصومات أسبوعية وإشعارات المنتجات الجديدة قبل الجميع.</p>
                     </div>
                     <div class="col-lg-7 col-xl-7">
@@ -49,7 +49,7 @@
                     <a href="{{ route('frontend.home') }}" class="footer-brand d-inline-flex align-items-center text-decoration-none mb-3">
                         <span class="footer-brand__icon"><i class="fas fa-store"></i></span>
                         <span class="footer-brand__text">
-                            <span class="footer-brand__name">إديو <em>ستور</em></span>
+                            <span class="footer-brand__name">{{ site_brand_name() }}</span>
                             <span class="footer-brand__tagline en-text">Smart Shopping</span>
                         </span>
                     </a>
@@ -197,7 +197,7 @@
         <div class="container">
             <div class="footer-bottom-inner">
                 <p class="footer-copyright mb-0">
-                    &copy; {{ date('Y') }} <strong>إديو ستور</strong>. جميع الحقوق محفوظة.
+                    &copy; {{ date('Y') }} <strong>{{ site_brand_name() }}</strong>. جميع الحقوق محفوظة.
                 </p>
                 <div class="footer-payments" aria-label="طرق الدفع">
                     <span class="footer-payment" title="Visa"><i class="fab fa-cc-visa"></i></span>

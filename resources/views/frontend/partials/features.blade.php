@@ -2,7 +2,7 @@
     <div class="container py-4">
         <div class="text-center mb-5">
             <h6 class="text-accent fw-bold text-uppercase tracking-wide">لماذا نحن؟</h6>
-            <h2 class="fw-bold m-0">مميزات إديو ستور</h2>
+            <h2 class="fw-bold m-0">مميزات {{ site_brand_name() }}</h2>
         </div>
         <div class="row g-4 features-elegant-row">
             <div class="col-md-6 col-lg-3">

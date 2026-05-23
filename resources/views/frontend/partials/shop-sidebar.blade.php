@@ -6,64 +6,121 @@
     $selectedCategory = request('category', $activeCategorySlug ?? '');
 @endphp
 <aside class="col-lg-3">
-    <form method="GET" action="{{ $filterAction }}" id="shop-filters-form" class="glass-panel p-4 sticky-top section-fade-up" style="top: 100px; z-index: 10;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold m-0"><i class="fas fa-filter text-accent me-2"></i> تصفية</h5>
-            <a href="{{ $filterAction }}" id="shop-filters-reset" class="btn btn-sm btn-outline-secondary py-0 border-0" style="font-size: 0.85rem">إعادة ضبط</a>
-        </div>
+    <form method="GET"
+          action="{{ $filterAction }}"
+          id="shop-filters-form"
+          class="shop-filters section-fade-up sticky-top">
+        <div class="shop-filters__card">
+            <header class="shop-filters__header">
+                <div class="shop-filters__title">
+                    <span class="shop-filters__title-icon" aria-hidden="true"><i class="fas fa-sliders"></i></span>
+                    <h2 class="shop-filters__heading">تصفية</h2>
+                </div>
+                <a href="{{ $filterAction }}" id="shop-filters-reset" class="shop-filters__reset">إعادة ضبط</a>
+            </header>
 
-        <div class="mb-4">
-            <label class="form-label small text-secondary" for="search-input">بحث</label>
-            <input type="text" id="search-input" name="search" value="{{ request('search') }}"
-                class="form-control bg-glass text-white rounded-3 border-secondary" placeholder="ابحث عن منتج...">
-        </div>
-
-        <div class="mb-4">
-            <h6 class="fw-bold mb-3">التصنيف</h6>
-            <div class="form-check mb-2">
-                <input class="form-check-input bg-glass border-secondary" type="radio" name="category" value=""
-                    id="cat-all" @checked($selectedCategory === '')>
-                <label class="form-check-label text-secondary" for="cat-all">جميع التصنيفات</label>
+            <div class="shop-filters__section">
+                <label class="shop-filters__label" for="search-input">بحث</label>
+                <div class="shop-filters__search">
+                    <i class="fas fa-search shop-filters__search-icon" aria-hidden="true"></i>
+                    <input type="search"
+                           id="search-input"
+                           name="search"
+                           value="{{ request('search') }}"
+                           class="shop-filters__input"
+                           placeholder="ابحث عن منتج، مفتاح، أو برنامج..."
+                           autocomplete="off">
+                </div>
             </div>
-            @foreach($categories as $category)
-            <div class="form-check mb-2">
-                <input class="form-check-input bg-glass border-secondary" type="radio" name="category"
-                    value="{{ $category->slug }}" id="cat-{{ $category->slug }}"
-                    @checked($selectedCategory === $category->slug)>
-                <label class="form-check-label text-secondary" for="cat-{{ $category->slug }}">{{ $category->name }}</label>
+
+            <div class="shop-filters__section">
+                <h3 class="shop-filters__section-title">التصنيف</h3>
+                <ul class="shop-filters__list">
+                    <li>
+                        <label class="shop-filters__option" for="cat-all">
+                            <input class="shop-filters__radio"
+                                   type="radio"
+                                   name="category"
+                                   value=""
+                                   id="cat-all"
+                                   @checked($selectedCategory === '')>
+                            <span class="shop-filters__option-indicator" aria-hidden="true"></span>
+                            <span class="shop-filters__option-text">جميع التصنيفات</span>
+                        </label>
+                    </li>
+                    @foreach($categories as $category)
+                    <li>
+                        <label class="shop-filters__option" for="cat-{{ $category->slug }}">
+                            <input class="shop-filters__radio"
+                                   type="radio"
+                                   name="category"
+                                   value="{{ $category->slug }}"
+                                   id="cat-{{ $category->slug }}"
+                                   @checked($selectedCategory === $category->slug)>
+                            <span class="shop-filters__option-indicator" aria-hidden="true"></span>
+                            <span class="shop-filters__option-text">{{ $category->name }}</span>
+                        </label>
+                    </li>
+                    @endforeach
+                </ul>
             </div>
-            @endforeach
-        </div>
 
-        <hr class="border-secondary border-opacity-25 mb-4">
-
-        <div class="mb-4">
-            <h6 class="fw-bold mb-3">السعر (حتى: <span id="price-val" class="text-accent en-text fw-bold">{{ $currentMax }}</span> ر.س)</h6>
-            <input type="range" class="form-range" name="max_price" min="0" max="{{ $maxPrice }}"
-                value="{{ min($currentMax, $maxPrice) }}" id="price-range"
-                oninput="document.getElementById('price-val').textContent = this.value">
-            <input type="hidden" name="min_price" value="{{ $currentMin }}">
-        </div>
-
-        <hr class="border-secondary border-opacity-25 mb-4">
-
-        <div class="mb-4">
-            <h6 class="fw-bold mb-3">العلامة التجارية</h6>
-            <div class="form-check mb-2">
-                <input class="form-check-input bg-glass border-secondary" type="radio" name="brand" value=""
-                    id="brand-all" @checked(!request('brand'))>
-                <label class="form-check-label text-secondary" for="brand-all">الكل</label>
+            <div class="shop-filters__section">
+                <h3 class="shop-filters__section-title">
+                    نطاق السعر
+                    <span class="shop-filters__price-value en-text">
+                        حتى <strong id="price-val">{{ min($currentMax, $maxPrice) }}</strong> ر.س
+                    </span>
+                </h3>
+                <div class="shop-filters__range-wrap">
+                    <input type="range"
+                           class="shop-filters__range"
+                           name="max_price"
+                           min="0"
+                           max="{{ $maxPrice }}"
+                           value="{{ min($currentMax, $maxPrice) }}"
+                           id="price-range"
+                           oninput="document.getElementById('price-val').textContent = this.value">
+                </div>
+                <input type="hidden" name="min_price" value="{{ $currentMin }}">
             </div>
-            @foreach($brands as $brand)
-            <div class="form-check mb-2">
-                <input class="form-check-input bg-glass border-secondary" type="radio" name="brand"
-                    value="{{ $brand->slug }}" id="brand-{{ $brand->slug }}"
-                    @checked(request('brand') === $brand->slug)>
-                <label class="form-check-label text-secondary" for="brand-{{ $brand->slug }}">{{ $brand->name }}</label>
-            </div>
-            @endforeach
-        </div>
 
-        <button type="submit" class="btn btn-accent w-100 rounded-3 fw-bold">تطبيق التصفية</button>
+            <div class="shop-filters__section">
+                <h3 class="shop-filters__section-title">العلامة التجارية</h3>
+                <ul class="shop-filters__list">
+                    <li>
+                        <label class="shop-filters__option" for="brand-all">
+                            <input class="shop-filters__radio"
+                                   type="radio"
+                                   name="brand"
+                                   value=""
+                                   id="brand-all"
+                                   @checked(!request('brand'))>
+                            <span class="shop-filters__option-indicator" aria-hidden="true"></span>
+                            <span class="shop-filters__option-text">الكل</span>
+                        </label>
+                    </li>
+                    @foreach($brands as $brand)
+                    <li>
+                        <label class="shop-filters__option" for="brand-{{ $brand->slug }}">
+                            <input class="shop-filters__radio"
+                                   type="radio"
+                                   name="brand"
+                                   value="{{ $brand->slug }}"
+                                   id="brand-{{ $brand->slug }}"
+                                   @checked(request('brand') === $brand->slug)>
+                            <span class="shop-filters__option-indicator" aria-hidden="true"></span>
+                            <span class="shop-filters__option-text">{{ $brand->name }}</span>
+                        </label>
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <button type="submit" class="btn btn-accent shop-filters__submit w-100">
+                <i class="fas fa-check ms-2"></i>
+                تطبيق التصفية
+            </button>
+        </div>
     </form>
 </aside>

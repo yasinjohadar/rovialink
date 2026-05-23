@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'site_name' => env('SEO_SITE_NAME', 'إديو ستور'),
-    'default_title' => env('SEO_DEFAULT_TITLE', 'متجر إديو ستور - تسوق أونلاين'),
+    'site_name' => env('SEO_SITE_NAME', 'RoviaLink'),
+    'default_title' => env('SEO_DEFAULT_TITLE', 'RoviaLink - تسوق أونلاين'),
     'default_description' => env('SEO_DEFAULT_DESCRIPTION', 'متجرك الإلكتروني الأول للتسوق الذكي. اكتشف أفضل المنتجات بأسعار تنافسية.'),
-    'default_keywords' => env('SEO_DEFAULT_KEYWORDS', 'متجر إلكتروني, تسوق أونلاين, إديو ستور'),
+    'default_keywords' => env('SEO_DEFAULT_KEYWORDS', 'متجر إلكتروني, تسوق أونلاين, RoviaLink'),
     'default_og_image' => env('SEO_DEFAULT_OG_IMAGE', '/frontend/assets/images/logo.png'),
     'organization_logo' => env('SEO_ORGANIZATION_LOGO', '/frontend/assets/images/logo.png'),
     'twitter_site' => env('SEO_TWITTER_SITE', ''),

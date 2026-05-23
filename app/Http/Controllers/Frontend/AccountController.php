@@ -17,6 +17,7 @@ use App\Models\OrderStatusHistory;
 use App\Models\Product;
 use App\Models\Wishlist;
 use App\Services\Seo\SeoBuilder;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -268,6 +269,34 @@ class AccountController extends Controller
 
         return redirect()->to(route('frontend.account') . '#wishlist')
             ->with('success', 'تمت إزالة المنتج من المفضلة.');
+    }
+
+    public function toggleWishlist(Request $request, Product $product): JsonResponse
+    {
+        $user = $request->user();
+
+        $existing = Wishlist::where('user_id', $user->id)
+            ->where('product_id', $product->id)
+            ->first();
+
+        if ($existing) {
+            $existing->delete();
+            $wishlisted = false;
+            $message = 'تم الإزالة من المفضلة';
+        } else {
+            Wishlist::create([
+                'user_id' => $user->id,
+                'product_id' => $product->id,
+            ]);
+            $wishlisted = true;
+            $message = 'تمت الإضافة للمفضلة!';
+        }
+
+        return response()->json([
+            'wishlisted' => $wishlisted,
+            'wishlist_count' => $user->wishlists()->count(),
+            'message' => $message,
+        ]);
     }
 
     protected function buildNotifications(int $userId): Collection
