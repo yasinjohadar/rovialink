@@ -5,15 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class Brand extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'image', 'order'];
+    protected $fillable = ['name', 'slug', 'image', 'order', 'show_on_homepage'];
 
-    protected $casts = ['order' => 'integer'];
+    protected $casts = [
+        'order' => 'integer',
+        'show_on_homepage' => 'boolean',
+    ];
 
     protected static function boot()
     {
@@ -26,7 +28,7 @@ class Brand extends Model
         });
 
         static::updating(function ($brand) {
-            if ($brand->isDirty('name') && !$brand->isDirty('slug')) {
+            if ($brand->isDirty('name') && ! $brand->isDirty('slug')) {
                 $brand->slug = Str::slug($brand->name);
             }
         });
@@ -37,8 +39,8 @@ class Brand extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function getImageUrlAttribute()
+    public function getImageUrlAttribute(): ?string
     {
-        return $this->image ? Storage::url($this->image) : null;
+        return brand_image_url($this->image);
     }
 }

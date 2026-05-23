@@ -3,17 +3,18 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
 use App\Http\Requests\Admin\StoreBrandRequest;
 use App\Http\Requests\Admin\UpdateBrandRequest;
+use App\Models\Brand;
+use App\Services\Storage\StorageHelperService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BrandController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        protected StorageHelperService $storageHelper
+    ) {
         $this->middleware('auth');
     }
 
@@ -30,6 +31,7 @@ class BrandController extends Controller
         }
 
         $brands = $query->paginate(15);
+
         return view('admin.pages.brands.index', compact('brands'));
     }
 
@@ -45,11 +47,22 @@ class BrandController extends Controller
             $data['slug'] = Str::slug($data['name']);
         }
 
+        $data['show_on_homepage'] = $request->boolean('show_on_homepage');
+
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('brands', 'public');
+            $image = $request->file('image');
+            $imageName = time().'_'.Str::slug($data['name']).'.'.$image->getClientOriginalExtension();
+            $data['image'] = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'brands',
+                $image,
+                'image',
+                $imageName
+            ) ?: null;
         }
 
         Brand::create($data);
+
         return redirect()->route('admin.brands.index')->with('success', 'تم إضافة الماركة بنجاح.');
     }
 
@@ -65,23 +78,35 @@ class BrandController extends Controller
             $data['slug'] = Str::slug($data['name']);
         }
 
+        $data['show_on_homepage'] = $request->boolean('show_on_homepage');
+
         if ($request->hasFile('image')) {
-            if ($brand->image && Storage::disk('public')->exists($brand->image)) {
-                Storage::disk('public')->delete($brand->image);
+            if ($brand->image) {
+                $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $brand->image);
             }
-            $data['image'] = $request->file('image')->store('brands', 'public');
+            $image = $request->file('image');
+            $imageName = time().'_'.Str::slug($data['name']).'.'.$image->getClientOriginalExtension();
+            $data['image'] = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'brands',
+                $image,
+                'image',
+                $imageName
+            ) ?: $brand->image;
         }
 
         $brand->update($data);
+
         return redirect()->route('admin.brands.index')->with('success', 'تم تحديث الماركة بنجاح.');
     }
 
     public function destroy(Brand $brand)
     {
-        if ($brand->image && Storage::disk('public')->exists($brand->image)) {
-            Storage::disk('public')->delete($brand->image);
+        if ($brand->image) {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $brand->image);
         }
         $brand->delete();
+
         return redirect()->route('admin.brands.index')->with('success', 'تم حذف الماركة بنجاح.');
     }
 }

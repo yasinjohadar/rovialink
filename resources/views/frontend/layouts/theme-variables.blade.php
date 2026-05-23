@@ -5,6 +5,7 @@
 :root {
   --accent-color: {{ $themeColors['accent'] }};
   --accent-hover: {{ $themeColors['accent_hover'] }};
+  --accent-active: {{ $themeColors['accent_active'] }};
   --accent-light: {{ $themeColors['accent_light'] }};
   --accent-lighter: {{ $themeColors['accent_lighter'] }};
   --accent-muted: {{ $themeColors['accent_muted'] }};

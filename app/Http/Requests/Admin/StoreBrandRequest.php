@@ -18,6 +18,7 @@ class StoreBrandRequest extends FormRequest
             'slug' => ['nullable', 'string', 'max:255', 'unique:brands,slug'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
             'order' => ['nullable', 'integer', 'min:0'],
+            'show_on_homepage' => ['nullable', 'boolean'],
         ];
     }
 }

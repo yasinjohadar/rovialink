@@ -1,15 +1,24 @@
-<section class="py-5 section-fade-up">
+<section class="newsletter-block section-fade-up py-5">
     <div class="container pb-5">
-        <div class="glass-card p-4 p-md-5 text-center position-relative overflow-hidden">
-            <div class="position-absolute shape shape-1" style="width: 150px; height: 150px; top:-50px; left:-50px;"></div>
-            <div class="position-absolute shape shape-2" style="width: 200px; height: 200px; bottom:-100px; right:-50px;"></div>
-
-            <div class="position-relative z-1 max-w-lg mx-auto" style="max-width: 600px; margin: 0 auto;">
-                <h2 class="fw-bold mb-3">انضم لنشرتنا البريدية</h2>
-                <p class="text-secondary mb-4">اشترك ليصلك آخر العروض والخصومات الحصرية مباشرة إلى بريدك.</p>
-                <form class="d-flex flex-column flex-sm-row gap-2 justify-content-center">
-                    <input type="email" class="form-control bg-glass border-secondary text-white rounded-pill px-4 py-2 flex-grow-1" placeholder="أدخل بريدك الإلكتروني" required>
-                    <button type="submit" class="btn btn-accent rounded-pill px-5 text-nowrap">اشترك الآن</button>
+        <div class="newsletter-block__card">
+            <div class="newsletter-block__glow" aria-hidden="true"></div>
+            <div class="newsletter-block__inner">
+                <div class="newsletter-block__icon" aria-hidden="true">
+                    <i class="fas fa-envelope-open-text"></i>
+                </div>
+                <h2 class="newsletter-block__title">انضم لنشرتنا البريدية</h2>
+                <p class="newsletter-block__desc">اشترك ليصلك آخر العروض والخصومات الحصرية مباشرة إلى بريدك.</p>
+                <form class="newsletter-block__form" action="#" method="post">
+                    @csrf
+                    <label class="visually-hidden" for="homepage-newsletter-email">البريد الإلكتروني</label>
+                    <input type="email"
+                           id="homepage-newsletter-email"
+                           name="email"
+                           class="newsletter-block__input"
+                           placeholder="أدخل بريدك الإلكتروني"
+                           required
+                           autocomplete="email">
+                    <button type="submit" class="btn btn-accent newsletter-block__btn">اشترك الآن</button>
                 </form>
             </div>
         </div>

@@ -50,6 +50,14 @@
                                 @error('order')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-12">
+                                <div class="form-check">
+                                    <input type="hidden" name="show_on_homepage" value="0">
+                                    <input class="form-check-input" type="checkbox" name="show_on_homepage" id="show_on_homepage" value="1" {{ old('show_on_homepage', true) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="show_on_homepage">عرض في شريط الصفحة الرئيسية</label>
+                                </div>
+                                <small class="text-muted d-block mt-1">يجب رفع صورة الشعار (يفضّل PNG بخلفية شفافة) ليظهر في الشريط المتحرك.</small>
+                            </div>
+                            <div class="col-12">
                                 <button type="submit" class="btn btn-primary">حفظ الماركة</button>
                                 <a href="{{ route('admin.brands.index') }}" class="btn btn-secondary">إلغاء</a>
                             </div>

@@ -48,6 +48,7 @@
                                             <th scope="col">الاسم</th>
                                             <th scope="col">الرابط (Slug)</th>
                                             <th scope="col" style="width: 80px;">الترتيب</th>
+                                            <th scope="col" style="width: 100px;">الرئيسية</th>
                                             <th scope="col" style="width: 180px;">العمليات</th>
                                         </tr>
                                     </thead>
@@ -66,6 +67,13 @@
                                                 <td><code class="text-primary">{{ $brand->slug }}</code></td>
                                                 <td>{{ $brand->order }}</td>
                                                 <td>
+                                                    @if($brand->show_on_homepage)
+                                                        <span class="badge bg-success-transparent text-success">نعم</span>
+                                                    @else
+                                                        <span class="badge bg-secondary-transparent text-muted">لا</span>
+                                                    @endif
+                                                </td>
+                                                <td>
                                                     <div class="d-flex gap-2">
                                                         <a href="{{ route('admin.brands.edit', $brand) }}" class="btn btn-sm btn-primary" title="تعديل">تعديل</a>
                                                         <form action="{{ route('admin.brands.destroy', $brand) }}" method="POST" class="d-inline" onsubmit="return confirm('حذف هذه الماركة؟');">
@@ -78,7 +86,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="6" class="text-center py-4 text-muted">لا توجد ماركات. <a href="{{ route('admin.brands.create') }}">إضافة ماركة</a></td>
+                                                <td colspan="7" class="text-center py-4 text-muted">لا توجد ماركات. <a href="{{ route('admin.brands.create') }}">إضافة ماركة</a></td>
                                             </tr>
                                         @endforelse
                                     </tbody>

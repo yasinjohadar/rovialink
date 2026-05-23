@@ -28,19 +28,6 @@
         }
     });
 
-    const brandsSwiper = new Swiper('.brands-swiper', {
-        slidesPerView: 3,
-        spaceBetween: 20,
-        loop: true,
-        autoplay: { delay: 3000, disableOnInteraction: false },
-        pagination: { el: '.brands-pagination', clickable: true },
-        breakpoints: {
-            576:  { slidesPerView: 4 },
-            992:  { slidesPerView: 5 },
-            1200: { slidesPerView: 6 }
-        }
-    });
-
     const blogSwiper = new Swiper('.blog-swiper', {
         slidesPerView: 1,
         spaceBetween: 24,

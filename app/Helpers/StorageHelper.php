@@ -200,6 +200,24 @@ if (!function_exists('product_image_url')) {
     }
 }
 
+if (!function_exists('brand_image_url')) {
+    /**
+     * @param  string|null  $imagePath
+     */
+    function brand_image_url($imagePath): ?string
+    {
+        if (empty($imagePath)) {
+            return null;
+        }
+
+        if (str_starts_with($imagePath, 'http://') || str_starts_with($imagePath, 'https://')) {
+            return $imagePath;
+        }
+
+        return media_url($imagePath);
+    }
+}
+
 if (!function_exists('category_image_url')) {
     /**
      * Get the URL for a category image with fallback to default image

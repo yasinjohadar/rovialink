@@ -74,7 +74,7 @@
                                     <a href="{{ route('admin.categories.index') }}" class="side-menu__item">التصنيفات</a>
                                 </li>
                                 <li class="slide {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.brands.index') }}" class="side-menu__item">الماركات</a>
+                                    <a href="{{ route('admin.brands.index') }}" class="side-menu__item">العلامات التجارية</a>
                                 </li>
                                 <li class="slide {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.products.index') }}" class="side-menu__item">المنتجات</a>

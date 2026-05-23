@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Models\Category;
 use App\Models\BlogPost;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 
 class HomeController extends Controller
 {
@@ -34,8 +35,17 @@ class HomeController extends Controller
 
         $blogPosts = BlogPost::published()->with(['author', 'category'])->latest('published_at')->limit(4)->get();
 
+        $homepageBrands = Brand::query()
+            ->where('show_on_homepage', true)
+            ->whereNotNull('image')
+            ->where('image', '!=', '')
+            ->orderBy('order')
+            ->orderBy('name')
+            ->get();
+
         return view('frontend.pages.index', compact(
             'categories',
+            'homepageBrands',
             'featuredProducts',
             'newArrivals',
             'bestSellers',

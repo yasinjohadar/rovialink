@@ -27,6 +27,7 @@ class ThemeColorService
     {
         $accent = $this->accentHex();
         $hover = $this->darken($accent, 0.12);
+        $active = $this->darken($hover, 0.1);
         $light = $this->lighten($accent, 0.35);
         $lighter = $this->lighten($accent, 0.55);
         $muted = $this->lighten($accent, 0.75);
@@ -35,13 +36,14 @@ class ThemeColorService
         return [
             'accent' => $accent,
             'accent_hover' => $hover,
+            'accent_active' => $active,
             'accent_light' => $light,
             'accent_lighter' => $lighter,
             'accent_muted' => $muted,
             'accent_rgb' => $rgb,
-            'bg_gradient_1' => $this->lighten($accent, 0.9),
-            'bg_gradient_2' => $this->lighten($accent, 0.96),
-            'bg_gradient_3' => $this->lighten($accent, 0.88),
+            'bg_gradient_1' => $this->lighten($accent, 0.94),
+            'bg_gradient_2' => $this->lighten($accent, 0.98),
+            'bg_gradient_3' => $this->lighten($accent, 0.96),
             'page_bg' => $this->lighten($accent, 0.96),
             'glass_shadow' => "rgba({$rgb}, 0.12)",
             'glass_border_dark' => "rgba({$rgb}, 0.3)",
