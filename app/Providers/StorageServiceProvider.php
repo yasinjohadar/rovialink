@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use App\Models\StorageDiskMapping;
 use App\Services\Storage\AppStorageFactory;
+use App\Support\StorageConfigHelper;
 use Illuminate\Support\Facades\Log;
 
 class StorageServiceProvider extends ServiceProvider
@@ -159,7 +160,7 @@ class StorageServiceProvider extends ServiceProvider
                 'region' => $config['region'] ?? 'us-east-1',
                 'bucket' => $config['bucket'] ?? '',
                 'endpoint' => $config['endpoint'] ?? null,
-                'use_path_style_endpoint' => $config['use_path_style'] ?? false,
+                'use_path_style_endpoint' => StorageConfigHelper::toBool($config['use_path_style'] ?? false),
             ],
             'google_drive' => [
                 'driver' => 'google',

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Support\StorageConfigHelper;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
@@ -108,6 +109,8 @@ class AppStorageConfig extends Model
     public function setConfigAttribute($value)
     {
         if (is_array($value)) {
+            $value = StorageConfigHelper::normalizeS3Flags($value);
+
             // إزالة الحقول الفارغة للـ passwords
             $filtered = array_filter($value, function($v) {
                 return $v !== null && $v !== '';

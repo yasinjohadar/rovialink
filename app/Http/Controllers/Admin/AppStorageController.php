@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AppStorageConfig;
+use App\Support\StorageConfigHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -93,6 +94,8 @@ class AppStorageController extends Controller
                     }
                 }
             }
+
+            $configData = $this->normalizeStorageConfig($driver, $configData, $request->input('config', []));
 
             $createData = [
                 'name' => $validated['name'],
@@ -204,6 +207,8 @@ class AppStorageController extends Controller
                 }
             }
 
+            $configData = $this->normalizeStorageConfig($driver, $configData, $request->input('config', []));
+
             $updateData = [
                 'name' => $validated['name'],
                 'driver' => $driver,
@@ -272,7 +277,11 @@ class AppStorageController extends Controller
             ]);
 
             $driver = $request->input('driver');
-            $configData = $request->input('config');
+            $configData = $this->normalizeStorageConfig(
+                $driver,
+                $request->input('config', []),
+                $request->input('config', [])
+            );
 
             // تنظيف وtrim للـ credentials (خاصة لـ Bunny Storage)
             if ($driver === 'bunny') {
@@ -337,7 +346,7 @@ class AppStorageController extends Controller
                     'bucket' => $configData['bucket'] ?? '',
                     'url' => $configData['url'] ?? null,
                     'endpoint' => $configData['endpoint'] ?? null,
-                    'use_path_style_endpoint' => $configData['use_path_style'] ?? false,
+                    'use_path_style_endpoint' => StorageConfigHelper::toBool($configData['use_path_style'] ?? false),
                     'throw' => false,
                 ],
                 'cloudflare_r2' => [
@@ -574,5 +583,23 @@ class AppStorageController extends Controller
             'bunny' => ['storage_zone', 'api_key'],
             default => [],
         };
+    }
+
+    /**
+     * @param  array<string, mixed>  $configData
+     * @param  array<string, mixed>  $requestConfig
+     * @return array<string, mixed>
+     */
+    private function normalizeStorageConfig(string $driver, array $configData, array $requestConfig = []): array
+    {
+        if ($driver !== 's3') {
+            return $configData;
+        }
+
+        if (! array_key_exists('use_path_style', $requestConfig)) {
+            $configData['use_path_style'] = false;
+        }
+
+        return StorageConfigHelper::normalizeS3Flags($configData);
     }
 }

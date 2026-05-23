@@ -3,6 +3,7 @@
 namespace App\Services\Backup\StorageDrivers;
 
 use App\Contracts\BackupStorageInterface;
+use App\Support\StorageConfigHelper;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Config;
@@ -26,7 +27,7 @@ class S3StorageDriver implements BackupStorageInterface
             'bucket' => $config['bucket'] ?? '',
             'url' => $config['url'] ?? null,
             'endpoint' => $config['endpoint'] ?? null,
-            'use_path_style_endpoint' => $config['use_path_style'] ?? false,
+            'use_path_style_endpoint' => StorageConfigHelper::toBool($config['use_path_style'] ?? false),
             'throw' => false,
         ]);
     }

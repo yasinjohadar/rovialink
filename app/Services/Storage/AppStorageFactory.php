@@ -3,6 +3,7 @@
 namespace App\Services\Storage;
 
 use App\Models\AppStorageConfig;
+use App\Support\StorageConfigHelper;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -72,7 +73,7 @@ class AppStorageFactory
             'bucket' => $config['bucket'] ?? '',
             'url' => $config['url'] ?? null,
             'endpoint' => $config['endpoint'] ?? null,
-            'use_path_style_endpoint' => $config['use_path_style'] ?? false,
+            'use_path_style_endpoint' => StorageConfigHelper::toBool($config['use_path_style'] ?? false),
             'throw' => false,
         ];
     }
