@@ -7,26 +7,34 @@
 
     {{-- شريط العروض / النشرة --}}
     <div class="site-footer__cta">
-        <div class="container position-relative">
+        <div class="container">
             <div class="footer-cta-card">
-                <div class="row align-items-center g-4">
-                    <div class="col-lg-6">
+                <div class="footer-cta-card__panel" aria-hidden="true"></div>
+                <div class="row align-items-center g-4 g-lg-5">
+                    <div class="col-lg-5 col-xl-5">
                         <span class="footer-cta-badge"><i class="fas fa-bolt"></i> عروض حصرية</span>
                         <h3 class="footer-cta-title mb-2">انضم لنشرة إديو ستور</h3>
                         <p class="footer-cta-text mb-0">احصل على خصومات أسبوعية وإشعارات المنتجات الجديدة قبل الجميع.</p>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-7 col-xl-7">
                         <form class="footer-newsletter" action="{{ route('frontend.contact') }}" method="get">
+                            <label class="visually-hidden" for="footer-newsletter-email">البريد الإلكتروني</label>
                             <div class="footer-newsletter__inner">
-                                <i class="fas fa-envelope footer-newsletter__icon"></i>
-                                <input type="email" name="email" class="footer-newsletter__input" placeholder="بريدك الإلكتروني" required autocomplete="email">
+                                <span class="footer-newsletter__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
+                                <input type="email"
+                                       id="footer-newsletter-email"
+                                       name="email"
+                                       class="footer-newsletter__input"
+                                       placeholder="أدخل بريدك الإلكتروني"
+                                       required
+                                       autocomplete="email">
                                 <button type="submit" class="footer-newsletter__btn">
                                     <span>اشترك الآن</span>
-                                    <i class="fas fa-arrow-left"></i>
+                                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
                                 </button>
                             </div>
                         </form>
-                        <p class="footer-newsletter-hint mb-0 mt-2"><i class="fas fa-lock"></i> لن نشارك بريدك مع أي طرف ثالث</p>
+                        <p class="footer-newsletter-hint mb-0 mt-3"><i class="fas fa-lock" aria-hidden="true"></i> لن نشارك بريدك مع أي طرف ثالث</p>
                     </div>
                 </div>
             </div>

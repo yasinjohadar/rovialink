@@ -1,5 +1,5 @@
-<section class="newsletter-block section-fade-up py-5">
-    <div class="container pb-5">
+<section class="newsletter-block section-fade-up py-5 pb-4">
+    <div class="container pb-3">
         <div class="newsletter-block__card">
             <div class="newsletter-block__glow" aria-hidden="true"></div>
             <div class="newsletter-block__inner">
