@@ -12,7 +12,7 @@
                             <i class="fas fa-times small"></i>
                         </button>
                     </form>
-                    <a href="{{ route('frontend.product.show', $product->slug) }}" class="product-img text-white text-center d-block overflow-hidden rounded-top" style="height:160px;">
+                    <a href="{{ route('frontend.product.show', $product->slug) }}" class="product-img text-white text-center d-block overflow-hidden rounded-top">
                         <img src="{{ $product->primary_image_url }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover">
                     </a>
                     <div class="p-3 d-flex flex-column flex-grow-1">

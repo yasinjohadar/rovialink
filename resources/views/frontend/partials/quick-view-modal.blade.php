@@ -6,7 +6,7 @@
             <div class="modal-body p-0">
                 <div class="row g-0">
                     <div class="col-lg-6">
-                        <div class="quick-view-gallery quick-view-gallery-pane p-4 h-100 d-flex flex-column justify-content-center">
+                        <div class="quick-view-gallery quick-view-gallery-pane p-3 h-100 d-flex flex-column justify-content-center">
                             <div class="swiper quick-view-swiper mb-3">
                                 <div class="swiper-wrapper" id="qv-swiper-wrapper">
                                 </div>
@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-                        <div class="p-4 p-lg-5 h-100 d-flex flex-column">
+                        <div class="p-3 p-lg-4 h-100 d-flex flex-column">
                             <div class="d-flex align-items-center gap-2 mb-3">
                                 <span class="badge bg-glass text-accent px-3 py-1 rounded-pill" id="qv-category"></span>
                                 <span class="badge bg-accent px-2 py-1 rounded-pill en-text" id="qv-brand"></span>
@@ -41,7 +41,7 @@
                             <div class="mb-4" id="qv-color-section"><h6 class="fw-bold qv-heading mb-3">اللون:</h6><div class="color-options" id="qv-colors"></div></div>
                             <div class="mb-4"><h6 class="fw-bold qv-heading mb-3">الكمية:</h6><div class="quantity-selector"><button type="button" onclick="qvChangeQty(-1)">-</button><input type="number" id="qv-qty" value="1" min="1" max="10"><button type="button" onclick="qvChangeQty(1)">+</button></div></div>
                             <div class="d-flex gap-3 mt-auto"><button class="btn btn-accent py-3 fw-bold flex-grow-1" id="qv-add-cart"><i class="fas fa-cart-plus ms-2"></i> أضف إلى السلة</button><button class="btn btn-glass py-3" style="width: 55px;" id="qv-wishlist"><i class="far fa-heart"></i></button></div>
-                            <div class="row g-2 mt-4"><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2 rounded-3"><i class="fas fa-download text-accent mb-1 d-block"></i><small class="qv-muted">تسليم رقمي</small></div></div><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2 rounded-3"><i class="fas fa-shield-halved text-accent mb-1 d-block"></i><small class="qv-muted">ضمان سنتين</small></div></div><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2 rounded-3"><i class="fas fa-undo text-accent mb-1 d-block"></i><small class="qv-muted">إرجاع 30 يوم</small></div></div></div>
+                            <div class="row g-2 mt-3"><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2"><i class="fas fa-download text-accent mb-1 d-block"></i><small class="qv-muted">تسليم رقمي</small></div></div><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2"><i class="fas fa-shield-halved text-accent mb-1 d-block"></i><small class="qv-muted">ضمان سنتين</small></div></div><div class="col-4 text-center"><div class="glass-panel qv-feature-tile p-2"><i class="fas fa-undo text-accent mb-1 d-block"></i><small class="qv-muted">إرجاع 30 يوم</small></div></div></div>
                         </div>
                     </div>
                 </div>
