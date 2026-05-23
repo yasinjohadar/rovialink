@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Review;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -61,7 +60,7 @@ class ProductController extends Controller
             ->firstOrFail();
 
         $images = $product->images
-            ->map(fn ($img) => Storage::url($img->path))
+            ->map(fn ($img) => product_image_url($img->path, $product->id))
             ->values()
             ->all();
 

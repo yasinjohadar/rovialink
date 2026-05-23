@@ -55,7 +55,7 @@
                                                     <a href="{{ route('admin.storage.edit', $config->id) }}" class="btn btn-sm btn-info">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
-                                                    <button type="button" class="btn btn-sm btn-warning test-storage" data-config-id="{{ $config->id }}">
+                                                    <button type="button" class="btn btn-sm btn-warning test-storage" data-test-url="{{ route('admin.storage.test', $config) }}">
                                                         <i class="fas fa-vial"></i>
                                                     </button>
                                                     <form action="{{ route('admin.storage.destroy', $config->id) }}" method="POST" class="d-inline" onsubmit="return confirm('هل أنت متأكد من حذف هذه الإعدادات؟');">
@@ -88,33 +88,45 @@
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.test-storage').forEach(btn => {
         btn.addEventListener('click', function() {
-            const configId = this.dataset.configId;
-            const btn = this;
-            
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            
-            fetch(`/admin/app-storage/configs/${configId}/test`, {
+            const testUrl = this.dataset.testUrl;
+            const button = this;
+
+            if (!testUrl) {
+                alert('رابط الاختبار غير متوفر');
+                return;
+            }
+
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            fetch(testUrl, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                }
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
             })
-            .then(response => response.json())
+            .then(async (response) => {
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    throw new Error(data.message || 'فشل الاتصال (HTTP ' + response.status + ')');
+                }
+                return data;
+            })
             .then(data => {
                 if (data.success) {
                     alert('✓ ' + data.message);
                 } else {
-                    alert('✗ ' + data.message);
+                    alert('✗ ' + (data.message || 'فشل الاتصال'));
                 }
             })
             .catch(error => {
-                alert('حدث خطأ: ' + error.message);
+                alert('✗ ' + error.message);
             })
             .finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-vial"></i>';
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-vial"></i>';
             });
         });
     });

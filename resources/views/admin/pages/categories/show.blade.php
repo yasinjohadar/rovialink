@@ -131,10 +131,10 @@
                                         <td>
                                             <div class="d-flex gap-2 flex-wrap">
                                                 @if($category->image)
-                                                    <img src="{{ Storage::url($category->image) }}" alt="" class="mini-thumb" title="صورة التصنيف">
+                                                    <img src="{{ category_image_url($category->image, $category->id) }}" alt="" class="mini-thumb" title="صورة التصنيف">
                                                 @endif
                                                 @if($category->cover_image)
-                                                    <img src="{{ Storage::url($category->cover_image) }}" alt="" class="mini-thumb" title="الغلاف">
+                                                    <img src="{{ category_image_url($category->cover_image, $category->id) }}" alt="" class="mini-thumb" title="الغلاف">
                                                 @endif
                                             </div>
                                         </td>

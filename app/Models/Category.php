@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class Category extends Model
 {
@@ -103,7 +102,7 @@ class Category extends Model
     public function getImageUrlAttribute()
     {
         if ($this->image) {
-            return Storage::url($this->image);
+            return category_image_url($this->image, $this->id);
         }
         $seed = $this->id ?? rand(1, 50);
         return "https://picsum.photos/seed/cat{$seed}/300/300";
@@ -115,7 +114,7 @@ class Category extends Model
     public function getCoverImageUrlAttribute()
     {
         if ($this->cover_image) {
-            return Storage::url($this->cover_image);
+            return category_image_url($this->cover_image, $this->id);
         }
         $seed = $this->id ?? rand(1, 50);
         return "https://picsum.photos/seed/catcover{$seed}/800/400";

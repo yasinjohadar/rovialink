@@ -129,7 +129,7 @@
                                 <label class="form-label">صورة التصنيف</label>
                                 @if($category->image)
                                     <div class="mb-2">
-                                        <img src="{{ Storage::url($category->image) }}" alt="الصورة الحالية" class="image-preview">
+                                        <img src="{{ category_image_url($category->image, $category->id) }}" alt="الصورة الحالية" class="image-preview">
                                     </div>
                                 @endif
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" 
@@ -144,7 +144,7 @@
                                 <label class="form-label">صورة الغلاف</label>
                                 @if($category->cover_image)
                                     <div class="mb-2">
-                                        <img src="{{ Storage::url($category->cover_image) }}" alt="صورة الغلاف الحالية" class="cover-preview">
+                                        <img src="{{ category_image_url($category->cover_image, $category->id) }}" alt="صورة الغلاف الحالية" class="cover-preview">
                                     </div>
                                 @endif
                                 <input type="file" class="form-control @error('cover_image') is-invalid @enderror" 

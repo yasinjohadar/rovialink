@@ -13,14 +13,15 @@ use App\Models\ProductVariant;
 use App\Http\Requests\Admin\StoreProductRequest;
 use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Services\CurrencyService;
+use App\Services\Storage\StorageHelperService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        protected StorageHelperService $storageHelper
+    ) {
         $this->middleware('auth');
     }
 
@@ -173,7 +174,15 @@ class ProductController extends Controller
         // حفظ الصورة الرئيسية إن وُجدت
         $orderCounter = 0;
         if ($request->hasFile('primary_image')) {
-            $primaryPath = $request->file('primary_image')->store('products/' . $product->id, 'public');
+            $primaryPath = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'products/' . $product->id,
+                $request->file('primary_image'),
+                'image'
+            );
+            if (! $primaryPath) {
+                return redirect()->back()->withInput()->with('error', 'فشل رفع الصورة الرئيسية.');
+            }
             $product->images()->create([
                 'path' => $primaryPath,
                 'order' => $orderCounter,
@@ -185,7 +194,15 @@ class ProductController extends Controller
         // حفظ صور المعرض
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $file) {
-                $path = $file->store('products/' . $product->id, 'public');
+                $path = $this->storageHelper->storeUploadedFileWithFailover(
+                    $this->storageHelper->mediaDisk(),
+                    'products/' . $product->id,
+                    $file,
+                    'image'
+                );
+                if (! $path) {
+                    continue;
+                }
                 $product->images()->create([
                     'path' => $path,
                     'order' => $orderCounter + $index,
@@ -263,7 +280,15 @@ class ProductController extends Controller
         // تحميل صورة رئيسية جديدة إن وُجدت
         $maxOrder = $product->images()->max('order') ?? -1;
         if ($request->hasFile('primary_image')) {
-            $primaryPath = $request->file('primary_image')->store('products/' . $product->id, 'public');
+            $primaryPath = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'products/' . $product->id,
+                $request->file('primary_image'),
+                'image'
+            );
+            if (! $primaryPath) {
+                return redirect()->back()->withInput()->with('error', 'فشل رفع الصورة الرئيسية.');
+            }
             // إلغاء تعيين أي صورة رئيسية سابقة
             $product->images()->update(['is_primary' => false]);
             $product->images()->create([
@@ -277,7 +302,15 @@ class ProductController extends Controller
         // إضافة صور جديدة للمعرض
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store('products/' . $product->id, 'public');
+                $path = $this->storageHelper->storeUploadedFileWithFailover(
+                    $this->storageHelper->mediaDisk(),
+                    'products/' . $product->id,
+                    $file,
+                    'image'
+                );
+                if (! $path) {
+                    continue;
+                }
                 $product->images()->create([
                     'path' => $path,
                     'order' => ++$maxOrder,
@@ -292,7 +325,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         foreach ($product->images as $img) {
-            Storage::disk('public')->delete($img->path);
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $img->path);
         }
         $product->delete();
         return redirect()->route('admin.products.index')->with('success', 'تم حذف المنتج.');
@@ -303,7 +336,7 @@ class ProductController extends Controller
         if ($image->product_id !== $product->id) {
             abort(404);
         }
-        Storage::disk('public')->delete($image->path);
+        $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $image->path);
         $image->delete();
         return back()->with('success', 'تم حذف الصورة.');
     }

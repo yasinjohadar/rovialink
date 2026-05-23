@@ -2,9 +2,15 @@
 
 namespace App\Services\Storage;
 
-use App\Services\Storage\AppStorageManager;
+use App\Models\AppStorageConfig;
+use App\Models\StorageDiskMapping;
+use App\Support\MediaUrlBuilder;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Http\File as HttpFile;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class StorageHelperService
 {
@@ -346,5 +352,364 @@ class StorageHelperService
     public function disk(string $diskName): Filesystem
     {
         return $this->getDisk($diskName);
+    }
+
+    /**
+     * Default media disk from config (StorageDiskMapping name).
+     */
+    public function mediaDisk(): string
+    {
+        return (string) config('media.disk', 'public');
+    }
+
+    /**
+     * Store an uploaded file: primary cloud → mapping fallbacks → local public disk.
+     *
+     * @return string|false Relative path on success
+     */
+    public function storeUploadedFileWithFailover(
+        string $disk,
+        string $directory,
+        UploadedFile $file,
+        ?string $fileType = 'image',
+        ?string $filename = null
+    ): string|false {
+        $directory = trim($directory, '/');
+        $storages = $this->resolveStoragesForMedia($disk);
+
+        foreach ($storages as $storageConfig) {
+            $storedPath = $this->putUploadedFileOnStorage($storageConfig, $directory, $file, $filename);
+            if ($storedPath !== false) {
+                $this->trackUploadAnalytics($disk, $storageConfig, $file, $fileType);
+
+                return $storedPath;
+            }
+        }
+
+        $storedPath = $this->putOnNativePublicDisk($directory, $file, $filename);
+        if ($storedPath !== false) {
+            Log::info('StorageHelperService: Stored on native public disk (final fallback)', [
+                'path' => $storedPath,
+            ]);
+
+            return $storedPath;
+        }
+
+        Log::error('StorageHelperService: All upload targets failed', [
+            'disk' => $disk,
+            'directory' => $directory,
+            'file' => $file->getClientOriginalName(),
+        ]);
+
+        return false;
+    }
+
+    /**
+     * Delete media from all mapped storages plus native public disk.
+     */
+    public function deleteMedia(string $disk, string $path): bool
+    {
+        if ($path === '') {
+            return false;
+        }
+
+        $deleted = false;
+        $storages = $this->resolveStoragesForDisk($disk);
+
+        foreach ($storages as $storageConfig) {
+            try {
+                $filesystem = AppStorageFactory::create($storageConfig);
+                if ($filesystem->exists($path) && $filesystem->delete($path)) {
+                    $deleted = true;
+                }
+            } catch (\Throwable $e) {
+                Log::warning('StorageHelperService: deleteMedia failed on storage', [
+                    'storage' => $storageConfig->name,
+                    'path' => $path,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        try {
+            $local = Storage::disk('public');
+            if ($local->exists($path) && $local->delete($path)) {
+                $deleted = true;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('StorageHelperService: deleteMedia failed on public disk', [
+                'path' => $path,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return $deleted;
+    }
+
+    /**
+     * Resolve a public URL for media, checking primary then fallbacks then local asset.
+     */
+    public function resolveMediaUrl(string $disk, ?string $path): ?string
+    {
+        if ($path === null || $path === '') {
+            return null;
+        }
+
+        $path = ltrim($path, '/');
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        foreach ($this->resolveStoragesForMedia($disk) as $storageConfig) {
+            try {
+                $filesystem = AppStorageFactory::create($storageConfig);
+                if ($filesystem->exists($path)) {
+                    $url = $this->urlForStorageConfig($storageConfig, $filesystem, $path);
+                    if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL)) {
+                        return $url;
+                    }
+                }
+            } catch (\Throwable $e) {
+                Log::debug('StorageHelperService: resolveMediaUrl check failed', [
+                    'storage' => $storageConfig->name,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        try {
+            $local = Storage::disk('public');
+            if ($local->exists($path)) {
+                $url = $local->url($path);
+                if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL)) {
+                    return $url;
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::debug('StorageHelperService: resolveMediaUrl local check failed', [
+                'path' => $path,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Check whether media exists on any configured storage (including native public).
+     */
+    public function mediaExists(string $disk, string $path): bool
+    {
+        if ($path === '') {
+            return false;
+        }
+
+        $path = ltrim($path, '/');
+
+        foreach ($this->resolveStoragesForMedia($disk) as $storageConfig) {
+            try {
+                if (AppStorageFactory::create($storageConfig)->exists($path)) {
+                    return true;
+                }
+            } catch (\Throwable $e) {
+                continue;
+            }
+        }
+
+        try {
+            return Storage::disk('public')->exists($path);
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Resolve storages for catalog media (may merge public + images mappings).
+     *
+     * @return Collection<int, AppStorageConfig>
+     */
+    protected function resolveStoragesForMedia(string $disk): Collection
+    {
+        if ($disk !== $this->mediaDisk()) {
+            return $this->resolveStoragesForDisk($disk);
+        }
+
+        $diskNames = config('media.disks', [$disk]);
+        if (! is_array($diskNames) || $diskNames === []) {
+            $diskNames = [$disk];
+        }
+
+        $storages = collect();
+        foreach ($diskNames as $diskName) {
+            $storages = $storages->merge($this->resolveStoragesForDisk((string) $diskName));
+        }
+
+        return $this->prioritizeMediaStorages($storages);
+    }
+
+    /**
+     * @return Collection<int, AppStorageConfig>
+     */
+    protected function resolveStoragesForDisk(string $disk): Collection
+    {
+        $mapping = StorageDiskMapping::where('disk_name', $disk)
+            ->where('is_active', true)
+            ->first();
+
+        if (! $mapping) {
+            return collect();
+        }
+
+        $storages = collect();
+
+        if ($mapping->primaryStorage && $mapping->primaryStorage->is_active) {
+            $storages->push($mapping->primaryStorage->fresh());
+        }
+
+        foreach ($mapping->getFallbackStorages() as $fallback) {
+            if ($fallback->is_active) {
+                $storages->push($fallback->fresh());
+            }
+        }
+
+        return $storages->filter()->unique('id')->values();
+    }
+
+    /**
+     * Cloud / remote drivers before local when uploading catalog media.
+     *
+     * @param  Collection<int, AppStorageConfig>  $storages
+     * @return Collection<int, AppStorageConfig>
+     */
+    protected function prioritizeMediaStorages(Collection $storages): Collection
+    {
+        return $storages
+            ->filter()
+            ->unique('id')
+            ->sortByDesc(function (AppStorageConfig $storage) {
+                $cloudBoost = $storage->driver === 'local' ? 0 : 100_000;
+
+                return $cloudBoost + (int) ($storage->priority ?? 0);
+            })
+            ->values();
+    }
+
+    /**
+     * @return string|false
+     */
+    protected function putUploadedFileOnStorage(
+        AppStorageConfig $storageConfig,
+        string $directory,
+        UploadedFile $file,
+        ?string $filename
+    ): string|false {
+        $realPath = $file->getRealPath();
+        if (! $realPath || ! is_readable($realPath)) {
+            Log::warning('StorageHelperService: Uploaded file is not readable', [
+                'storage' => $storageConfig->name,
+            ]);
+
+            return false;
+        }
+
+        $uploadOptions = ['visibility' => 'public'];
+        $fileObject = new HttpFile($realPath);
+
+        try {
+            $filesystem = AppStorageFactory::create($storageConfig);
+            $storedPath = $filename
+                ? $filesystem->putFileAs($directory, $fileObject, $filename, $uploadOptions)
+                : $filesystem->putFile($directory, $fileObject, $uploadOptions);
+
+            if ($storedPath && $this->verifyStoredFile($filesystem, $storedPath)) {
+                Log::info('StorageHelperService: File stored', [
+                    'storage' => $storageConfig->name,
+                    'path' => $storedPath,
+                ]);
+
+                return $storedPath;
+            }
+
+            if ($storedPath) {
+                try {
+                    $filesystem->delete($storedPath);
+                } catch (\Throwable $e) {
+                    // ignore cleanup errors
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning('StorageHelperService: Upload failed on storage', [
+                'storage' => $storageConfig->name,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string|false
+     */
+    protected function putOnNativePublicDisk(string $directory, UploadedFile $file, ?string $filename): string|false
+    {
+        $realPath = $file->getRealPath();
+        if (! $realPath || ! is_readable($realPath)) {
+            return false;
+        }
+
+        try {
+            $local = Storage::disk('public');
+            $fileObject = new HttpFile($realPath);
+            $uploadOptions = ['visibility' => 'public'];
+            $storedPath = $filename
+                ? $local->putFileAs($directory, $fileObject, $filename, $uploadOptions)
+                : $local->putFile($directory, $fileObject, $uploadOptions);
+
+            if ($storedPath && $this->verifyStoredFile($local, $storedPath)) {
+                return $storedPath;
+            }
+        } catch (\Throwable $e) {
+            Log::error('StorageHelperService: Native public disk upload failed', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return false;
+    }
+
+    protected function verifyStoredFile(Filesystem $filesystem, string $path): bool
+    {
+        try {
+            return $filesystem->exists($path) && $filesystem->size($path) > 0;
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    protected function urlForStorageConfig(
+        AppStorageConfig $config,
+        Filesystem $filesystem,
+        string $path
+    ): string {
+        return MediaUrlBuilder::build($config, $filesystem, $path);
+    }
+
+    protected function trackUploadAnalytics(
+        string $disk,
+        AppStorageConfig $storageConfig,
+        UploadedFile $file,
+        ?string $fileType
+    ): void {
+        try {
+            $analyticsService = app(AppStorageAnalyticsService::class);
+            $analyticsService->trackStorageUsage($storageConfig, $file->getSize(), $fileType);
+            $analyticsService->trackBandwidth($storageConfig, 'upload', $file->getSize(), $fileType);
+        } catch (\Throwable $e) {
+            Log::debug('StorageHelperService: Analytics tracking skipped', [
+                'disk' => $disk,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
 }

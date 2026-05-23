@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
-
 class ProductImage extends Model
 {
     use HasFactory;
@@ -24,6 +22,6 @@ class ProductImage extends Model
 
     public function getUrlAttribute()
     {
-        return Storage::url($this->path);
+        return product_image_url($this->path, $this->product_id);
     }
 }

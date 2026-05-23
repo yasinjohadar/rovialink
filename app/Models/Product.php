@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -178,7 +177,7 @@ class Product extends Model
     {
         $img = $this->primary_image;
         if ($img) {
-            return Storage::url($img->path);
+            return product_image_url($img->path, $this->id);
         }
         $seed = $this->id ?? rand(1, 100);
         return "https://picsum.photos/seed/product{$seed}/400/450";

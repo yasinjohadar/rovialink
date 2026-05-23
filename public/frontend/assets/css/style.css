@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;600;700;800&family=Cairo:wght@300;400;600;700&family=Poppins:wght@300;400;600;700&display=swap');
 
+:root {
+  --top-bar-h: 37px;
+  --main-nav-h: 66px;
+  --site-header-offset: calc(var(--top-bar-h) + var(--main-nav-h));
+}
+
 /* Use Alexandria for all headings */
 h1,
 h2,
@@ -81,8 +87,7 @@ html {
 }
 
 body {
-  padding-top: 108px;
-  /* top-bar (37px) + navbar (~55px) + gap (16px) */
+  padding-top: var(--site-header-offset);
   overflow-x: hidden;
   position: relative;
   width: 100%;
@@ -90,12 +95,13 @@ body {
 
 /* Hide top bar on mobile → adjust navbar */
 @media (max-width: 767px) {
-  .main-nav {
-    top: 0;
+  :root {
+    --top-bar-h: 0px;
+    --main-nav-h: 64px;
   }
 
-  body {
-    padding-top: 70px;
+  .main-nav {
+    top: 0;
   }
 }
 
@@ -342,11 +348,6 @@ body {
   transition: all 0.4s ease;
 }
 
-/* Sticky Navbar padding compensation */
-body {
-  padding-top: 80px;
-}
-
 /* Custom Buttons */
 .btn-accent {
   background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
@@ -535,7 +536,8 @@ p {
 
 /* Hero Section */
 .hero-section {
-  min-height: 90vh;
+  min-height: calc(100vh - var(--site-header-offset));
+  min-height: calc(100dvh - var(--site-header-offset));
   position: relative;
   overflow: hidden;
 }

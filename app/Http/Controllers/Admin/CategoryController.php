@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreCategoryRequest;
 use App\Http\Requests\Admin\UpdateCategoryRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Storage\StorageHelperService;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(
+        protected StorageHelperService $storageHelper
+    ) {
         $this->middleware('auth');
         $this->middleware('permission:category-list')->only('index');
         $this->middleware('permission:category-create')->only(['create', 'store']);
@@ -79,14 +80,26 @@ class CategoryController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . Str::slug($data['name']) . '.' . $image->getClientOriginalExtension();
-            $data['image'] = $image->storeAs('categories/images', $imageName, 'public');
+            $data['image'] = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'categories/images',
+                $image,
+                'image',
+                $imageName
+            ) ?: null;
         }
 
         // معالجة صورة الغلاف
         if ($request->hasFile('cover_image')) {
             $coverImage = $request->file('cover_image');
             $coverImageName = time() . '_cover_' . Str::slug($data['name']) . '.' . $coverImage->getClientOriginalExtension();
-            $data['cover_image'] = $coverImage->storeAs('categories/covers', $coverImageName, 'public');
+            $data['cover_image'] = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'categories/covers',
+                $coverImage,
+                'image',
+                $coverImageName
+            ) ?: null;
         }
 
         // إنشاء slug إذا لم يتم توفيره
@@ -138,26 +151,36 @@ class CategoryController extends Controller
 
         // معالجة صورة التصنيف
         if ($request->hasFile('image')) {
-            // حذف الصورة القديمة
-            if ($category->image && Storage::disk('public')->exists($category->image)) {
-                Storage::disk('public')->delete($category->image);
+            if ($category->image) {
+                $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $category->image);
             }
 
             $image = $request->file('image');
             $imageName = time() . '_' . Str::slug($data['name']) . '.' . $image->getClientOriginalExtension();
-            $data['image'] = $image->storeAs('categories/images', $imageName, 'public');
+            $data['image'] = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'categories/images',
+                $image,
+                'image',
+                $imageName
+            ) ?: $category->image;
         }
 
         // معالجة صورة الغلاف
         if ($request->hasFile('cover_image')) {
-            // حذف الصورة القديمة
-            if ($category->cover_image && Storage::disk('public')->exists($category->cover_image)) {
-                Storage::disk('public')->delete($category->cover_image);
+            if ($category->cover_image) {
+                $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $category->cover_image);
             }
 
             $coverImage = $request->file('cover_image');
             $coverImageName = time() . '_cover_' . Str::slug($data['name']) . '.' . $coverImage->getClientOriginalExtension();
-            $data['cover_image'] = $coverImage->storeAs('categories/covers', $coverImageName, 'public');
+            $data['cover_image'] = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'categories/covers',
+                $coverImage,
+                'image',
+                $coverImageName
+            ) ?: $category->cover_image;
         }
 
         // إنشاء slug إذا لم يتم توفيره
@@ -185,12 +208,12 @@ class CategoryController extends Controller
         }
 
         // حذف الصور
-        if ($category->image && Storage::disk('public')->exists($category->image)) {
-            Storage::disk('public')->delete($category->image);
+        if ($category->image) {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $category->image);
         }
 
-        if ($category->cover_image && Storage::disk('public')->exists($category->cover_image)) {
-            Storage::disk('public')->delete($category->cover_image);
+        if ($category->cover_image) {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $category->cover_image);
         }
 
         $category->delete();

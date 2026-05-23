@@ -3,6 +3,7 @@
 namespace App\Services\Storage;
 
 use App\Models\AppStorageConfig;
+use App\Support\MediaUrlBuilder;
 use App\Support\StorageConfigHelper;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
@@ -36,8 +37,8 @@ class AppStorageFactory
             default => throw new \Exception("نوع التخزين غير مدعوم: {$freshConfig->driver}"),
         };
 
-        // إضافة CDN URL إذا كان موجوداً
-        if ($freshConfig->cdn_url) {
+        // CDN عام فقط — لا تستخدم endpoint الـ S3 API كـ url (iDrive يعيد HTML)
+        if ($freshConfig->cdn_url && ! MediaUrlBuilder::isRawObjectStoreEndpoint($freshConfig->cdn_url)) {
             $diskConfig['url'] = rtrim($freshConfig->cdn_url, '/');
         }
 
@@ -74,6 +75,7 @@ class AppStorageFactory
             'url' => $config['url'] ?? null,
             'endpoint' => $config['endpoint'] ?? null,
             'use_path_style_endpoint' => StorageConfigHelper::toBool($config['use_path_style'] ?? false),
+            'visibility' => 'public',
             'throw' => false,
         ];
     }

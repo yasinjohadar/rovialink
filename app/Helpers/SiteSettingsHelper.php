@@ -29,12 +29,8 @@ if (!function_exists('site_setting_url')) {
         if (empty($path)) {
             return null;
         }
-        $disk = config('filesystems.default', 'public');
-        try {
-            return \Illuminate\Support\Facades\Storage::disk($disk)->url($path);
-        } catch (\Throwable $e) {
-            return asset('storage/' . ltrim($path, '/'));
-        }
+
+        return media_url($path);
     }
 }
 

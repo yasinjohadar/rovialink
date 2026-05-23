@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\SystemSetting;
+use App\Services\Storage\StorageHelperService;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class SiteSettingsService
 {
@@ -502,14 +502,26 @@ class SiteSettingsService
             return null;
         }
 
-        $disk = config('filesystems.default', 'public');
+        $storageHelper = app(StorageHelperService::class);
+        $disk = $storageHelper->mediaDisk();
         $oldPath = $this->get($key);
-        if ($oldPath && Storage::disk($disk)->exists($oldPath)) {
-            Storage::disk($disk)->delete($oldPath);
+        if ($oldPath) {
+            $storageHelper->deleteMedia($disk, $oldPath);
         }
 
-        $path = $file->store('site-settings', $disk);
+        $path = $storageHelper->storeUploadedFileWithFailover(
+            $disk,
+            'site-settings',
+            $file,
+            'image'
+        );
+
+        if (! $path) {
+            return null;
+        }
+
         $this->setMany([$key => $path]);
+
         return $path;
     }
 
