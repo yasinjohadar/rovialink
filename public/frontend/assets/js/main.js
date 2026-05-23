@@ -1248,10 +1248,10 @@ function populateQvGallery(modalEl, product) {
   const images = product.images && product.images.length ? product.images : [];
   const badgeHTML = product.badge ? `<span class="product-badge ${product.badgeType || ''}">${product.badge}</span>` : '';
   const slideImg = (src) =>
-    `<div class="product-img text-center mx-auto rounded-4 position-relative qv-slide-frame">${badgeHTML}<img src="${src}" alt="${product.title}" class="qv-slide-img w-100 h-100 object-fit-cover"></div>`;
+    `<div class="qv-slide-frame position-relative">${badgeHTML}<img src="${src}" alt="${product.title}" class="qv-slide-img"></div>`;
 
   if (images.length === 0) {
-    mainWrapper.innerHTML = `<div class="swiper-slide"><div class="product-img text-center mx-auto rounded-4 position-relative qv-slide-frame">${badgeHTML}<i class="fas ${product.imgIcon || 'fa-image'} fa-5x qv-placeholder-icon opacity-50"></i></div></div>`;
+    mainWrapper.innerHTML = `<div class="swiper-slide"><div class="qv-slide-frame qv-slide-frame--placeholder position-relative">${badgeHTML}<i class="fas ${product.imgIcon || 'fa-image'} fa-5x qv-placeholder-icon opacity-50"></i></div></div>`;
     if (thumbsWrapper) thumbsWrapper.innerHTML = '';
     modalEl._qvSlideCount = 1;
     modalEl._qvUseSwiper = false;
@@ -1318,9 +1318,9 @@ function initQvSwipers(modalEl) {
   }
 
   window.qvMainSwiper = new Swiper(mainSwiperEl, {
-    spaceBetween: 10,
+    spaceBetween: 0,
     slidesPerView: 1,
-    centeredSlides: true,
+    centeredSlides: false,
     loop: useLoop,
     rtl: isRtl,
     observer: true,

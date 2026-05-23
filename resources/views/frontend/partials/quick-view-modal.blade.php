@@ -4,23 +4,25 @@
         <div class="modal-content">
             <button type="button" class="btn-close position-absolute top-0 end-0 m-3 z-3" data-bs-dismiss="modal" aria-label="Close"></button>
             <div class="modal-body p-0">
-                <div class="row g-0">
-                    <div class="col-lg-6">
-                        <div class="quick-view-gallery quick-view-gallery-pane p-3 h-100 d-flex flex-column justify-content-center">
-                            <div class="swiper quick-view-swiper mb-3">
-                                <div class="swiper-wrapper" id="qv-swiper-wrapper">
+                <div class="row g-0 quick-view-modal__row">
+                    <div class="col-lg-6 quick-view-gallery-col">
+                        <div class="quick-view-gallery quick-view-gallery-pane">
+                            <div class="quick-view-gallery-media">
+                                <div class="swiper quick-view-swiper">
+                                    <div class="swiper-wrapper" id="qv-swiper-wrapper"></div>
+                                    <div class="swiper-button-next qv-img-next"></div>
+                                    <div class="swiper-button-prev qv-img-prev"></div>
                                 </div>
-                                <div class="swiper-button-next qv-img-next"></div>
-                                <div class="swiper-button-prev qv-img-prev"></div>
                             </div>
-                            <div thumbsSlider="" class="swiper quick-view-thumbs-swiper">
-                                <div class="swiper-wrapper" id="qv-thumbs-wrapper">
+                            <div class="quick-view-thumbs-wrap">
+                                <div thumbsSlider="" class="swiper quick-view-thumbs-swiper">
+                                    <div class="swiper-wrapper" id="qv-thumbs-wrapper"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="p-3 p-lg-4 h-100 d-flex flex-column">
+                    <div class="col-lg-6 quick-view-details-col">
+                        <div class="quick-view-details p-3 p-lg-4 h-100 d-flex flex-column">
                             <div class="d-flex align-items-center gap-2 mb-3">
                                 <span class="badge bg-glass text-accent px-3 py-1 rounded-pill" id="qv-category"></span>
                                 <span class="badge bg-accent px-2 py-1 rounded-pill en-text" id="qv-brand"></span>
