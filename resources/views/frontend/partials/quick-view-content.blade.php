@@ -6,7 +6,8 @@
                         @forelse($product->images as $image)
                         <div class="swiper-slide">
                             <figure class="product-image">
-                                <img src="{{ asset('storage/' . $image->path) }}" data-zoom-image="{{ asset('storage/' . $image->path) }}" alt="{{ $product->name }}" width="800" height="900">
+                                @php $imgUrl = product_image_url($image->path, $product->id); @endphp
+                                <img src="{{ $imgUrl }}" data-zoom-image="{{ $imgUrl }}" alt="{{ $product->name }}" width="800" height="900">
                             </figure>
                         </div>
                         @empty
@@ -30,7 +31,7 @@
                     <div class="product-thumbs swiper-wrapper row cols-4 gutter-sm">
                         @foreach($product->images as $image)
                         <div class="product-thumb swiper-slide">
-                            <img src="{{ asset('storage/' . $image->path) }}" alt="{{ $product->name }}" width="103" height="116">
+                            <img src="{{ product_image_url($image->path, $product->id) }}" alt="{{ $product->name }}" width="103" height="116">
                         </div>
                         @endforeach
                     </div>

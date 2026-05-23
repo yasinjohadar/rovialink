@@ -25,7 +25,7 @@
                                 @forelse($product->images as $image)
                                 <div class="swiper-slide">
                                     <div class="product-img text-white text-center rounded-3" style="height: 400px;">
-                                        <img src="{{ asset('storage/' . $image->path) }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover" style="border-radius: 12px;">
+                                        <img src="{{ product_image_url($image->path, $product->id) }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover" style="border-radius: 12px;">
                                     </div>
                                 </div>
                                 @empty
@@ -45,7 +45,7 @@
                                 @foreach($product->images as $image)
                                 <div class="swiper-slide">
                                     <div class="product-img text-white text-center rounded-3" style="height: 80px; cursor: pointer;">
-                                        <img src="{{ asset('storage/' . $image->path) }}" alt="thumb" class="w-100 h-100 object-fit-cover" style="border-radius: 8px;">
+                                        <img src="{{ product_image_url($image->path, $product->id) }}" alt="{{ $product->name }}" class="w-100 h-100 object-fit-cover" style="border-radius: 8px;">
                                     </div>
                                 </div>
                                 @endforeach
