@@ -5,7 +5,7 @@
   const nav = document.getElementById('dashboard-nav');
   if (!nav) return;
 
-  const navLinks = nav.querySelectorAll('.nav-link[data-section]');
+  const navLinks = nav.querySelectorAll('a[data-section]');
   const sections = document.querySelectorAll('.dashboard-section');
 
   function showSection(sectionId) {
@@ -39,7 +39,7 @@
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const section = link.getAttribute('data-section-link');
-      const targetNav = nav.querySelector(`.nav-link[data-section="${section}"]`);
+      const targetNav = nav.querySelector(`a[data-section="${section}"]`);
       if (targetNav) {
         showSection(section);
       }

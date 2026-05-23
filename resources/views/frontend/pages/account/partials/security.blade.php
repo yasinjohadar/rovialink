@@ -1,6 +1,6 @@
 <div class="dashboard-section d-none" id="section-security">
     <div class="glass-card p-4 mb-4 section-fade-up">
-        <h5 class="fw-bold text-white mb-4"><i class="fas fa-lock text-accent me-2"></i> تغيير كلمة المرور</h5>
+        <h5 class="account-panel__title mb-4"><i class="fas fa-lock me-2" aria-hidden="true"></i> تغيير كلمة المرور</h5>
         <form method="POST" action="{{ route('frontend.account.password.update') }}">
             @csrf
             @method('PUT')
@@ -27,7 +27,7 @@
     </div>
 
     <div class="glass-card p-4 section-fade-up">
-        <h5 class="fw-bold text-white mb-4"><i class="fas fa-shield-alt text-accent me-2"></i> إعدادات الأمان</h5>
+        <h5 class="account-panel__title mb-4"><i class="fas fa-shield-alt me-2" aria-hidden="true"></i> إعدادات الأمان</h5>
         <div class="d-flex justify-content-between align-items-center p-3 mb-3 glass-panel rounded-3 opacity-75">
             <div>
                 <h6 class="fw-bold text-white mb-1">المصادقة الثنائية</h6>

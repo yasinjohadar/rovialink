@@ -1,6 +1,6 @@
 <div class="dashboard-section d-none" id="section-wishlist">
     <div class="glass-card p-4 section-fade-up">
-        <h5 class="fw-bold text-white mb-4"><i class="fas fa-heart text-accent me-2"></i> قائمة المفضلة</h5>
+        <h5 class="account-panel__title mb-4"><i class="fas fa-heart me-2" aria-hidden="true"></i> قائمة المفضلة</h5>
         <div class="row g-3" id="dashboard-wishlist-items">
             @forelse($wishlistProducts as $product)
             <div class="col-md-6 col-lg-4">

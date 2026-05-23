@@ -1,7 +1,7 @@
 <div class="dashboard-section d-none" id="section-notifications">
     <div class="glass-card p-4 section-fade-up">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold text-white m-0"><i class="fas fa-bell text-accent me-2"></i> الإشعارات</h5>
+            <h5 class="account-panel__title m-0"><i class="fas fa-bell me-2" aria-hidden="true"></i> الإشعارات</h5>
         </div>
 
         @forelse($notifications as $notification)

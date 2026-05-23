@@ -1,7 +1,7 @@
 <div class="dashboard-section d-none" id="section-addresses">
     <div class="glass-card p-4 section-fade-up">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold text-white m-0"><i class="fas fa-map-marker-alt text-accent me-2"></i> عناوين الفوترة</h5>
+            <h5 class="account-panel__title m-0"><i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i> عناوين الفوترة</h5>
             <button class="btn btn-sm btn-accent rounded-pill px-3" type="button" data-bs-toggle="modal" data-bs-target="#addAddressModal">
                 <i class="fas fa-plus me-1"></i> إضافة عنوان
             </button>

@@ -1,7 +1,7 @@
 <div class="glass-panel p-3 mb-3">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
         <div>
-            <h6 class="fw-bold text-white mb-1">طلب <span class="en-text">#{{ $order->order_number }}</span></h6>
+            <h6 class="fw-bold mb-1">طلب <span class="en-text">#{{ $order->order_number }}</span></h6>
             <p class="text-secondary small mb-0"><i class="fas fa-calendar-alt me-1"></i> {{ $order->created_at->translatedFormat('d F Y') }}</p>
         </div>
         <div class="d-flex align-items-center gap-3">

@@ -17,10 +17,10 @@
         </div>
         @endif
 
-        <div class="row g-4">
+        <div class="row g-4 account-dashboard">
             @include('frontend.pages.account.partials.sidebar')
 
-            <div class="col-lg-9">
+            <div class="col-lg-9 account-dashboard__main">
                 @include('frontend.pages.account.partials.overview')
                 @include('frontend.pages.account.partials.orders')
                 @include('frontend.pages.account.partials.wishlist')

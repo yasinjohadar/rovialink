@@ -970,6 +970,29 @@ body {
   color: var(--text-primary);
 }
 
+/* Outline CTAs (جميع المنتجات، عرض الكل…) — readable in light & dark */
+.btn.btn-outline-light:not(.border-secondary) {
+  color: var(--text-primary);
+  border-color: rgba(var(--accent-rgb), 0.45);
+  background-color: transparent;
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.btn.btn-outline-light:not(.border-secondary):hover,
+.btn.btn-outline-light:not(.border-secondary):focus-visible {
+  color: #fff;
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.35);
+}
+
+.btn.btn-outline-light:not(.border-secondary):active,
+.btn.btn-outline-light:not(.border-secondary).active {
+  color: #fff;
+  background-color: var(--accent-active);
+  border-color: var(--accent-active);
+}
+
 /* Theme Toggle Button */
 .theme-toggle {
   background: transparent;
@@ -6900,19 +6923,7 @@ html[data-theme="dark"] .quantity-selector input {
   border-bottom: 1px solid var(--glass-border);
 }
 
-/* Account dashboard sidebar */
-#dashboard-nav .nav-link {
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-#dashboard-nav .nav-link:hover {
-  background: rgba(var(--accent-rgb), 0.08);
-}
-
-#dashboard-nav .nav-link.active {
-  background: rgba(var(--accent-rgb), 0.18);
-  color: var(--text-primary) !important;
-}
+/* Account dashboard — legacy hook (nav uses .account-sidebar__link) */
 
 /* Cart Item Enhancements */
 #cart-server-rendered.cart-is-busy {
@@ -9211,6 +9222,407 @@ html[data-theme="dark"] .shop-filters__range::-moz-range-thumb {
 
   .shop-filters__list {
     max-height: none;
+  }
+}
+
+/* ===========================
+   Account dashboard
+   =========================== */
+.account-sidebar {
+  top: calc(var(--site-header-offset, 88px) + 0.75rem);
+}
+
+.account-sidebar__card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.account-sidebar__profile {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
+  margin-bottom: 0;
+  padding: 1.35rem 1.25rem 1.15rem;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.14);
+}
+
+html[data-theme="dark"] .account-sidebar__profile {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.account-sidebar__title {
+  align-items: flex-start;
+  width: 100%;
+}
+
+.account-sidebar__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 5px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.account-sidebar__avatar--img {
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 8px 20px rgba(var(--accent-rgb), 0.35);
+}
+
+.account-sidebar__identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.account-sidebar__name {
+  font-size: 1.05rem;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.account-sidebar__email {
+  margin: 0.2rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+.account-sidebar__tier {
+  align-self: flex-start;
+  background: rgba(var(--accent-rgb), 0.12);
+  color: var(--accent-color);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  border-radius: 5px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+}
+
+.account-sidebar__section {
+  padding: 0 1rem 0.25rem;
+  margin-bottom: 0;
+}
+
+.account-sidebar__list {
+  max-height: none;
+  padding: 0;
+  margin: 0;
+}
+
+.account-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  margin: 0;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.account-sidebar__link:hover {
+  background: rgba(var(--accent-rgb), 0.06);
+  border-color: rgba(var(--accent-rgb), 0.12);
+  color: inherit;
+}
+
+.account-sidebar__link.active {
+  background: rgba(var(--accent-rgb), 0.1);
+  border-color: rgba(var(--accent-rgb), 0.28);
+}
+
+.account-sidebar__indicator {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(var(--accent-rgb), 0.45);
+  background: transparent;
+  position: relative;
+  transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.account-sidebar__link.active .account-sidebar__indicator {
+  border-color: var(--accent-color);
+  background: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.2);
+}
+
+.account-sidebar__link.active .account-sidebar__indicator::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.account-sidebar__icon {
+  width: 1.1rem;
+  text-align: center;
+  color: var(--accent-color);
+  font-size: 0.88rem;
+  flex-shrink: 0;
+}
+
+.account-sidebar__link .shop-filters__option-text {
+  flex: 1;
+  font-weight: 600;
+}
+
+.account-sidebar__badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  border-radius: 5px;
+  padding: 0.2rem 0.45rem;
+  margin-inline-start: auto;
+}
+
+.account-sidebar__footer {
+  padding: 0.85rem 1rem 1.25rem;
+  margin-bottom: 0;
+  border-top: 1px solid rgba(var(--accent-rgb), 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+html[data-theme="dark"] .account-sidebar__footer {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+.account-sidebar__footer-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background: transparent;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.account-sidebar__footer-link:hover {
+  background: rgba(var(--accent-rgb), 0.06);
+  border-color: rgba(var(--accent-rgb), 0.12);
+  color: var(--text-primary);
+}
+
+.account-sidebar__footer-link--danger {
+  color: #dc3545;
+}
+
+.account-sidebar__footer-link--danger:hover {
+  background: rgba(220, 53, 69, 0.08);
+  border-color: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+}
+
+.account-sidebar__logout-form {
+  margin: 0;
+}
+
+/* Main panels & stats */
+.account-dashboard__main .glass-card,
+.account-dashboard__main .glass-panel {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  border-radius: 5px;
+  box-shadow:
+    0 16px 48px rgba(var(--accent-rgb), 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+html[data-theme="dark"] .account-dashboard__main .glass-card,
+html[data-theme="dark"] .account-dashboard__main .glass-panel {
+  background: rgba(18, 18, 18, 0.92);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.account-dashboard__main .glass-card:not(.product-card):hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.82);
+  border-color: rgba(var(--accent-rgb), 0.28);
+}
+
+html[data-theme="dark"] .account-dashboard__main .glass-card:not(.product-card):hover {
+  background: rgba(24, 24, 24, 0.96);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.account-dashboard__main a.glass-card:not(.product-card):hover {
+  transform: translateY(-3px);
+  border-color: rgba(var(--accent-rgb), 0.35);
+  box-shadow: 0 14px 36px rgba(var(--accent-rgb), 0.12);
+}
+
+.account-dashboard .text-white,
+.account-dashboard h3.text-white,
+.account-dashboard h5.text-white,
+.account-dashboard h6.text-white,
+.account-dashboard td.text-white,
+.account-dashboard p.text-white {
+  color: var(--text-primary) !important;
+}
+
+.account-dashboard .text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.account-stat {
+  text-align: center;
+  padding: 1.1rem 0.85rem;
+  height: 100%;
+}
+
+.account-stat__icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background: rgba(var(--accent-rgb), 0.1);
+  color: var(--accent-color);
+  font-size: 1.15rem;
+}
+
+.account-stat__icon--success {
+  background: rgba(25, 135, 84, 0.12);
+  color: #198754;
+}
+
+.account-stat__icon--warning {
+  background: rgba(255, 193, 7, 0.15);
+  color: #d4a106;
+}
+
+.account-stat__icon--info {
+  background: rgba(13, 202, 240, 0.12);
+  color: #0aa2c0;
+}
+
+.account-stat__value {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800;
+  font-size: 1.65rem;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.account-stat__label {
+  margin: 0.25rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.account-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.account-panel__title {
+  margin: 0;
+  font-family: 'Alexandria', 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.account-panel__title i {
+  color: var(--accent-color);
+}
+
+.account-dashboard__main .table {
+  --bs-table-color: var(--text-secondary);
+  --bs-table-bg: transparent;
+}
+
+.account-dashboard__main .table thead th {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-bottom-color: rgba(var(--accent-rgb), 0.14) !important;
+}
+
+.account-dashboard__main .table tbody td {
+  vertical-align: middle;
+  border-bottom-color: rgba(var(--accent-rgb), 0.08) !important;
+}
+
+.account-dashboard__main .form-select.bg-glass,
+.account-dashboard__main .form-control.bg-glass {
+  border-radius: 5px;
+  border-color: rgba(var(--accent-rgb), 0.22);
+  color: var(--text-primary);
+}
+
+.account-order-highlight {
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.16);
+  border-radius: 5px;
+}
+
+.account-quick-link {
+  display: block;
+  height: 100%;
+  padding: 1.35rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.account-quick-link:hover {
+  color: inherit;
+}
+
+.account-quick-link__icon {
+  display: block;
+  font-size: 1.65rem;
+  margin-bottom: 0.75rem;
+  color: var(--accent-color);
+}
+
+.account-quick-link__icon--warning {
+  color: #d4a106;
+}
+
+.account-quick-link__icon--success {
+  color: #198754;
+}
+
+.account-quick-link__title {
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+@media (max-width: 991.98px) {
+  .account-sidebar {
+    position: static !important;
+    top: auto;
   }
 }
 

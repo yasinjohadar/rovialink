@@ -1,7 +1,7 @@
 <div class="dashboard-section d-none" id="section-orders">
     <div class="glass-card p-4 section-fade-up">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h5 class="fw-bold text-white m-0"><i class="fas fa-box text-accent me-2"></i> جميع الطلبات</h5>
+        <div class="account-panel__head">
+            <h5 class="account-panel__title"><i class="fas fa-box me-2" aria-hidden="true"></i> جميع الطلبات</h5>
             <form method="GET" action="{{ route('frontend.account') }}" class="d-flex gap-2" id="orders-filter-form">
                 <select name="status" class="form-select form-select-sm bg-glass text-white border-secondary rounded-pill" style="min-width: 160px;" onchange="this.form.submit()">
                     <option value="">جميع الحالات</option>

@@ -1,6 +1,6 @@
 <div class="dashboard-section d-none" id="section-profile">
     <div class="glass-card p-4 section-fade-up">
-        <h5 class="fw-bold text-white mb-4"><i class="fas fa-user-edit text-accent me-2"></i> الملف الشخصي</h5>
+        <h5 class="account-panel__title mb-4"><i class="fas fa-user-edit me-2" aria-hidden="true"></i> الملف الشخصي</h5>
         <form method="POST" action="{{ route('frontend.account.profile.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PATCH')
