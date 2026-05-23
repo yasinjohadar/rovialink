@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateCartBadge();
   updateWishlistBadge();
 
+  initMainNav();
   initTypingAnimation();
   initCounters();
   initScrollAnimations();
@@ -967,6 +968,36 @@ function initCounters() {
 }
 
 let fadeIntersectionObserver = null;
+
+function initMainNav() {
+  const nav = document.getElementById('siteMainNav');
+  if (!nav) {
+    return;
+  }
+
+  const updateScrolled = () => {
+    nav.classList.toggle('is-scrolled', window.scrollY > 12);
+  };
+
+  updateScrolled();
+  window.addEventListener('scroll', updateScrolled, { passive: true });
+
+  const searchDesktop = document.getElementById('mainNavSearch');
+  const searchMobile = document.getElementById('mainNavSearchMobile');
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      const desktopWrap = searchDesktop?.closest('.main-nav__search');
+      const useDesktop = desktopWrap && window.getComputedStyle(desktopWrap).display !== 'none';
+      const target = useDesktop ? searchDesktop : searchMobile;
+      target?.focus();
+      if (target?.value) {
+        target.select();
+      }
+    }
+  });
+}
 
 function getFadeIntersectionObserver() {
   if (!fadeIntersectionObserver) {

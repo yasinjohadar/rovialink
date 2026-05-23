@@ -49,13 +49,18 @@
         </div>
 
         @if(!empty($hero['stats']))
-            <div class="row g-4 mt-5 pt-3 section-fade-up">
+            <div class="row g-4 mt-5 pt-3 section-fade-up hero-stats-row">
                 @foreach($hero['stats'] as $stat)
                     <div class="col-6 col-md-3">
-                        <div class="glass-card p-4 text-center h-100">
-                            <i class="fas {{ $stat['icon'] ?? 'fa-star' }} fs-1 text-accent mb-3"></i>
-                            <h2 class="fw-bold counter en-text" data-target="{{ (int) ($stat['target'] ?? 0) }}">0</h2>
-                            <p class="text-secondary m-0">{{ $stat['label'] ?? '' }}</p>
+                        <div class="glass-card hero-stat-card h-100">
+                            <span class="elegant-card__shine" aria-hidden="true"></span>
+                            <div class="hero-stat-card__body">
+                                <div class="elegant-card__icon-wrap hero-stat-card__icon">
+                                    <i class="fas {{ $stat['icon'] ?? 'fa-star' }}"></i>
+                                </div>
+                                <h2 class="hero-stat-card__value counter en-text fw-bold" data-target="{{ (int) ($stat['target'] ?? 0) }}">0</h2>
+                                <p class="hero-stat-card__label">{{ $stat['label'] ?? '' }}</p>
+                            </div>
                         </div>
                     </div>
                 @endforeach

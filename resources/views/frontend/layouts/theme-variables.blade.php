@@ -18,7 +18,9 @@
   --text-primary: {{ $themeColors['text_primary_light'] }};
 }
 [data-theme="dark"] {
-  --glass-border: {{ $themeColors['glass_border_dark'] }};
-  --glass-hover-border: {{ $themeColors['glass_hover_border_dark'] }};
+  --page-bg: #000000;
+  --text-primary: #f5f5f5;
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-hover-border: rgba(255, 255, 255, 0.16);
 }
 </style>
