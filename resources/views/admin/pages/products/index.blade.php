@@ -51,8 +51,9 @@
                                         <option value="activate">تفعيل المنتجات المحددة</option>
                                         <option value="draft">تحويل إلى مسودة</option>
                                         <option value="hide">إخفاء من المتجر</option>
+                                        <option value="delete">حذف المنتجات المحددة</option>
                                     </select>
-                                    <button type="submit" class="btn btn-sm btn-outline-primary" onclick="return confirm('تأكيد تنفيذ الإجراء الجماعي على المنتجات المحددة؟');">تطبيق</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-primary" id="bulk-apply-btn">تطبيق</button>
                                 </form>
                                 <button type="button" id="btn-compare-selected" class="btn btn-sm btn-outline-success" disabled>مقارنة المنتجات</button>
                             </div>
@@ -234,6 +235,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     initProductsTableControls();
+
+    const bulkForm = document.getElementById('bulk-products-form');
+    if (bulkForm) {
+        bulkForm.addEventListener('submit', function(e) {
+            const action = bulkForm.querySelector('[name="action"]')?.value;
+            const checked = tableContainer
+                ? tableContainer.querySelectorAll('input[name="ids[]"]:checked').length
+                : 0;
+
+            if (!action) {
+                e.preventDefault();
+                alert('اختر إجراءً جماعياً من القائمة.');
+                return;
+            }
+
+            if (checked === 0) {
+                e.preventDefault();
+                alert('حدد منتجاً واحداً على الأقل.');
+                return;
+            }
+
+            if (action === 'delete') {
+                if (!confirm('حذف ' + checked + ' منتج(ات)؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                    e.preventDefault();
+                }
+                return;
+            }
+
+            if (!confirm('تأكيد تنفيذ الإجراء الجماعي على المنتجات المحددة؟')) {
+                e.preventDefault();
+            }
+        });
+    }
 });
 </script>
 @stop

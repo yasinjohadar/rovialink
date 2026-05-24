@@ -16,6 +16,8 @@ use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Services\CurrencyService;
 use App\Services\Storage\StorageHelperService;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ProductController extends Controller
@@ -125,8 +127,22 @@ class ProductController extends Controller
         $data = $request->validate([
             'ids' => ['required', 'array', 'min:1'],
             'ids.*' => ['integer', 'exists:products,id'],
-            'action' => ['required', 'in:activate,draft,hide'],
+            'action' => ['required', 'in:activate,draft,hide,delete'],
         ]);
+
+        if ($data['action'] === 'delete') {
+            $products = Product::with(['images', 'files'])->whereIn('id', $data['ids'])->get();
+            $count = $products->count();
+
+            foreach ($products as $product) {
+                $this->deleteProduct($product);
+            }
+
+            return redirect()->route('admin.products.index')->with(
+                'success',
+                'تم حذف '.$count.' منتج(ات) بنجاح.'
+            );
+        }
 
         $query = Product::whereIn('id', $data['ids']);
 
@@ -173,27 +189,14 @@ class ProductController extends Controller
         $product->attributes()->sync($request->input('attribute_ids', []));
         $this->syncDigitalFiles($product, $request);
 
-        // حفظ الصورة الرئيسية إن وُجدت
-        $orderCounter = 0;
+        $galleryOrder = 0;
+
         if ($request->hasFile('primary_image')) {
-            $primaryPath = $this->storageHelper->storeUploadedFileWithFailover(
-                $this->storageHelper->mediaDisk(),
-                'products/' . $product->id,
-                $request->file('primary_image'),
-                'image'
-            );
-            if (! $primaryPath) {
+            if (! $this->setPrimaryImage($product, $request->file('primary_image'))) {
                 return redirect()->back()->withInput()->with('error', 'فشل رفع الصورة الرئيسية.');
             }
-            $product->images()->create([
-                'path' => $primaryPath,
-                'order' => $orderCounter,
-                'is_primary' => true,
-            ]);
-            $orderCounter++;
         }
 
-        // حفظ صور المعرض
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $file) {
                 $path = $this->storageHelper->storeUploadedFileWithFailover(
@@ -207,9 +210,8 @@ class ProductController extends Controller
                 }
                 $product->images()->create([
                     'path' => $path,
-                    'order' => $orderCounter + $index,
-                    // إذا لم تُرفع صورة رئيسية سيتم اعتبار أول صورة من المعرض كصورة رئيسية
-                    'is_primary' => !$request->hasFile('primary_image') && $index === 0,
+                    'order' => $galleryOrder + $index,
+                    'is_primary' => false,
                 ]);
             }
         }
@@ -233,7 +235,7 @@ class ProductController extends Controller
         $categories = Category::orderBy('name')->get();
         $brands = Brand::orderBy('order')->orderBy('name')->get();
         $attributes = ProductAttribute::with('values')->orderBy('order')->get();
-        $product->load(['images', 'attributes', 'variants.attributeValues', 'files']);
+        $product->load(['images', 'primaryImage', 'galleryImages', 'attributes', 'variants.attributeValues', 'files']);
         $aiModels = $modelService->getAvailableModels('all');
 
         return view('admin.pages.products.edit', compact('product', 'categories', 'brands', 'attributes', 'aiModels'));
@@ -288,30 +290,14 @@ class ProductController extends Controller
             $defaultVariant->update(['is_default' => true]);
         }
 
-        // تحميل صورة رئيسية جديدة إن وُجدت
-        $maxOrder = $product->images()->max('order') ?? -1;
         if ($request->hasFile('primary_image')) {
-            $primaryPath = $this->storageHelper->storeUploadedFileWithFailover(
-                $this->storageHelper->mediaDisk(),
-                'products/' . $product->id,
-                $request->file('primary_image'),
-                'image'
-            );
-            if (! $primaryPath) {
+            if (! $this->setPrimaryImage($product, $request->file('primary_image'))) {
                 return redirect()->back()->withInput()->with('error', 'فشل رفع الصورة الرئيسية.');
             }
-            // إلغاء تعيين أي صورة رئيسية سابقة
-            $product->images()->update(['is_primary' => false]);
-            $product->images()->create([
-                'path' => $primaryPath,
-                'order' => $maxOrder + 1,
-                'is_primary' => true,
-            ]);
-            $maxOrder++;
         }
 
-        // إضافة صور جديدة للمعرض
         if ($request->hasFile('images')) {
+            $maxOrder = (int) $product->galleryImages()->max('order');
             foreach ($request->file('images') as $file) {
                 $path = $this->storageHelper->storeUploadedFileWithFailover(
                     $this->storageHelper->mediaDisk(),
@@ -335,21 +321,73 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        foreach ($product->images as $img) {
-            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $img->path);
-        }
-        $product->delete();
+        $product->load(['images', 'files']);
+        $this->deleteProduct($product);
+
         return redirect()->route('admin.products.index')->with('success', 'تم حذف المنتج.');
     }
 
-    public function deleteImage(Product $product, ProductImage $image)
+    protected function deleteProduct(Product $product): void
+    {
+        foreach ($product->images as $img) {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $img->path);
+        }
+
+        foreach ($product->files as $file) {
+            if ($file->path && Storage::disk('public')->exists($file->path)) {
+                Storage::disk('public')->delete($file->path);
+            }
+        }
+
+        $product->delete();
+    }
+
+    public function deleteImage(Request $request, Product $product, ProductImage $image)
     {
         if ($image->product_id !== $product->id) {
             abort(404);
         }
+
+        $wasPrimary = (bool) $image->is_primary;
         $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $image->path);
         $image->delete();
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'was_primary' => $wasPrimary,
+                'message' => $wasPrimary ? 'تم حذف الصورة الرئيسية.' : 'تم حذف صورة المعرض.',
+            ]);
+        }
+
         return back()->with('success', 'تم حذف الصورة.');
+    }
+
+    protected function setPrimaryImage(Product $product, UploadedFile $file): bool
+    {
+        $path = $this->storageHelper->storeUploadedFileWithFailover(
+            $this->storageHelper->mediaDisk(),
+            'products/'.$product->id,
+            $file,
+            'image'
+        );
+
+        if (! $path) {
+            return false;
+        }
+
+        foreach ($product->images()->where('is_primary', true)->get() as $oldPrimary) {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $oldPrimary->path);
+            $oldPrimary->delete();
+        }
+
+        $product->images()->create([
+            'path' => $path,
+            'order' => 0,
+            'is_primary' => true,
+        ]);
+
+        return true;
     }
 
     private function syncDigitalFiles(Product $product, Request $request): void

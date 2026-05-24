@@ -135,13 +135,19 @@
                                 @php
                                     $primaryImage = $product->primary_image;
                                 @endphp
-                                @if($primaryImage)
-                                    <div class="mb-2">
-                                        <img src="{{ $primaryImage->url }}" alt="" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
-                                    </div>
-                                @else
-                                    <p class="text-muted small">لم يتم تعيين صورة رئيسية بعد، سيتم استخدام أول صورة من المعرض.</p>
-                                @endif
+                                <div id="primary-image-block">
+                                    @if($primaryImage)
+                                        <div class="mb-2 position-relative d-inline-block" id="primary-image-preview">
+                                            <img src="{{ $primaryImage->url }}" alt="" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+                                            <button type="button"
+                                                class="btn btn-sm btn-danger p-1 position-absolute top-0 start-0 product-primary-image-delete"
+                                                data-delete-url="{{ route('admin.products.images.delete', [$product, $primaryImage]) }}"
+                                                title="حذف الصورة الرئيسية">&times;</button>
+                                        </div>
+                                    @else
+                                        <p class="text-muted small mb-2" id="primary-image-empty-hint">لم يتم تعيين صورة رئيسية بعد، سيتم استخدام أول صورة من المعرض في المتجر.</p>
+                                    @endif
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">تعيين صورة رئيسية جديدة (اختياري)</label>
                                     <input type="file" name="primary_image" class="form-control" accept="image/*">
@@ -149,11 +155,12 @@
                                 </div>
                                 <label class="form-label">معرض الصور الحالي</label>
                                 <div class="d-flex gap-2 flex-wrap mb-2" id="product-gallery-images">
-                                    @foreach($product->images as $img)
+                                    @foreach($product->galleryImages as $img)
                                         <div class="position-relative product-gallery-item" data-image-id="{{ $img->id }}">
                                             <img src="{{ $img->url }}" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
                                             <button type="button"
                                                 class="btn btn-sm btn-danger p-1 position-absolute top-0 start-0 product-image-delete"
+                                                style="z-index: 5; line-height: 1; min-width: 22px; min-height: 22px;"
                                                 data-delete-url="{{ route('admin.products.images.delete', [$product, $img]) }}"
                                                 title="حذف الصورة">&times;</button>
                                         </div>
@@ -299,6 +306,91 @@
 @stop
 
 @section('script')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function csrfToken() {
+        return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    }
+
+    async function requestImageDelete(url, confirmMessage) {
+        if (!url) {
+            return false;
+        }
+        if (!confirm(confirmMessage)) {
+            return false;
+        }
+
+        const response = await fetch(url, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken(),
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ _token: csrfToken() }),
+        });
+
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (e) {
+            data = null;
+        }
+
+        if (!response.ok || !data || !data.success) {
+            const message = (data && data.message) ? data.message : 'تعذر حذف الصورة (رمز ' + response.status + ')';
+            throw new Error(message);
+        }
+
+        return data;
+    }
+
+    document.getElementById('product-gallery-images')?.addEventListener('click', function (event) {
+        const btn = event.target.closest('.product-image-delete');
+        if (!btn) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+
+        const item = btn.closest('.product-gallery-item');
+        const url = btn.getAttribute('data-delete-url');
+
+        requestImageDelete(url, 'حذف صورة المعرض؟')
+            .then(function () {
+                item?.remove();
+            })
+            .catch(function (error) {
+                alert(error.message || 'تعذر حذف الصورة');
+            });
+    });
+
+    document.getElementById('primary-image-block')?.addEventListener('click', function (event) {
+        const btn = event.target.closest('.product-primary-image-delete');
+        if (!btn) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+
+        const url = btn.getAttribute('data-delete-url');
+        const block = document.getElementById('primary-image-block');
+
+        requestImageDelete(url, 'حذف الصورة الرئيسية؟')
+            .then(function () {
+                if (!block) {
+                    return;
+                }
+                block.innerHTML = '<p class="text-muted small mb-2" id="primary-image-empty-hint">لم يتم تعيين صورة رئيسية بعد، سيتم استخدام أول صورة من المعرض في المتجر.</p>';
+            })
+            .catch(function (error) {
+                alert(error.message || 'تعذر حذف الصورة');
+            });
+    });
+});
+</script>
 <!-- TinyMCE Editor (نفس محرر المدونة) -->
 <script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.3/tinymce.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
@@ -369,30 +461,6 @@ document.getElementById('product-edit-form')?.addEventListener('submit', functio
 </script>
 <script>
 (function() {
-    const csrf = @json(csrf_token());
-    document.querySelectorAll('.product-image-delete').forEach(function (btn) {
-        btn.addEventListener('click', async function () {
-            if (!confirm('حذف الصورة؟')) return;
-            const wrap = this.closest('.product-gallery-item');
-            const url = this.getAttribute('data-delete-url');
-            try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrf,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams({ _method: 'DELETE' }),
-                });
-                if (!res.ok) throw new Error('فشل حذف الصورة');
-                wrap?.remove();
-            } catch (e) {
-                alert(e.message || 'تعذر حذف الصورة');
-            }
-        });
-    });
-
     const digitalCb = document.getElementById('is_digital_cb');
     const digitalSection = document.getElementById('digital-files-section');
     const digitalTbody = document.getElementById('digital-files-tbody');
@@ -445,7 +513,7 @@ document.getElementById('product-edit-form')?.addEventListener('submit', functio
         }
     });
 
-    document.getElementById('btn-generate-variants').addEventListener('click', function() {
+    document.getElementById('btn-generate-variants')?.addEventListener('click', function() {
         const checked = document.querySelectorAll('.product-attribute-cb:checked');
         const attributes = [];
         checked.forEach(function(cb) {
@@ -466,6 +534,7 @@ document.getElementById('product-edit-form')?.addEventListener('submit', functio
         }
         const valueArrays = attributes.map(a => a.values);
         const combinations = cartesian(valueArrays);
+        if (!tbody) return;
         const nextIndex = tbody.querySelectorAll('tr').length;
         combinations.forEach(function(combo, i) {
             const idx = nextIndex + i;
@@ -483,7 +552,7 @@ document.getElementById('product-edit-form')?.addEventListener('submit', functio
         });
     });
 
-    tbody.addEventListener('click', function(e) {
+    tbody?.addEventListener('click', function(e) {
         if (e.target.classList.contains('remove-variant')) {
             e.target.closest('tr').remove();
         }

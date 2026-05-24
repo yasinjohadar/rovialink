@@ -101,12 +101,17 @@ class Product extends Model
         return $this->hasMany(ProductImage::class)->orderBy('order')->orderBy('id');
     }
 
-    public function primaryImage()
+    public function galleryImages()
     {
-        return $this->hasOne(ProductImage::class)
-            ->orderByDesc('is_primary')
+        return $this->hasMany(ProductImage::class)
+            ->where('is_primary', false)
             ->orderBy('order')
             ->orderBy('id');
+    }
+
+    public function primaryImage()
+    {
+        return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
 
     public function files()
