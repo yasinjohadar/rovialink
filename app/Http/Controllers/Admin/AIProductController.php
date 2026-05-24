@@ -25,8 +25,10 @@ class AIProductController extends Controller
             'category_id' => 'nullable|exists:categories,id',
             'price' => 'nullable|numeric|min:0',
             'features' => 'nullable|string|max:2000',
+            'short_description' => 'nullable|string|max:5000',
             'language' => 'nullable|in:ar,en',
             'ai_model_id' => 'nullable|exists:ai_models,id',
+            'step' => 'nullable|in:short,description',
         ]);
 
         try {
@@ -40,29 +42,67 @@ class AIProductController extends Controller
                 $categoryName = Category::find($validated['category_id'])?->name ?? '';
             }
 
-            $data = $this->orchestrator->generateProductCopy(
-                $validated['name'],
-                $model,
-                [
-                    'language' => $validated['language'] ?? 'ar',
-                    'category' => $categoryName,
-                    'price' => $validated['price'] ?? '',
-                    'features' => $validated['features'] ?? '',
-                ]
-            );
+            $context = [
+                'language' => $validated['language'] ?? 'ar',
+                'category' => $categoryName,
+                'price' => $validated['price'] ?? '',
+                'features' => $validated['features'] ?? '',
+                'short_description' => $validated['short_description'] ?? '',
+            ];
+
+            $step = $validated['step'] ?? 'short';
+
+            $data = match ($step) {
+                'description' => $this->orchestrator->generateProductDescription(
+                    $validated['name'],
+                    $model,
+                    $context,
+                ),
+                default => $this->orchestrator->generateProductShortDescription(
+                    $validated['name'],
+                    $model,
+                    $context,
+                ),
+            };
 
             return response()->json([
                 'success' => true,
                 'data' => $data,
+                'step' => $step,
             ], 200, [], JSON_UNESCAPED_UNICODE);
         } catch (\Throwable $e) {
-            Log::error('AI product copy failed: '.$e->getMessage());
+            Log::error('AI product copy failed: '.$e->getMessage(), [
+                'step' => $validated['step'] ?? 'short',
+            ]);
 
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $this->friendlyAiErrorMessage($e),
             ], 500);
         }
+    }
+
+    protected function friendlyAiErrorMessage(\Throwable $e): string
+    {
+        $errorMessage = $e->getMessage();
+
+        if (str_contains($errorMessage, 'timeout') || str_contains($errorMessage, 'Timeout')) {
+            return 'انتهت مهلة الخادم أو مزود AI. جرّب نموذجاً أسرع أو أعد المحاولة بعد قليل.';
+        }
+
+        if (stripos($errorMessage, 'API Key') !== false || stripos($errorMessage, 'api key') !== false) {
+            return 'مشكلة في مفتاح API. تحقق من إعدادات النموذج في لوحة AI.';
+        }
+
+        if (str_contains($errorMessage, 'quota') || str_contains($errorMessage, 'rate limit') || str_contains($errorMessage, '429')) {
+            return 'تم تجاوز حد الطلبات أو نفاد الرصيد. انتظر دقيقة أو غيّر النموذج.';
+        }
+
+        if (str_contains($errorMessage, '<html') || str_contains($errorMessage, 'is not valid JSON')) {
+            return 'رد غير متوقع من مزود AI (صفحة HTML). تحقق من base URL والنموذج في OpenRouter.';
+        }
+
+        return 'حدث خطأ أثناء التوليد: '.$errorMessage;
     }
 
     public function generateSeo(Request $request)

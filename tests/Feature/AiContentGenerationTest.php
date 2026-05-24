@@ -55,7 +55,27 @@ test('blog ai generate returns structured content', function () {
         ->assertJsonPath('data.title', 'مقال تجريبي');
 });
 
-test('product ai generate copy fills description fields', function () {
+test('product ai generate copy short step returns short description', function () {
+    $user = User::factory()->create(['is_active' => true]);
+    $model = createActiveAiModel();
+
+    $this->mock(DynamicAiBridge::class, function ($mock) {
+        $mock->shouldReceive('promptStructured')
+            ->once()
+            ->andReturn(['short_description' => 'وصف قصير']);
+    });
+
+    $this->actingAs($user)->postJson(route('admin.ai.products.generate-copy'), [
+        'name' => 'منتج تجريبي',
+        'ai_model_id' => $model->id,
+        'step' => 'short',
+    ])
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('data.short_description', 'وصف قصير');
+});
+
+test('product ai generate copy description step returns html', function () {
     $user = User::factory()->create(['is_active' => true]);
     $model = createActiveAiModel();
 
@@ -63,19 +83,19 @@ test('product ai generate copy fills description fields', function () {
         $mock->shouldReceive('promptStructured')
             ->once()
             ->andReturn([
-                'short_description' => 'وصف قصير',
                 'description' => '<p>'.str_repeat('وصف كامل للمنتج. ', 40).'</p>',
             ]);
     });
 
-    $response = $this->actingAs($user)->postJson(route('admin.ai.products.generate-copy'), [
+    $this->actingAs($user)->postJson(route('admin.ai.products.generate-copy'), [
         'name' => 'منتج تجريبي',
         'ai_model_id' => $model->id,
-    ]);
-
-    $response->assertOk()
+        'step' => 'description',
+        'short_description' => 'وصف قصير',
+    ])
+        ->assertOk()
         ->assertJsonPath('success', true)
-        ->assertJsonPath('data.short_description', 'وصف قصير');
+        ->assertJsonPath('step', 'description');
 });
 
 test('product ai generate seo returns meta fields', function () {

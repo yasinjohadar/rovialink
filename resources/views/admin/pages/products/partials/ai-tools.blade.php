@@ -65,7 +65,40 @@
         const categoryId = document.querySelector('[name="category_id"]')?.value;
         const price = document.querySelector('[name="price"]')?.value;
         const features = document.getElementById('product-ai-features')?.value?.trim() || '';
-        return { name, category_id: categoryId, price, features, ai_model_id: modelId() };
+        const shortDescription = document.querySelector('[name="short_description"]')?.value?.trim() || '';
+        return { name, category_id: categoryId, price, features, short_description: shortDescription, ai_model_id: modelId() };
+    }
+
+    function isBadDescription(html) {
+        if (!html || typeof html !== 'string') return true;
+        const plain = html.replace(/<[^>]+>/g, '').trim();
+        if (plain.length < 200) return true;
+        return /^\|?\s*(short_description|description)\s*$/i.test(plain);
+    }
+
+    async function parseJsonResponse(res) {
+        const contentType = res.headers.get('content-type') || '';
+        const text = await res.text();
+
+        if (contentType.includes('application/json') || (text.trim().startsWith('{') || text.trim().startsWith('['))) {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                throw new Error('رد الخادم غير صالح (JSON تالف).');
+            }
+        }
+
+        if (res.status === 419) {
+            throw new Error('انتهت الجلسة. حدّث الصفحة وسجّل الدخول مرة أخرى.');
+        }
+        if (res.status === 504 || res.status === 502) {
+            throw new Error('انتهت مهلة الخادم (504/502). التوليد يستغرق وقتاً — جرّب نموذجاً أسرع أو زِد مهلة PHP/nginx على الاستضافة.');
+        }
+        if (res.status === 401 || res.status === 403) {
+            throw new Error('غير مصرح. تأكد من تسجيل الدخول كمسؤول.');
+        }
+
+        throw new Error('الخادم أعاد صفحة HTML بدل JSON (غالباً خطأ استضافة أو مهلة). راجع سجل Laravel.');
     }
 
     async function post(url, body) {
@@ -75,10 +108,11 @@
                 'Content-Type': 'application/json',
                 'X-CSRF-TOKEN': csrf,
                 'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
             },
             body: JSON.stringify(body),
         });
-        const data = await res.json();
+        const data = await parseJsonResponse(res);
         if (!res.ok || !data.success) {
             throw new Error(data.message || 'فشل الطلب');
         }
@@ -91,42 +125,42 @@
             status('أدخل اسم المنتج أولاً', true);
             return;
         }
-        status('جاري توليد وصف شامل (قد يستغرق دقيقة أو أكثر)...');
-        this.disabled = true;
+
+        const shortEl = document.querySelector('[name="short_description"]');
+        const descEl = document.querySelector('[name="description"]');
+        const editor = window.tinymce?.get('description');
+        const btn = this;
+
+        btn.disabled = true;
+
         try {
-            const data = await post(copyUrl, base);
+            status('الخطوة 1/2: جاري توليد الوصف المختصر...');
+            const shortData = await post(copyUrl, { ...base, step: 'short' });
 
-            function isBadDescription(html) {
-                if (!html || typeof html !== 'string') return true;
-                const plain = html.replace(/<[^>]+>/g, '').trim();
-                if (plain.length < 200) return true;
-                return /^\|?\s*(short_description|description)\s*$/i.test(plain);
+            if (shortEl && shortData.short_description) {
+                shortEl.value = shortData.short_description;
+                base.short_description = shortData.short_description;
             }
 
-            const shortEl = document.querySelector('[name="short_description"]');
-            const descEl = document.querySelector('[name="description"]');
-            const editor = window.tinymce?.get('description');
+            status('الخطوة 2/2: جاري توليد الوصف الكامل (قد يستغرق دقيقة)...');
+            const longData = await post(copyUrl, { ...base, step: 'description' });
 
-            if (shortEl && data.short_description) {
-                shortEl.value = data.short_description;
-            }
-
-            if (data.description && !isBadDescription(data.description)) {
-                if (descEl) descEl.value = data.description;
+            if (longData.description && !isBadDescription(longData.description)) {
+                if (descEl) descEl.value = longData.description;
                 if (editor) {
-                    editor.setContent(data.description);
+                    editor.setContent(longData.description);
                     editor.save();
                 }
-                status('تم توليد الوصف بنجاح');
-            } else if (data.description && isBadDescription(data.description)) {
-                status('الوصف الكامل ضعيف من النموذج — جرّب نموذجاً أقوى (مثل gemini-2.0-flash) أو أعد المحاولة.', true);
+                status('تم توليد الوصف المختصر والكامل بنجاح');
+            } else if (longData.description && isBadDescription(longData.description)) {
+                status('الوصف الكامل ضعيف من النموذج — جرّب gemini-2.0-flash أو زِد max tokens.', true);
             } else {
-                status('تم الوصف المختصر فقط — فشل الوصف الطويل. غيّر النموذج أو زِد max tokens.', true);
+                status('تم الوصف المختصر فقط — فشل الوصف الطويل. غيّر النموذج أو أعد المحاولة.', true);
             }
         } catch (e) {
             status(e.message, true);
         } finally {
-            this.disabled = false;
+            btn.disabled = false;
         }
     });
 

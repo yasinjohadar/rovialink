@@ -4,8 +4,8 @@ namespace App\Services\Ai;
 
 use App\Ai\Agents\BlogWriterAgent;
 use App\Ai\Agents\ContentToolsAgent;
-use App\Ai\Agents\ProductCopyAgent;
 use App\Ai\Agents\ProductLongDescriptionAgent;
+use App\Ai\Agents\ProductShortDescriptionAgent;
 use App\Ai\Agents\SeoApplyAgent;
 use App\Ai\Agents\SeoAuditAgent;
 use App\Ai\Agents\SeoOptimizerAgent;
@@ -177,60 +177,71 @@ PROMPT;
     /**
      * @return array<string, mixed>
      */
-    public function generateProductCopy(string $productName, AIModel $model, array $context = []): array
+    /**
+     * @return array{short_description: string}
+     */
+    public function generateProductShortDescription(string $productName, AIModel $model, array $context = []): array
     {
-        set_time_limit(420);
+        set_time_limit(120);
 
         $language = $context['language'] ?? 'ar';
         $category = $context['category'] ?? '';
         $features = $context['features'] ?? '';
         $price = $context['price'] ?? '';
-        $wordTarget = $language === 'en' ? '800+ English words' : '1200+ كلمة عربية';
 
         $featuresBlock = $features !== ''
-            ? "معلومات إضافية من البائع:\n{$features}\n"
+            ? "معلومات إضافية:\n{$features}\n"
             : '';
 
         $prompt = <<<PROMPT
-اكتب وصفاً تسويقياً **شاملاً ومفصّلاً جداً** لصفحة منتج رقمي في متجر إلكتروني.
+اكتب وصفاً مختصراً (2–4 جمل) لمنتج رقمي:
 
 المنتج: {$productName}
 التصنيف: {$category}
 السعر: {$price}
 {$featuresBlock}
-المطلوب:
-- وصف قصير (2–4 جمل) في الحقل short_description
-- وصف كامل طويل جداً ({$wordTarget}) في الحقل description بصيغة HTML منظمة
-- إن كان المنتج إضافة/بلجن/قالب ووردبريس: اذكر التوافق، Elementor إن لزم، المتطلبات، الميزات، حالات الاستخدام
-- قسّم الوصف الكامل بعناوين h2/h3 وقوائم ul/ol
-- لا تترك أقساماً فارغة؛ املأ كل قسم بمحتوى غني ومفيد للمشتري
 PROMPT;
 
-        $agent = new ProductCopyAgent(language: $language);
-        $data = $this->bridge->promptStructured($agent, $prompt, $model, 420);
-
-        $short = $this->sanitizeProductCopyField($data['short_description'] ?? '', 'short_description');
-        $description = $this->sanitizeProductCopyField($data['description'] ?? '', 'description');
-
-        if (! $this->isValidProductDescription($description)) {
-            Log::info('Product description invalid from first pass, retrying with long-description agent.', [
-                'snippet' => mb_substr($description, 0, 80),
-            ]);
-            $description = $this->generateProductLongDescription(
-                $productName,
-                $short,
-                $model,
-                $language,
-                $category,
-                $features,
-                $price
-            );
-        }
+        $agent = new ProductShortDescriptionAgent(language: $language);
+        $data = $this->bridge->promptStructured($agent, $prompt, $model, 90);
 
         return [
-            'short_description' => $short,
-            'description' => $description,
+            'short_description' => $this->sanitizeProductCopyField($data['short_description'] ?? '', 'short_description'),
         ];
+    }
+
+    /**
+     * @return array{description: string}
+     */
+    public function generateProductDescription(string $productName, AIModel $model, array $context = []): array
+    {
+        set_time_limit(180);
+
+        $language = $context['language'] ?? 'ar';
+        $short = $context['short_description'] ?? '';
+
+        $description = $this->generateProductLongDescription(
+            $productName,
+            $short,
+            $model,
+            $language,
+            $context['category'] ?? '',
+            $context['features'] ?? '',
+            $context['price'] ?? '',
+        );
+
+        return ['description' => $description];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function generateProductCopy(string $productName, AIModel $model, array $context = []): array
+    {
+        $short = $this->generateProductShortDescription($productName, $model, $context);
+        $long = $this->generateProductDescription($productName, $model, array_merge($context, $short));
+
+        return array_merge($short, $long);
     }
 
     protected function generateProductLongDescription(
@@ -256,7 +267,7 @@ PROMPT;
 PROMPT;
 
         $agent = new ProductLongDescriptionAgent(language: $language);
-        $data = $this->bridge->promptStructured($agent, $prompt, $model, 420);
+        $data = $this->bridge->promptStructured($agent, $prompt, $model, 120);
         $description = $this->sanitizeProductCopyField($data['description'] ?? '', 'description');
 
         if (! $this->isValidProductDescription($description)) {
