@@ -3,7 +3,7 @@
 @section('content')
     @include('frontend.partials.checkout-hero')
 
-    <main class="container py-5 section-fade-up">
+    <main class="container py-5 section-fade-up checkout-order-page">
         <div class="text-center mb-5">
             <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-4" style="width:88px;height:88px;">
                 <i class="fas fa-check-circle fa-3x text-success"></i>
@@ -16,10 +16,10 @@
             <div class="col-lg-8">
                 <div class="glass-card p-4">
                     <h5 class="account-panel__title mb-4"><i class="fas fa-box me-2"></i> تفاصيل الطلب</h5>
-                    <div class="table-responsive">
-                        <table class="table table-borderless mb-0">
+                    <div class="table-responsive account-themed-table-wrap">
+                        <table class="table account-themed-table mb-0">
                             <thead>
-                                <tr class="text-muted small">
+                                <tr>
                                     <th>المنتج</th>
                                     <th>الكمية</th>
                                     <th>السعر</th>

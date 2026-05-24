@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<div class="container py-4">
+<div class="container py-4 account-order-page">
     @if(session('success'))
     <div class="alert alert-success mb-4">{{ session('success') }}</div>
     @endif
@@ -33,35 +33,34 @@
 
     <div class="row g-4">
         <div class="col-lg-8">
-            <div class="glass-card p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
-                    <div>
-                        <h5 class="fw-bold text-white m-0">المنتجات</h5>
-                    </div>
+            <div class="glass-card account-order-card p-4 mb-4">
+                <div class="account-panel__head">
+                    <h2 class="account-panel__title m-0">المنتجات</h2>
                     @include('frontend.pages.account.partials.order-status-badge', ['order' => $order])
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-borderless text-secondary">
+                <div class="table-responsive account-themed-table-wrap">
+                    <table class="table account-themed-table mb-0">
                         <thead>
-                            <tr class="border-bottom border-secondary border-opacity-25">
-                                <th class="text-secondary small">المنتج</th>
-                                <th class="text-secondary small">الكمية</th>
-                                <th class="text-secondary small">السعر</th>
-                                <th class="text-secondary small">المجموع</th>
+                            <tr>
+                                <th>المنتج</th>
+                                <th>الكمية</th>
+                                <th>السعر</th>
+                                <th>المجموع</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($order->items as $item)
-                            <tr class="border-bottom border-secondary border-opacity-10">
-                                <td class="py-3 text-white">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <img src="{{ product_image_url($item->product?->primary_image?->path ?? null, $item->product_id) }}" alt="" width="48" height="48" class="rounded-3 object-fit-cover">
-                                        <span>{{ $item->product_name }}</span>
+                            <tr>
+                                <td>
+                                    <div class="account-order-product">
+                                        <img src="{{ product_image_url($item->product?->primary_image?->path ?? null, $item->product_id) }}"
+                                             alt="" width="48" height="48" class="account-order-product__img">
+                                        <span class="account-order-product__name">{{ $item->product_name }}</span>
                                     </div>
                                 </td>
-                                <td class="py-3 en-text">{{ $item->quantity }}</td>
-                                <td class="py-3 en-text">{{ number_format($item->unit_price, 2) }} ر.س</td>
-                                <td class="py-3 en-text text-accent fw-bold">{{ number_format($item->total, 2) }} ر.س</td>
+                                <td class="en-text">{{ $item->quantity }}</td>
+                                <td class="en-text">{{ number_format($item->unit_price, 2) }} {{ $order->currency ?? 'SAR' }}</td>
+                                <td class="en-text text-accent fw-bold">{{ number_format($item->total, 2) }} {{ $order->currency ?? 'SAR' }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -71,8 +70,8 @@
 
             @php $hasDownloads = $order->items->flatMap->downloads->isNotEmpty(); @endphp
             @if($hasDownloads)
-            <div class="glass-card p-4 mb-4">
-                <h5 class="fw-bold text-white mb-3"><i class="fas fa-download text-accent me-2"></i> التحميلات الرقمية</h5>
+            <div class="glass-card account-order-card p-4 mb-4">
+                <h2 class="account-panel__title mb-3"><i class="fas fa-download me-2"></i> التحميلات الرقمية</h2>
                 <ul class="list-unstyled mb-0">
                     @foreach($order->items as $item)
                         @foreach($item->downloads as $download)
@@ -81,7 +80,7 @@
                                 <i class="fas fa-download me-1"></i> تحميل — {{ $item->product_name }}
                             </a>
                             @if($download->expires_at)
-                            <span class="text-secondary small ms-2">ينتهي {{ $download->expires_at->format('Y-m-d') }}</span>
+                            <span class="account-order-muted small ms-2">ينتهي {{ $download->expires_at->format('Y-m-d') }}</span>
                             @endif
                         </li>
                         @endforeach
@@ -89,17 +88,17 @@
                 </ul>
             </div>
             @else
-            <div class="glass-card p-4 mb-4">
-                <p class="text-secondary mb-0"><i class="fas fa-bolt text-accent me-2"></i> منتج رقمي — التسليم يتم بعد تأكيد الدفع. تواصل مع الدعم إذا لم تصلك روابط التحميل.</p>
+            <div class="glass-card account-order-card p-4 mb-4">
+                <p class="account-order-muted mb-0"><i class="fas fa-bolt text-accent me-2"></i> منتج رقمي — التسليم يتم بعد تأكيد الدفع. تواصل مع الدعم إذا لم تصلك روابط التحميل.</p>
             </div>
             @endif
 
             @if($order->status?->is_final && !$hasPendingReturn)
-            <div class="glass-card p-4">
-                <h6 class="fw-bold text-white mb-3">طلب إرجاع</h6>
+            <div class="glass-card account-order-card p-4">
+                <h2 class="account-panel__title mb-3">طلب إرجاع</h2>
                 <form method="POST" action="{{ route('frontend.account.orders.return', $order) }}">
                     @csrf
-                    <textarea name="reason" class="form-control bg-glass text-white border-secondary mb-3" rows="3" placeholder="سبب طلب الإرجاع..." required>{{ old('reason') }}</textarea>
+                    <textarea name="reason" class="form-control bg-glass account-order-input border-secondary mb-3" rows="3" placeholder="سبب طلب الإرجاع..." required>{{ old('reason') }}</textarea>
                     <button type="submit" class="btn btn-outline-warning rounded-pill px-4">إرسال طلب إرجاع</button>
                 </form>
             </div>
@@ -109,49 +108,49 @@
         </div>
 
         <div class="col-lg-4">
-            <div class="glass-card p-4 position-sticky" style="top:100px;">
-                <h5 class="fw-bold text-white mb-3">ملخص الطلب</h5>
-                <div class="d-flex justify-content-between text-secondary mb-2">
+            <div class="glass-card account-order-card account-order-summary p-4 position-sticky" style="top:100px;">
+                <h2 class="account-panel__title mb-3">ملخص الطلب</h2>
+                <div class="d-flex justify-content-between account-order-muted mb-2">
                     <span>المجموع الفرعي</span>
-                    <span class="en-text">{{ number_format($order->subtotal, 2) }} ر.س</span>
+                    <span class="en-text account-order-value">{{ number_format($order->subtotal, 2) }} {{ $order->currency ?? 'SAR' }}</span>
                 </div>
                 @if($order->discount_amount > 0)
                 <div class="d-flex justify-content-between text-success mb-2">
                     <span>الخصم @if($order->coupon_code)({{ $order->coupon_code }})@endif</span>
-                    <span class="en-text">-{{ number_format($order->discount_amount, 2) }} ر.س</span>
+                    <span class="en-text">−{{ number_format($order->discount_amount, 2) }} {{ $order->currency ?? 'SAR' }}</span>
                 </div>
                 @endif
                 @if($order->tax_amount > 0)
-                <div class="d-flex justify-content-between text-secondary mb-2">
+                <div class="d-flex justify-content-between account-order-muted mb-2">
                     <span>الضريبة</span>
-                    <span class="en-text">{{ number_format($order->tax_amount, 2) }} ر.س</span>
+                    <span class="en-text account-order-value">{{ number_format($order->tax_amount, 2) }} {{ $order->currency ?? 'SAR' }}</span>
                 </div>
                 @endif
-                <hr class="border-secondary border-opacity-25">
+                <hr class="account-order-divider">
                 <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold text-white">الإجمالي</span>
-                    <span class="fw-bold text-accent fs-4 en-text">{{ number_format($order->total, 2) }} ر.س</span>
+                    <span class="account-order-total-label">الإجمالي</span>
+                    <span class="account-order-total-value en-text">{{ number_format($order->total, 2) }} {{ $order->currency ?? 'SAR' }}</span>
                 </div>
 
                 @php $latestPayment = $order->payments->sortByDesc('id')->first(); @endphp
                 @if($latestPayment)
-                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
-                    <h6 class="fw-bold text-white mb-2">الدفع</h6>
-                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                <div class="mt-4 pt-3 account-order-payment">
+                    <h3 class="account-panel__title account-panel__title--sm mb-2">الدفع</h3>
+                    <div class="d-flex justify-content-between account-order-muted small mb-2">
                         <span>الوسيلة</span>
-                        <span>{{ $latestPayment->paymentMethod?->displayLabel() ?? '—' }}</span>
+                        <span class="account-order-value">{{ $latestPayment->paymentMethod?->displayLabel() ?? '—' }}</span>
                     </div>
-                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                    <div class="d-flex justify-content-between account-order-muted small mb-2">
                         <span>الحالة</span>
                         @php
                             $paymentStatusMap = [
                                 'completed' => ['label' => 'مكتمل', 'class' => 'text-success'],
                                 'pending' => ['label' => 'قيد الانتظار', 'class' => 'text-warning'],
                                 'failed' => ['label' => 'فشل', 'class' => 'text-danger'],
-                                'cancelled' => ['label' => 'ملغي', 'class' => 'text-secondary'],
+                                'cancelled' => ['label' => 'ملغي', 'class' => 'account-order-muted'],
                                 'refunded' => ['label' => 'مسترد', 'class' => 'text-info'],
                             ];
-                            $paymentUi = $paymentStatusMap[$latestPayment->status] ?? ['label' => $latestPayment->status, 'class' => 'text-secondary'];
+                            $paymentUi = $paymentStatusMap[$latestPayment->status] ?? ['label' => $latestPayment->status, 'class' => 'account-order-muted'];
                         @endphp
                         <span class="{{ $paymentUi['class'] }}">{{ $paymentUi['label'] }}</span>
                     </div>
