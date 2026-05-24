@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\CouponUsage;
+use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -44,6 +45,13 @@ class ReportController extends Controller
         $topProducts = $this->buildTopProducts($startDate, $endDate);
         $couponSummary = $this->buildCouponSummary($startDate, $endDate);
 
+        $paymentStats = Payment::query()
+            ->whereBetween('created_at', [$startDate, $endDate->copy()->endOfDay()])
+            ->selectRaw('status, COUNT(*) as count, SUM(amount) as total')
+            ->groupBy('status')
+            ->get()
+            ->keyBy('status');
+
         $filters = [
             'start' => $startDate->toDateString(),
             'end' => $endDate->toDateString(),
@@ -56,6 +64,7 @@ class ReportController extends Controller
             'salesSeries' => $salesSeries,
             'topProducts' => $topProducts,
             'couponSummary' => $couponSummary,
+            'paymentStats' => $paymentStats,
         ]);
     }
 

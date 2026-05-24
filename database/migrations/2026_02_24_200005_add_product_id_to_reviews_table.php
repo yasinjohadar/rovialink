@@ -8,14 +8,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        if (!Schema::hasColumn('reviews', 'product_id')) {
+        if (! Schema::hasColumn('reviews', 'product_id')) {
             Schema::table('reviews', function (Blueprint $table) {
-                $table->foreignId('product_id')->nullable()->after('id')->constrained('products')->onDelete('cascade');
-                $table->index('product_id');
+                $table->foreignId('product_id')->nullable()->constrained('products')->onDelete('cascade');
             });
         }
-        // Add unique constraint for one review per user per product if not exists
-        if (!Schema::hasIndex('reviews', 'unique_product_user_review')) {
+
+        if (! Schema::hasIndex('reviews', 'unique_product_user_review')) {
             Schema::table('reviews', function (Blueprint $table) {
                 $table->unique(['product_id', 'user_id'], 'unique_product_user_review');
             });

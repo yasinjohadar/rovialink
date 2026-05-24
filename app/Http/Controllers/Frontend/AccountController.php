@@ -107,6 +107,7 @@ class AccountController extends Controller
             'returns',
             'statusHistory.newStatus',
             'statusHistory.oldStatus',
+            'payments.paymentMethod',
         ]);
 
         $statusSteps = OrderStatus::ordered()->get();
@@ -207,7 +208,7 @@ class AccountController extends Controller
         abort_if($order->user_id !== $request->user()->id, 403);
 
         $order->load('items.product');
-        $cart = session('cart', []);
+        $cartService = app(\App\Services\CartService::class);
 
         foreach ($order->items as $item) {
             $product = $item->product ?? Product::find($item->product_id);
@@ -215,24 +216,12 @@ class AccountController extends Controller
                 continue;
             }
 
-            $rowId = md5($product->id . '_' . ($item->product_variant_id ?? 'null'));
-
-            if (isset($cart[$rowId])) {
-                $cart[$rowId]['quantity'] += $item->quantity;
-            } else {
-                $cart[$rowId] = [
-                    'product_id' => $product->id,
-                    'variant_id' => $item->product_variant_id,
-                    'name' => $item->product_name ?? $product->name,
-                    'slug' => $product->slug,
-                    'price' => (float) $item->unit_price,
-                    'quantity' => $item->quantity,
-                    'image' => $product->primary_image?->path,
-                ];
-            }
+            $cartService->add(
+                (int) $product->id,
+                (int) $item->quantity,
+                $item->product_variant_id ? (int) $item->product_variant_id : null
+            );
         }
-
-        session(['cart' => $cart]);
 
         return redirect()->route('frontend.cart.index')
             ->with('success', 'تمت إضافة منتجات الطلب إلى السلة.');

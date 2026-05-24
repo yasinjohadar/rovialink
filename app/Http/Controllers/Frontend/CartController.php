@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Services\CouponService;
+use App\Services\CartService;
 use App\Services\Seo\SeoBuilder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -13,18 +13,19 @@ use Illuminate\Validation\ValidationException;
 class CartController extends Controller
 {
     public function __construct(
-        protected CouponService $couponService
+        protected CartService $cartService
     ) {}
 
     public function index()
     {
-        $cartItems = $this->getCartItems();
-        $cartTotal = $this->getCartTotal();
-        $discount = session('discount', 0);
-        $couponCode = session('coupon_code');
+        $cart = $this->cartService->getCart();
+        $cartItems = $this->cartService->toViewItems($cart);
+        $cartTotal = (float) $cart->subtotal;
+        $discount = (float) ($cart->discount_amount ?? 0);
+        $couponCode = $cart->coupon_code;
 
         $seo = SeoBuilder::forPage(
-            'سلة المشتريات - إديو ستور',
+            'سلة المشتريات - ' . site_brand_name(),
             'راجع منتجاتك الرقمية وأكمل عملية الشراء بأمان.',
             route('frontend.cart.index')
         );
@@ -34,7 +35,7 @@ class CartController extends Controller
 
     public function clear(Request $request)
     {
-        session()->forget(['cart', 'discount', 'coupon_code']);
+        $this->cartService->clear();
 
         if ($this->wantsCartJson($request)) {
             return $this->cartJsonResponse('تم إفراغ السلة بنجاح.');
@@ -48,34 +49,20 @@ class CartController extends Controller
         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'integer|min:1',
+            'product_variant_id' => 'nullable|exists:product_variants,id',
         ]);
 
         $product = Product::active()->findOrFail($request->product_id);
-        $quantity = $request->quantity ?? 1;
 
         if (! $product->in_stock) {
             return $this->cartErrorResponse($request, 'هذا المنتج غير متاح للشراء حالياً', 'quantity');
         }
 
-        $cart = $this->getCart();
-        $rowId = $this->generateRowId($product->id, $request->product_variant_id ?? null);
-
-        if (isset($cart[$rowId])) {
-            $cart[$rowId]['quantity'] += $quantity;
-        } else {
-            $cart[$rowId] = [
-                'product_id' => $product->id,
-                'variant_id' => $request->product_variant_id,
-                'name' => $product->name,
-                'slug' => $product->slug,
-                'price' => $product->effective_price,
-                'quantity' => $quantity,
-                'image' => $product->primary_image?->path,
-            ];
-        }
-
-        session(['cart' => $cart]);
-        $this->syncSessionCoupon();
+        $this->cartService->add(
+            (int) $request->product_id,
+            (int) ($request->quantity ?? 1),
+            $request->product_variant_id ? (int) $request->product_variant_id : null
+        );
 
         if ($this->wantsCartJson($request)) {
             return $this->cartJsonResponse('تمت إضافة المنتج إلى السلة');
@@ -94,26 +81,11 @@ class CartController extends Controller
             return $this->cartValidationResponse($request, $e);
         }
 
-        $cart = $this->getCart();
-
-        if (! isset($cart[$id])) {
+        try {
+            $this->cartService->update((int) $id, (int) $request->quantity);
+        } catch (\Throwable) {
             return $this->cartErrorResponse($request, 'المنتج غير موجود في السلة', 'cart');
         }
-
-        $product = Product::find($cart[$id]['product_id']);
-
-        if ($product && ! $product->in_stock) {
-            return $this->cartErrorResponse($request, 'هذا المنتج غير متاح للشراء حالياً', 'quantity');
-        }
-
-        $cart[$id]['quantity'] = $request->quantity;
-
-        if ($cart[$id]['quantity'] <= 0) {
-            unset($cart[$id]);
-        }
-
-        session(['cart' => $cart]);
-        $this->syncSessionCoupon();
 
         if ($this->wantsCartJson($request)) {
             return $this->cartJsonResponse('تم تحديث السلة');
@@ -124,13 +96,7 @@ class CartController extends Controller
 
     public function destroy(Request $request, $id)
     {
-        $cart = $this->getCart();
-
-        if (isset($cart[$id])) {
-            unset($cart[$id]);
-            session(['cart' => $cart]);
-            $this->syncSessionCoupon();
-        }
+        $this->cartService->remove((int) $id);
 
         if ($this->wantsCartJson($request)) {
             return $this->cartJsonResponse('تم إزالة المنتج من السلة');
@@ -149,24 +115,16 @@ class CartController extends Controller
             return $this->cartValidationResponse($request, $e);
         }
 
-        $cart = $this->getCart();
-        if (empty($cart)) {
+        $cart = $this->cartService->getCart();
+        if ($cart->items->isEmpty()) {
             return $this->cartErrorResponse($request, 'السلة فارغة.', 'coupon');
         }
 
-        $result = $this->couponService->calculateDiscountForSessionCart(
-            $request->input('coupon'),
-            $cart
-        );
+        $result = $this->cartService->applyCoupon($request->input('coupon'));
 
         if (! $result['success']) {
             return $this->cartErrorResponse($request, $result['message'], 'coupon');
         }
-
-        session([
-            'discount' => $result['discount_amount'],
-            'coupon_code' => $result['coupon_code'],
-        ]);
 
         $message = 'تم تطبيق الكوبون بنجاح. الخصم: ' . number_format($result['discount_amount'], 2) . ' ر.س';
 
@@ -179,77 +137,13 @@ class CartController extends Controller
 
     public function removeCoupon(Request $request)
     {
-        session()->forget(['discount', 'coupon_code']);
+        $this->cartService->removeCoupon();
 
         if ($this->wantsCartJson($request)) {
             return $this->cartJsonResponse('تم إزالة كود الخصم');
         }
 
         return back()->with('success', 'تم إزالة كود الخصم');
-    }
-
-    protected function syncSessionCoupon(): void
-    {
-        $code = session('coupon_code');
-        if (! $code) {
-            return;
-        }
-
-        $cart = $this->getCart();
-        if (empty($cart)) {
-            session()->forget(['discount', 'coupon_code']);
-
-            return;
-        }
-
-        $result = $this->couponService->calculateDiscountForSessionCart($code, $cart);
-        if ($result['success']) {
-            session([
-                'discount' => $result['discount_amount'],
-                'coupon_code' => $result['coupon_code'],
-            ]);
-
-            return;
-        }
-
-        session()->forget(['discount', 'coupon_code']);
-    }
-
-    protected function getCart()
-    {
-        return session('cart', []);
-    }
-
-    protected function getCartItems()
-    {
-        $cart = $this->getCart();
-        $items = [];
-
-        foreach ($cart as $rowId => $item) {
-            $items[] = array_merge($item, [
-                'row_id' => $rowId,
-                'subtotal' => $item['price'] * $item['quantity'],
-            ]);
-        }
-
-        return $items;
-    }
-
-    protected function getCartTotal()
-    {
-        $cart = $this->getCart();
-        $total = 0;
-
-        foreach ($cart as $item) {
-            $total += $item['price'] * $item['quantity'];
-        }
-
-        return $total;
-    }
-
-    protected function generateRowId($productId, $variantId = null)
-    {
-        return md5($productId . '_' . ($variantId ?? 'null'));
     }
 
     protected function wantsCartJson(Request $request): bool
@@ -259,10 +153,11 @@ class CartController extends Controller
 
     protected function cartJsonResponse(string $message, int $status = 200): JsonResponse
     {
-        $cartItems = $this->getCartItems();
-        $cartTotal = $this->getCartTotal();
-        $discount = (float) session('discount', 0);
-        $couponCode = session('coupon_code');
+        $cart = $this->cartService->getCart();
+        $cartItems = $this->cartService->toViewItems($cart);
+        $cartTotal = (float) $cart->subtotal;
+        $discount = (float) ($cart->discount_amount ?? 0);
+        $couponCode = $cart->coupon_code;
 
         return response()->json([
             'success' => $status < 400,

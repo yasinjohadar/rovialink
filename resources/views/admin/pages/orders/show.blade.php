@@ -42,6 +42,28 @@
                             </div>
                         </div>
                     </div>
+
+                    @if($order->payments->isNotEmpty())
+                    <div class="card mb-3">
+                        <div class="card-header"><h6 class="mb-0">المدفوعات</h6></div>
+                        <div class="card-body p-0">
+                            <table class="table mb-0">
+                                <thead class="table-light"><tr><th>الوسيلة</th><th>المبلغ</th><th>الحالة</th><th>المعاملة</th><th></th></tr></thead>
+                                <tbody>
+                                    @foreach($order->payments as $pay)
+                                    <tr>
+                                        <td>{{ $pay->paymentMethod?->name ?? '—' }}</td>
+                                        <td>{{ number_format($pay->amount, 2) }} {{ $pay->currency }}</td>
+                                        <td>{{ $pay->status }}</td>
+                                        <td><code class="small">{{ $pay->transaction_id ?? '—' }}</code></td>
+                                        <td><a href="{{ route('admin.payments.show', $pay) }}" class="btn btn-sm btn-outline-primary">تفاصيل</a></td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
 

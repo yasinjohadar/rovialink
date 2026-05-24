@@ -125,4 +125,46 @@ class CartService
 
         $cart->update(['coupon_code' => null, 'discount_amount' => 0]);
     }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function toViewItems(ShoppingCart $cart): array
+    {
+        $cart->loadMissing('items.product.primaryImage', 'items.product.images', 'items.variant');
+
+        return $cart->items->map(function ($item) {
+            $product = $item->product;
+
+            return [
+                'row_id' => (string) $item->id,
+                'product_id' => $product->id,
+                'variant_id' => $item->product_variant_id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'price' => $item->unit_price,
+                'quantity' => $item->quantity,
+                'image' => $product->primary_image?->path,
+                'subtotal' => $item->line_total,
+            ];
+        })->values()->all();
+    }
+
+    public function migrateSessionCart(array $sessionCart): void
+    {
+        if (empty($sessionCart)) {
+            return;
+        }
+
+        foreach ($sessionCart as $item) {
+            if (empty($item['product_id'])) {
+                continue;
+            }
+            $this->add(
+                (int) $item['product_id'],
+                (int) ($item['quantity'] ?? 1),
+                isset($item['variant_id']) ? (int) $item['variant_id'] : null
+            );
+        }
+    }
 }

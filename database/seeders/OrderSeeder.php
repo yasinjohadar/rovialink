@@ -190,7 +190,8 @@ class OrderSeeder extends Seeder
         $methods = [
             ['name' => 'الدفع عند الاستلام', 'slug' => 'cod', 'driver' => 'cod', 'order' => 1],
             ['name' => 'تحويل بنكي', 'slug' => 'bank_transfer', 'driver' => 'bank_transfer', 'order' => 2],
-            ['name' => 'بطاقة ائتمان', 'slug' => 'card', 'driver' => 'stripe', 'order' => 3],
+            ['name' => 'بطاقة ائتمان', 'slug' => 'card', 'driver' => 'card', 'order' => 3, 'config' => ['gateway' => 'stripe']],
+            ['name' => 'PayPal', 'slug' => 'paypal', 'driver' => 'paypal', 'order' => 4],
         ];
 
         foreach ($methods as $data) {

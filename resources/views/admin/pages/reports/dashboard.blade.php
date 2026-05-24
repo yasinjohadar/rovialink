@@ -74,6 +74,31 @@
                 </div>
             </div>
 
+            @php
+                $paymentStatusLabels = [
+                    'completed' => 'مكتملة',
+                    'pending' => 'قيد الانتظار',
+                    'failed' => 'فاشلة',
+                    'cancelled' => 'ملغاة',
+                    'refunded' => 'مستردة',
+                ];
+            @endphp
+            @if(isset($paymentStats) && $paymentStats->isNotEmpty())
+            <div class="row g-3 mt-1">
+                @foreach($paymentStats as $status => $row)
+                <div class="col-md-3 col-sm-6">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <p class="text-muted mb-1">مدفوعات {{ $paymentStatusLabels[$status] ?? $status }}</p>
+                            <h4 class="mb-0">{{ (int) $row->count }}</h4>
+                            <small class="text-muted">{{ $currencyService->format((float) ($row->total ?? 0)) }}</small>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+            @endif
+
             <div class="card mt-3">
                 <div class="card-header">
                     <h6 class="mb-0">منحنى المبيعات حسب اليوم (الطلبات المكتملة / الجارية)</h6>

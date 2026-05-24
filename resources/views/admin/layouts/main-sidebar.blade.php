@@ -34,7 +34,7 @@
                                 'admin.categories.*', 'admin.brands.*', 'admin.products.*', 'admin.attributes.*',
                                 'admin.orders.*', 'admin.order-returns.*', 'admin.customers.*', 'admin.wishlists.*',
                                 'admin.reviews.*', 'admin.review-settings.*', 'admin.coupons.*', 'admin.loyalty.*',
-                                'admin.payment-methods.*', 'admin.tax.*', 'admin.currencies.*',
+                                'admin.payment-methods.*', 'admin.payments.settings.*', 'admin.payments.*', 'admin.tax.*', 'admin.currencies.*',
                                 'admin.reports.*'
                             );
                             $contentActive = request()->routeIs('admin.blog.*');
@@ -111,6 +111,12 @@
                                 </li>
                                 <li class="slide {{ request()->routeIs('admin.payment-methods.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.payment-methods.index') }}" class="side-menu__item">وسائل الدفع</a>
+                                </li>
+                                <li class="slide {{ request()->routeIs('admin.payments.settings.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.payments.settings.index') }}" class="side-menu__item">إعدادات الدفع</a>
+                                </li>
+                                <li class="slide {{ request()->routeIs('admin.payments.index', 'admin.payments.show', 'admin.payments.webhooks', 'admin.payments.confirm', 'admin.payments.reject', 'admin.payments.refund') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.payments.index') }}" class="side-menu__item">المدفوعات</a>
                                 </li>
                                 <li class="slide {{ request()->routeIs('admin.tax.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.tax.index') }}" class="side-menu__item">فئات ومعدلات الضرائب</a>

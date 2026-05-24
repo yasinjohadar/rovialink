@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "stripe": {
+      "url": "https://mcp.stripe.com"
+    },
+    "stripe-local": {
+      "command": "npx",
+      "args": ["-y", "@stripe/mcp@latest"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${env:STRIPE_SECRET_KEY}"
+      }
+    }
+  }
+}

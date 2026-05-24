@@ -25,7 +25,11 @@
                     <h4 class="mb-0">وسائل الدفع</h4>
                     <p class="mb-0 text-muted">إدارة وسائل الدفع المعروضة للعميل عند إتمام الطلب (دفع عند الاستلام، تحويل بنكي، باي بال، فيزا/ماستركارد)</p>
                 </div>
-                <div class="ms-auto">
+                <div class="ms-auto d-flex gap-2">
+                    <a href="{{ route('admin.payments.settings.index') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-gear me-2"></i>
+                        إعدادات الدفع
+                    </a>
                     <a href="{{ route('admin.payment-methods.create') }}" class="btn btn-primary">
                         <i class="bi bi-plus-lg me-2"></i>
                         إضافة وسيلة دفع

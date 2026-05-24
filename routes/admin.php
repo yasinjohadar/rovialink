@@ -35,6 +35,7 @@ use App\Http\Controllers\Admin\WishlistController;
 use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\OrderReturnController;
 use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 use App\Http\Controllers\Admin\ProductCompareController;
 use App\Http\Controllers\Admin\SystemStatusController;
@@ -114,6 +115,18 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
 
     // Payment methods
     Route::resource('payment-methods', PaymentMethodController::class)->except(['show']);
+
+    // Payment settings (before payments/{payment} to avoid conflict with "settings" id)
+    Route::get('payments/settings', [\App\Http\Controllers\Admin\PaymentSettingsController::class, 'index'])->name('payments.settings.index');
+    Route::put('payments/settings', [\App\Http\Controllers\Admin\PaymentSettingsController::class, 'update'])->name('payments.settings.update');
+    Route::redirect('payment-settings', 'payments/settings', 301);
+    Route::redirect('payment-setting', 'payments/settings', 301);
+
+    Route::get('payments/webhooks', [PaymentController::class, 'webhooks'])->name('payments.webhooks');
+    Route::post('payments/{payment}/confirm', [PaymentController::class, 'confirm'])->name('payments.confirm');
+    Route::post('payments/{payment}/reject', [PaymentController::class, 'reject'])->name('payments.reject');
+    Route::post('payments/{payment}/refund', [PaymentController::class, 'refund'])->name('payments.refund');
+    Route::resource('payments', PaymentController::class)->only(['index', 'show']);
 
     // Certificate functionality removed
 

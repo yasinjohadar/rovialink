@@ -37,6 +37,11 @@ class Payment extends Model
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
     }
 
+    public function refunds()
+    {
+        return $this->hasMany(PaymentRefund::class);
+    }
+
     public function scopeCompleted($query)
     {
         return $query->where('status', 'completed');

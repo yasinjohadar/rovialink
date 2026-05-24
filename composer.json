@@ -13,6 +13,7 @@
         "league/flysystem-aws-s3-v3": "^3.0",
         "platformcommunity/flysystem-bunnycdn": "^3.3",
         "spatie/laravel-permission": "^6.19",
+        "stripe/stripe-php": "^20.1",
         "yaza/laravel-google-drive-storage": "^4.1"
     },
     "require-dev": {

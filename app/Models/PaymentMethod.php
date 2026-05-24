@@ -31,4 +31,29 @@ class PaymentMethod extends Model
     {
         return ['cod', 'bank_transfer', 'paypal', 'card'];
     }
+
+    public function resolvedGateway(): string
+    {
+        if ($this->driver === 'card') {
+            return strtolower((string) ($this->config['gateway'] ?? 'stripe'));
+        }
+
+        return $this->driver;
+    }
+
+    public function isManual(): bool
+    {
+        return in_array($this->driver, ['cod', 'bank_transfer'], true);
+    }
+
+    public function displayLabel(): string
+    {
+        return match ($this->driver) {
+            'cod' => 'الدفع عند الاستلام',
+            'bank_transfer' => 'تحويل بنكي',
+            'paypal' => 'PayPal',
+            'card' => 'بطاقة ائتمان',
+            default => $this->name,
+        };
+    }
 }

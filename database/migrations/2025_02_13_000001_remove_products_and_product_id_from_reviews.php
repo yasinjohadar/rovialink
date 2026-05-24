@@ -13,13 +13,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('reviews', function (Blueprint $table) {
-            // Check if the unique constraint exists before dropping it
             if (Schema::hasIndex('reviews', 'unique_product_user_review')) {
                 $table->dropUnique('unique_product_user_review');
             }
-            
-            // Check if the foreign key exists before dropping it
+
             if (Schema::hasColumn('reviews', 'product_id')) {
+                if (Schema::hasIndex('reviews', 'reviews_product_id_index')) {
+                    $table->dropIndex(['product_id']);
+                }
+
                 $table->dropColumn('product_id');
             }
         });

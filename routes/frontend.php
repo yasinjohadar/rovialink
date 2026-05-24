@@ -43,10 +43,19 @@ Route::prefix('')->name('frontend.')->group(function () {
     });
 
     // Checkout
-    Route::prefix('checkout')->name('checkout.')->group(function () {
-        Route::get('/', [CheckoutController::class, 'index'])->name('index')->middleware('auth');
-        Route::post('/', [CheckoutController::class, 'store'])->name('store')->middleware('auth');
+    Route::prefix('checkout')->name('checkout.')->middleware('auth')->group(function () {
+        Route::get('/', [CheckoutController::class, 'index'])->name('index');
+        Route::post('/', [CheckoutController::class, 'store'])->name('store');
+        Route::get('success/{order}', [CheckoutController::class, 'success'])->name('success');
+        Route::get('pending/{order}', [CheckoutController::class, 'pending'])->name('pending');
+        Route::get('cancel/{order}', [CheckoutController::class, 'cancel'])->name('cancel');
+        Route::get('paypal/return/{order}', [CheckoutController::class, 'paypalReturn'])->name('paypal.return');
+        Route::post('retry/{order}', [CheckoutController::class, 'retry'])->name('retry');
     });
+
+    Route::get('downloads/{token}', [\App\Http\Controllers\Store\DownloadController::class, 'download'])
+        ->name('downloads.show')
+        ->middleware('auth');
 
     // Blog
     Route::prefix('blog')->name('blog.')->group(function () {

@@ -77,7 +77,7 @@
                     @foreach($order->items as $item)
                         @foreach($item->downloads as $download)
                         <li class="mb-2">
-                            <a href="{{ route('store.downloads.show', $download->download_token) }}" class="btn btn-sm btn-accent rounded-pill">
+                            <a href="{{ route('frontend.downloads.show', $download->download_token) }}" class="btn btn-sm btn-accent rounded-pill">
                                 <i class="fas fa-download me-1"></i> تحميل — {{ $item->product_name }}
                             </a>
                             @if($download->expires_at)
@@ -132,6 +132,37 @@
                     <span class="fw-bold text-white">الإجمالي</span>
                     <span class="fw-bold text-accent fs-4 en-text">{{ number_format($order->total, 2) }} ر.س</span>
                 </div>
+
+                @php $latestPayment = $order->payments->sortByDesc('id')->first(); @endphp
+                @if($latestPayment)
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                    <h6 class="fw-bold text-white mb-2">الدفع</h6>
+                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                        <span>الوسيلة</span>
+                        <span>{{ $latestPayment->paymentMethod?->displayLabel() ?? '—' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between text-secondary small mb-2">
+                        <span>الحالة</span>
+                        @php
+                            $paymentStatusMap = [
+                                'completed' => ['label' => 'مكتمل', 'class' => 'text-success'],
+                                'pending' => ['label' => 'قيد الانتظار', 'class' => 'text-warning'],
+                                'failed' => ['label' => 'فشل', 'class' => 'text-danger'],
+                                'cancelled' => ['label' => 'ملغي', 'class' => 'text-secondary'],
+                                'refunded' => ['label' => 'مسترد', 'class' => 'text-info'],
+                            ];
+                            $paymentUi = $paymentStatusMap[$latestPayment->status] ?? ['label' => $latestPayment->status, 'class' => 'text-secondary'];
+                        @endphp
+                        <span class="{{ $paymentUi['class'] }}">{{ $paymentUi['label'] }}</span>
+                    </div>
+                    @if($latestPayment->status === 'pending')
+                    <form method="POST" action="{{ route('frontend.checkout.retry', $order) }}" class="mt-3">
+                        @csrf
+                        <button type="submit" class="btn btn-accent w-100 rounded-pill">إكمال الدفع</button>
+                    </form>
+                    @endif
+                </div>
+                @endif
 
                 <div class="mt-4 d-grid gap-2">
                     <form method="POST" action="{{ route('frontend.account.orders.reorder', $order) }}">
