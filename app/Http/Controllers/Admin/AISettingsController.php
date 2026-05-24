@@ -14,7 +14,7 @@ class AISettingsController extends Controller
      */
     public function index()
     {
-        $settings = AISetting::orderBy('key')->get();
+        $settings = AISetting::orderBy('category')->orderBy('key')->get();
 
         return view('admin.ai.settings.index', compact('settings'));
     }

@@ -29,7 +29,12 @@
                             @method('PUT')
 
                             <div id="settings-container">
+                                @php $lastCategory = null; @endphp
                                 @foreach($settings as $setting)
+                                    @if($setting->category && $setting->category !== $lastCategory)
+                                        @php $lastCategory = $setting->category; @endphp
+                                        <h6 class="text-primary mt-3 mb-2">{{ $setting->category === 'store_chat' ? 'ودجت محادثة المتجر' : $setting->category }}</h6>
+                                    @endif
                                     <div class="mb-3">
                                         <label for="setting_{{ $setting->id }}" class="form-label">
                                             {{ $setting->key }}

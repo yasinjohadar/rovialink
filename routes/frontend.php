@@ -11,6 +11,7 @@ use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\Frontend\SitemapController;
 use App\Http\Controllers\Frontend\AccountController;
+use App\Http\Controllers\Frontend\StoreChatController;
 
 Route::get('sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 Route::get('robots.txt', [SitemapController::class, 'robots'])->name('robots');
@@ -25,6 +26,14 @@ Route::prefix('')->name('frontend.')->group(function () {
     // Categories
     Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('category/{slug}', [CategoryController::class, 'show'])->name('category.show');
+
+    // Store chat widget (products only)
+    Route::prefix('store/chat')->name('chat.')->middleware('throttle:30,1')->group(function () {
+        Route::get('config', [StoreChatController::class, 'config'])->name('config');
+        Route::post('session', [StoreChatController::class, 'session'])->name('session');
+        Route::post('message', [StoreChatController::class, 'message'])->name('message');
+        Route::get('history', [StoreChatController::class, 'history'])->name('history');
+    });
 
     // Products
     Route::get('product/{slug}', [ProductController::class, 'show'])->name('product.show');

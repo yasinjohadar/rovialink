@@ -17,6 +17,8 @@
 
     @include('frontend.partials.quick-view-modal')
 
+    @include('frontend.partials.store-chat-widget')
+
     @include('frontend.layouts.footer-scripts')
 </body>
 </html>
