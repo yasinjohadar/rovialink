@@ -54,10 +54,12 @@
     function fieldMap(panel) {
       const type = panel.dataset.seoAuditType || 'product';
       const isBlog = type === 'blog_post';
+      const productOrPostName = document.querySelector('[name="title"]')?.value?.trim()
+          || document.querySelector('[name="name"]')?.value?.trim() || '';
       const payload = {
         type: type,
-        title: document.querySelector('[name="title"]')?.value?.trim()
-          || document.querySelector('[name="name"]')?.value?.trim() || '',
+        title: productOrPostName,
+        name: productOrPostName,
         slug: document.querySelector('[name="slug"]')?.value?.trim() || '',
         meta_title: document.querySelector('[name="meta_title"]')?.value?.trim() || '',
         meta_description: document.querySelector('[name="meta_description"]')?.value?.trim() || '',
@@ -201,7 +203,12 @@
         try {
           const fields = await post(applyUrl, payload);
           fillFields(panel, fields);
-          setStatus(panel, 'تم تعبئة الحقول — راجع ثم احفظ النموذج.', false);
+          setStatus(panel, 'تم التطبيق — جاري إعادة الفحص بالحقول المحدّثة...');
+          const refreshed = fieldMap(panel);
+          refreshed.recommendations = recs;
+          const data = await post(auditUrl, refreshed);
+          renderReport(panel, data);
+          setStatus(panel, 'تم تطبيق التوصيات وإعادة الفحص — احفظ النموذج لحفظ التغييرات في قاعدة البيانات.', false);
         } catch (e) {
           setStatus(panel, e.message, true);
         } finally {

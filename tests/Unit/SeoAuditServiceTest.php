@@ -32,6 +32,25 @@ test('flags missing focus keyword on blog post', function () {
     expect(collect($result->checks)->pluck('id'))->toContain('focus_keyword_empty');
 });
 
+test('product name in meta title passes with flexible match', function () {
+    $ctx = new SeoAuditContext(
+        type: 'product',
+        title: 'Windows 11 Pro - مفتاح تفعيل أصلي',
+        metaTitle: 'Windows 11 Pro مفتاح تفعيل أصلي وسريع',
+        metaDescription: str_repeat('و', 130),
+        metaKeywords: 'ويندوز, تفعيل, مفتاح',
+        slug: 'windows-11-pro',
+        shortDescription: 'وصف مختصر',
+        content: str_repeat('وصف ', 200),
+    );
+
+    $result = (new SeoAuditService)->audit($ctx);
+    $ids = collect($result->checks)->pluck('id');
+
+    expect($ids)->not->toContain('product_name_in_meta');
+    expect($ids)->not->toContain('meta_title_mismatch');
+});
+
 test('good meta yields higher score', function () {
     $ctx = new SeoAuditContext(
         type: 'product',

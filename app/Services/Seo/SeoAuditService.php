@@ -55,7 +55,7 @@ class SeoAuditService
             $this->addCheck('meta_title_ok', 'info', 'meta_title', 'طول عنوان SEO مناسب', 'جيد — راجع تضمين الكلمة المفتاحية في البداية.');
         }
 
-        if ($title !== '' && $ctx->title !== '' && ! $this->containsKeyword($title, $ctx->title)) {
+        if ($title !== '' && $ctx->title !== '' && ! $this->titleAppearsInMeta($title, $ctx->title)) {
             $this->addCheck('meta_title_mismatch', 'info', 'meta_title', 'عنوان SEO لا يعكس اسم المحتوى بوضوح', 'ضمّن اسم المنتج/المقال أو كلمته المفتاحية في meta_title.');
         }
     }
@@ -144,8 +144,8 @@ class SeoAuditService
         }
 
         $metaTitle = trim($ctx->metaTitle);
-        if ($metaTitle !== '' && $ctx->title !== '' && ! $this->containsKeyword($metaTitle, $ctx->title)) {
-            $this->addCheck('product_name_in_meta', 'warning', 'meta_title', 'اسم المنتج غير واضح في عنوان SEO', 'ضمّن اسم المنتج في meta_title.');
+        if ($metaTitle !== '' && $ctx->title !== '' && ! $this->titleAppearsInMeta($metaTitle, $ctx->title)) {
+            $this->addCheck('product_name_in_meta', 'warning', 'meta_title', 'اسم المنتج غير واضح في عنوان SEO', 'ضمّن اسم المنتج أو الجزء الرئيسي منه في meta_title.');
         }
     }
 
@@ -249,6 +249,72 @@ class SeoAuditService
         }
 
         return mb_stripos($haystack, $needle) !== false;
+    }
+
+    /**
+     * يتحقق إن كان اسم المنتج/المقال ظاهراً في meta_title (تطابق مرن وليس حرفياً).
+     */
+    protected function titleAppearsInMeta(string $metaTitle, string $title): bool
+    {
+        if ($title === '' || $metaTitle === '') {
+            return false;
+        }
+
+        $meta = $this->normalizeSeoText($metaTitle);
+        $full = $this->normalizeSeoText($title);
+
+        if ($full !== '' && str_contains($meta, $full)) {
+            return true;
+        }
+
+        $core = $this->extractTitleCore($title);
+        $coreNorm = $this->normalizeSeoText($core);
+        if ($coreNorm !== '' && mb_strlen($coreNorm) >= 4 && str_contains($meta, $coreNorm)) {
+            return true;
+        }
+
+        return $this->significantWordOverlap($metaTitle, $title, 0.55);
+    }
+
+    protected function normalizeSeoText(string $text): string
+    {
+        $text = mb_strtolower(trim($text));
+        $text = preg_replace('/[\x{2013}\x{2014}\x{2212}\-_|،]+/u', ' ', $text) ?? $text;
+        $text = preg_replace('/[^\p{L}\p{N}\s]/u', '', $text) ?? $text;
+
+        return trim(preg_replace('/\s+/u', ' ', $text) ?? '');
+    }
+
+    protected function extractTitleCore(string $title): string
+    {
+        $parts = preg_split('/[\x{2013}\x{2014}\x{2212}\-\|:–]+/u', $title, 2);
+
+        return trim($parts[0] ?? $title);
+    }
+
+    /**
+     * @return bool true إذا نسبة كافية من الكلمات المهمة في العنوان موجودة في meta_title
+     */
+    protected function significantWordOverlap(string $metaTitle, string $title, float $minRatio): bool
+    {
+        $words = array_values(array_filter(
+            preg_split('/\s+/u', $this->normalizeSeoText($title)) ?: [],
+            fn (string $w) => mb_strlen($w) >= 2
+        ));
+
+        if ($words === []) {
+            return false;
+        }
+
+        $normMeta = $this->normalizeSeoText($metaTitle);
+        $found = 0;
+        foreach ($words as $word) {
+            if (str_contains($normMeta, $word)) {
+                $found++;
+            }
+        }
+
+        return ($found / count($words)) >= $minRatio;
     }
 
     protected function keywordDensity(string $text, string $keyword): float
