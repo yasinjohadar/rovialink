@@ -32,7 +32,6 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\TaxController;
 use App\Http\Controllers\Admin\WishlistController;
-use App\Http\Controllers\Admin\CurrencyController;
 use App\Http\Controllers\Admin\OrderReturnController;
 use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PaymentController;
@@ -178,11 +177,6 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
     // Wishlists (admin view + destroy)
     Route::get('wishlists', [WishlistController::class, 'index'])->name('wishlists.index');
     Route::delete('wishlists/{wishlist}', [WishlistController::class, 'destroy'])->name('wishlists.destroy');
-
-    // Currencies
-    Route::post('currencies/set-display', [CurrencyController::class, 'setDisplay'])->name('currencies.set-display');
-    Route::post('currencies/{currency}/set-default', [CurrencyController::class, 'setDefault'])->name('currencies.set-default');
-    Route::resource('currencies', CurrencyController::class);
 
     // Blog routes
     Route::prefix('blog')->name('blog.')->group(function () {

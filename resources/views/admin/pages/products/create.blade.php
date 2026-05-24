@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     إضافة منتج جديد
@@ -165,11 +165,11 @@
                             <div class="card-body">
                                 <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label class="form-label">السعر (ر.س) <span class="text-danger">*</span></label>
+                                        <label class="form-label">السعر ($) <span class="text-danger">*</span></label>
                                         <input type="number" step="0.01" min="0" class="form-control" name="price" value="{{ old('price', 0) }}" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">سعر المقارنة (ر.س)</label>
+                                        <label class="form-label">سعر المقارنة ($)</label>
                                         <input type="number" step="0.01" min="0" class="form-control" name="compare_at_price" value="{{ old('compare_at_price') }}">
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-@extends('frontend.layouts.master')
+﻿@extends('frontend.layouts.master')
 
 @section('content')
     @include('frontend.partials.checkout-hero')
@@ -31,8 +31,8 @@
                                 <tr>
                                     <td class="py-3">{{ $item->product_name }}</td>
                                     <td class="py-3 en-text">{{ $item->quantity }}</td>
-                                    <td class="py-3 en-text">{{ number_format($item->unit_price, 2) }} ر.س</td>
-                                    <td class="py-3 en-text text-accent fw-bold">{{ number_format($item->total, 2) }} ر.س</td>
+                                    <td class="py-3 en-text">{{ format_money($item->unit_price) }}</td>
+                                    <td class="py-3 en-text text-accent fw-bold">{{ format_money($item->total) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -71,7 +71,7 @@
                     <hr>
                     <div class="d-flex justify-content-between fw-bold fs-5">
                         <span>الإجمالي</span>
-                        <span class="text-accent en-text">{{ number_format($order->total, 2) }} ر.س</span>
+                        <span class="text-accent en-text">{{ format_money($order->total) }}</span>
                     </div>
                     <a href="{{ route('frontend.account.orders.show', $order) }}" class="btn btn-accent w-100 mt-4">عرض الطلب</a>
                     <a href="{{ route('frontend.shop.index') }}" class="btn btn-glass w-100 mt-2">متابعة التسوق</a>

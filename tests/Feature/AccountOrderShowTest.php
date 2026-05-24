@@ -14,7 +14,7 @@ test('customer can view order linked by billing email when user_id is missing', 
         'order_status_id' => $statusId,
         'subtotal' => 100,
         'total' => 100,
-        'currency' => 'SAR',
+        'currency' => 'USD',
     ]);
 
     OrderAddress::create([
@@ -46,7 +46,7 @@ test('customer cannot view another users order', function () {
         'order_status_id' => $statusId,
         'subtotal' => 50,
         'total' => 50,
-        'currency' => 'SAR',
+        'currency' => 'USD',
     ]);
 
     OrderAddress::create([

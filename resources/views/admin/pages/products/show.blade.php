@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     عرض المنتج: {{ $product->name }}
@@ -74,9 +74,9 @@
                         <div class="card-body">
                             <p><strong>SKU:</strong> {{ $product->sku ?? '-' }}</p>
                             <p><strong>التصنيف:</strong> {{ $product->category->name ?? '-' }}</p>
-                            <p><strong>السعر:</strong> {{ number_format($product->effective_price, 2) }} ر.س</p>
+                            <p><strong>السعر:</strong> {{ format_money($product->effective_price) }}</p>
                             @if($product->compare_at_price)
-                                <p><strong>سعر المقارنة:</strong> <del>{{ number_format($product->compare_at_price, 2) }} ر.س</del></p>
+                                <p><strong>سعر المقارنة:</strong> <del>{{ format_money($product->compare_at_price) }}</del></p>
                             @endif
                             <p><strong>التوفر:</strong> {{ $product->in_stock ? 'متاح للشراء' : 'غير متاح' }}</p>
                             @if($product->is_digital)
@@ -100,7 +100,7 @@
                                         @foreach($product->variants as $v)
                                             <tr>
                                                 <td>{{ $v->sku ?? '-' }}</td>
-                                                <td>{{ $v->effective_price ? number_format($v->effective_price, 2) . ' ر.س' : '-' }}</td>
+                                                <td>{{ $v->effective_price ? format_money($v->effective_price) : '-' }}</td>
                                                 <td>{{ $v->attributeValues->pluck('value')->join(' / ') ?: '-' }}</td>
                                             </tr>
                                         @endforeach

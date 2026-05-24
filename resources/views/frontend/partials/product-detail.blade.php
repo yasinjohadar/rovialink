@@ -1,4 +1,4 @@
-@php
+﻿@php
     $reviewCount = $product->reviews->count();
     $avgRating = $product->reviews_avg_rating ?? 0;
 @endphp
@@ -116,9 +116,9 @@
                     </div>
 
                     <div class="product-page__pricing">
-                        <span class="product-page__price en-text">{{ number_format($product->price, 2) }} ر.س</span>
+                        <span class="product-page__price en-text">{{ format_money($product->price) }}</span>
                         @if($product->compare_at_price && $product->compare_at_price > $product->price)
-                        <span class="product-page__price-old en-text">{{ number_format($product->compare_at_price, 2) }} ر.س</span>
+                        <span class="product-page__price-old en-text">{{ format_money($product->compare_at_price) }}</span>
                         <span class="product-page__discount">خصم {{ $product->discount_percentage }}%</span>
                         @endif
                     </div>

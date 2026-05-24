@@ -1,10 +1,9 @@
-@extends('frontend.layouts.master')
+﻿@extends('frontend.layouts.master')
 
 @section('content')
 @php
     $method = $payment?->paymentMethod;
     $cfg = $method?->config ?? [];
-    $currency = $order->currency ?? 'SAR';
     $hasReceipt = ! empty($payment?->metadata['payment_receipt_path']);
 @endphp
 
@@ -102,7 +101,7 @@
                                 @endif
                                 <tr class="checkout-pending-table__row--highlight">
                                     <th scope="row"><span class="checkout-pending-table__label"><i class="fas fa-coins"></i> المبلغ المطلوب</span></th>
-                                    <td class="checkout-pending-table__value checkout-pending-table__value--amount en-text">{{ number_format($order->total, 2) }} {{ $currency }}</td>
+                                    <td class="checkout-pending-table__value checkout-pending-table__value--amount en-text">{{ format_money($order->total) }}</td>
                                 </tr>
                                 <tr>
                                     <th scope="row"><span class="checkout-pending-table__label"><i class="fas fa-file-invoice"></i> إيصال التحويل</span></th>
@@ -131,7 +130,7 @@
                                 </tr>
                                 <tr class="checkout-pending-table__row--highlight">
                                     <th scope="row"><span class="checkout-pending-table__label"><i class="fas fa-coins"></i> المبلغ المطلوب</span></th>
-                                    <td class="checkout-pending-table__value checkout-pending-table__value--amount en-text">{{ number_format($order->total, 2) }} {{ $currency }}</td>
+                                    <td class="checkout-pending-table__value checkout-pending-table__value--amount en-text">{{ format_money($order->total) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -168,7 +167,7 @@
                                     </div>
                                 </td>
                                 <td class="text-center en-text">{{ $item->quantity }}</td>
-                                <td class="text-end en-text checkout-pending-table__value--amount-sm">{{ number_format($item->total, 2) }} {{ $currency }}</td>
+                                <td class="text-end en-text checkout-pending-table__value--amount-sm">{{ format_money($item->total) }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -199,7 +198,7 @@
                             @if($order->discount_amount > 0)
                             <tr>
                                 <th scope="row"><span class="checkout-pending-table__label">الخصم</span></th>
-                                <td class="text-success en-text">−{{ number_format($order->discount_amount, 2) }} {{ $currency }}</td>
+                                <td class="text-success en-text">−{{ format_money($order->discount_amount) }}</td>
                             </tr>
                             @endif
                         </tbody>
@@ -208,7 +207,7 @@
 
                 <div class="checkout-pending-summary__total">
                     <span class="checkout-pending-summary__total-label">الإجمالي المستحق</span>
-                    <span class="checkout-pending-summary__total-value en-text">{{ number_format($order->total, 2) }} {{ $currency }}</span>
+                    <span class="checkout-pending-summary__total-value en-text">{{ format_money($order->total) }}</span>
                 </div>
 
                 <ul class="checkout-pending-timeline">

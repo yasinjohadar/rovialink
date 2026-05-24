@@ -1,4 +1,4 @@
-@extends('frontend.layouts.master')
+﻿@extends('frontend.layouts.master')
 
 @section('content')
 <div class="page-hero">
@@ -59,8 +59,8 @@
                                     </div>
                                 </td>
                                 <td class="en-text">{{ $item->quantity }}</td>
-                                <td class="en-text">{{ number_format($item->unit_price, 2) }} {{ $order->currency ?? 'SAR' }}</td>
-                                <td class="en-text text-accent fw-bold">{{ number_format($item->total, 2) }} {{ $order->currency ?? 'SAR' }}</td>
+                                <td class="en-text">{{ format_money($item->unit_price) }}</td>
+                                <td class="en-text text-accent fw-bold">{{ format_money($item->total) }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -112,24 +112,24 @@
                 <h2 class="account-panel__title mb-3">ملخص الطلب</h2>
                 <div class="d-flex justify-content-between account-order-muted mb-2">
                     <span>المجموع الفرعي</span>
-                    <span class="en-text account-order-value">{{ number_format($order->subtotal, 2) }} {{ $order->currency ?? 'SAR' }}</span>
+                    <span class="en-text account-order-value">{{ format_money($order->subtotal) }}</span>
                 </div>
                 @if($order->discount_amount > 0)
                 <div class="d-flex justify-content-between text-success mb-2">
                     <span>الخصم @if($order->coupon_code)({{ $order->coupon_code }})@endif</span>
-                    <span class="en-text">−{{ number_format($order->discount_amount, 2) }} {{ $order->currency ?? 'SAR' }}</span>
+                    <span class="en-text">−{{ format_money($order->discount_amount) }}</span>
                 </div>
                 @endif
                 @if($order->tax_amount > 0)
                 <div class="d-flex justify-content-between account-order-muted mb-2">
                     <span>الضريبة</span>
-                    <span class="en-text account-order-value">{{ number_format($order->tax_amount, 2) }} {{ $order->currency ?? 'SAR' }}</span>
+                    <span class="en-text account-order-value">{{ format_money($order->tax_amount) }}</span>
                 </div>
                 @endif
                 <hr class="account-order-divider">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="account-order-total-label">الإجمالي</span>
-                    <span class="account-order-total-value en-text">{{ number_format($order->total, 2) }} {{ $order->currency ?? 'SAR' }}</span>
+                    <span class="account-order-total-value en-text">{{ format_money($order->total) }}</span>
                 </div>
 
                 @php $latestPayment = $order->payments->sortByDesc('id')->first(); @endphp

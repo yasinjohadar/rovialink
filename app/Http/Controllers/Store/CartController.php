@@ -57,7 +57,7 @@ class CartController extends Controller
         $request->validate(['code' => 'required|string|max:100']);
         $result = $this->cartService->applyCoupon($request->input('code'));
         if ($result['success']) {
-            return back()->with('success', 'تم تطبيق الكوبون بنجاح. الخصم: ' . number_format($result['discount_amount'], 2) . ' ر.س');
+            return back()->with('success', 'تم تطبيق الكوبون بنجاح. الخصم: ' . format_money($result['discount_amount']));
         }
         return back()->with('error', $result['message'] ?? 'فشل تطبيق الكوبون.');
     }

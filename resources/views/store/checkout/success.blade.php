@@ -1,4 +1,4 @@
-@extends('store.layouts.master')
+﻿@extends('store.layouts.master')
 
 @section('title', 'تم إنشاء الطلب')
 
@@ -24,8 +24,8 @@
                         @endif
                     </td>
                     <td>{{ $item->quantity }}</td>
-                    <td>{{ number_format($item->unit_price, 2) }} ر.س</td>
-                    <td>{{ number_format($item->total, 2) }} ر.س</td>
+                    <td>{{ format_money($item->unit_price) }}</td>
+                    <td>{{ format_money($item->total) }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -60,6 +60,6 @@
         <small class="text-muted d-block">قد تنتهي صلاحية التحميل حسب إعدادات المنتج.</small>
     @endif
 
-    <p><strong>الإجمالي: {{ number_format($order->total, 2) }} ر.س</strong></p>
+    <p><strong>الإجمالي: {{ format_money($order->total) }}</strong></p>
     <a href="{{ route('store.products.index') }}" class="btn btn-primary">العودة للمتجر</a>
 @endsection

@@ -65,20 +65,6 @@
                         </ul>
                     </div>
 
-                    @if(isset($currencies) && $currencies->isNotEmpty())
-                    <div class="header-element">
-                        <form action="{{ route('admin.currencies.set-display') }}" method="POST" class="d-flex align-items-center gap-1">
-                            @csrf
-                            <select name="code" class="form-select form-select-sm" style="width: auto; min-width: 90px;" onchange="this.form.submit()">
-                                @foreach($currencies as $c)
-                                    <option value="{{ $c->code }}" {{ ($displayCurrency && $displayCurrency->code === $c->code) ? 'selected' : '' }}>{{ $c->code }} {{ $c->symbol ? '(' . $c->symbol . ')' : '' }}</option>
-                                @endforeach
-                            </select>
-                            <span class="small text-muted d-none d-md-inline">عرض الأسعار</span>
-                        </form>
-                    </div>
-                    @endif
-
                     <!-- Start::header-element -->
                     <div class="header-element header-theme-mode">
                         <!-- Start::header-link|layout-setting -->

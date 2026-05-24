@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     الكوبونات
@@ -83,7 +83,7 @@
                                             @if($coupon->type === 'percentage')
                                                 {{ $coupon->value }}%
                                             @else
-                                                {{ number_format($coupon->value, 2) }} ر.س
+                                                {{ format_money($coupon->value) }}
                                             @endif
                                         </td>
                                         <td>

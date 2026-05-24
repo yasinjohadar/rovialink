@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     إعدادات نقاط الولاء
@@ -41,21 +41,21 @@
                         @method('PUT')
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">نقاط لكل وحدة عملة (ر.س)</label>
+                                <label class="form-label">نقاط لكل وحدة عملة ($)</label>
                                 <input type="number" min="0" step="1" class="form-control @error('loyalty_points_per_currency') is-invalid @enderror"
                                     name="loyalty_points_per_currency" value="{{ old('loyalty_points_per_currency', $settings['loyalty_points_per_currency'] ?? 1)">
-                                <small class="text-muted">مثال: 1 = نقطة واحدة لكل 1 ر.س من إجمالي الطلب المكتمل</small>
+                                <small class="text-muted">مثال: 1 = نقطة واحدة لكل 1 $ من إجمالي الطلب المكتمل</small>
                                 @error('loyalty_points_per_currency')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">كل X نقطة = 1 ر.س خصم (نسبة الاستبدال)</label>
+                                <label class="form-label">كل X نقطة = 1 $ خصم (نسبة الاستبدال)</label>
                                 <input type="number" min="1" step="1" class="form-control @error('loyalty_redemption_rate') is-invalid @enderror"
                                     name="loyalty_redemption_rate" value="{{ old('loyalty_redemption_rate', $settings['loyalty_redemption_rate'] ?? 100)">
-                                <small class="text-muted">مثال: 100 = 100 نقطة تعطي 1 ر.س خصم</small>
+                                <small class="text-muted">مثال: 100 = 100 نقطة تعطي 1 $ خصم</small>
                                 @error('loyalty_redemption_rate')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">الحد الأدنى لمبلغ الطلب لاستخدام النقاط (ر.س)</label>
+                                <label class="form-label">الحد الأدنى لمبلغ الطلب لاستخدام النقاط ($)</label>
                                 <input type="number" min="0" step="0.01" class="form-control @error('loyalty_min_order_to_redeem') is-invalid @enderror"
                                     name="loyalty_min_order_to_redeem" value="{{ old('loyalty_min_order_to_redeem', $settings['loyalty_min_order_to_redeem'] ?? 0)">
                                 @error('loyalty_min_order_to_redeem')<div class="invalid-feedback">{{ $message }}</div>@enderror

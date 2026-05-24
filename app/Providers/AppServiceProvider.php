@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use App\Events\WhatsAppMessageReceived;
 use App\Listeners\AutoReplyWhatsAppListener;
-use App\Models\Currency;
 use App\Services\CurrencyService;
 use App\Services\ThemeColorService;
 
@@ -19,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        require_once app_path('Helpers/MoneyHelper.php');
     }
 
     /**
@@ -37,13 +36,6 @@ class AppServiceProvider extends ServiceProvider
             WhatsAppMessageReceived::class,
             AutoReplyWhatsAppListener::class
         );
-
-        View::composer('admin.layouts.main-header', function ($view) {
-            $currencies = Currency::active()->ordered()->get();
-            $currencyService = app(CurrencyService::class);
-            $displayCurrency = $currencyService->getDisplayCurrency();
-            $view->with(compact('currencies', 'displayCurrency'));
-        });
 
         View::composer(['admin.layouts.master', 'admin.pages.*'], function ($view) {
             $view->with('currencyService', app(CurrencyService::class));

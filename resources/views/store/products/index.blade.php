@@ -1,4 +1,4 @@
-@extends('store.layouts.master')
+﻿@extends('store.layouts.master')
 
 @section('title', 'المنتجات')
 
@@ -11,7 +11,7 @@
                     <img src="{{ $product->primary_image_url }}" class="card-img-top" alt="{{ $product->name }}" style="height: 180px; object-fit: cover;">
                     <div class="card-body">
                         <h6 class="card-title">{{ $product->name }}</h6>
-                        <p class="mb-2">{{ number_format($product->effective_price, 2) }} ر.س</p>
+                        <p class="mb-2">{{ format_money($product->effective_price) }}</p>
                         <a href="{{ route('store.products.show', $product) }}" class="btn btn-sm btn-primary">عرض</a>
                     </div>
                 </div>

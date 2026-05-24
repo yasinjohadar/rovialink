@@ -1,4 +1,4 @@
-@php
+﻿@php
     $columnClass = $columnClass ?? 'col-md-6 col-lg-4 col-xl-3';
     $inSwiper = !empty($inSwiper);
     $productUrl = route('frontend.product.show', $product->slug);
@@ -69,9 +69,9 @@
             </div>
             <footer class="product-card__footer product-card-footer">
                 <div class="product-price">
-                    <span class="current-price en-text">{{ $product->price }} ر.س</span>
+                    <span class="current-price en-text">{{ format_money($product->price) }}</span>
                     @if($product->compare_at_price && $product->compare_at_price > $product->price)
-                        <span class="original-price en-text">{{ $product->compare_at_price }} ر.س</span>
+                        <span class="original-price en-text">{{ format_money($product->compare_at_price) }}</span>
                     @endif
                 </div>
                 @include('frontend.partials.add-to-cart-form', [

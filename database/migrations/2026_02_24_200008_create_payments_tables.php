@@ -25,7 +25,7 @@ return new class extends Migration
             $table->foreignId('payment_method_id')->nullable()->constrained('payment_methods')->onDelete('set null');
             $table->string('transaction_id')->nullable();
             $table->decimal('amount', 12, 2);
-            $table->string('currency', 3)->default('SAR');
+            $table->string('currency', 3)->default('USD');
             $table->enum('status', ['pending', 'completed', 'failed', 'refunded', 'cancelled'])->default('pending');
             $table->string('gateway_response')->nullable();
             $table->json('metadata')->nullable();

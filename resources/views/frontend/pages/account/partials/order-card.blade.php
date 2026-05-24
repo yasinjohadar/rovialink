@@ -1,4 +1,4 @@
-<div class="glass-panel p-3 mb-3">
+﻿<div class="glass-panel p-3 mb-3">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
         <div>
             <h6 class="fw-bold mb-1">طلب <span class="en-text">#{{ $order->order_number }}</span></h6>
@@ -6,7 +6,7 @@
         </div>
         <div class="d-flex align-items-center gap-3">
             @include('frontend.pages.account.partials.order-status-badge', ['order' => $order])
-            <span class="en-text text-accent fw-bold fs-5">{{ number_format($order->total, 2) }} ر.س</span>
+            <span class="en-text text-accent fw-bold fs-5">{{ format_money($order->total) }}</span>
         </div>
     </div>
     @if($order->items->isNotEmpty())

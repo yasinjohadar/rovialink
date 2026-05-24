@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     العملاء
@@ -77,7 +77,7 @@
                                         <td>{{ $customer->phone ?? '—' }}</td>
                                         <td>{{ number_format($customer->loyalty_points_balance ?? 0, 0) }} نقطة</td>
                                         <td>{{ $customer->orders_count ?? 0 }}</td>
-                                        <td>{{ number_format($customer->total_spent ?? 0, 2) }} ر.س</td>
+                                        <td>{{ format_money($customer->total_spent ?? 0) }}</td>
                                         <td>{{ $customer->created_at?->format('Y-m-d H:i') }}</td>
                                         <td>
                                             <a href="{{ route('admin.customers.show', $customer) }}" class="btn btn-sm btn-outline-primary">

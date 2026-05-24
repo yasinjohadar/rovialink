@@ -98,7 +98,7 @@ class Coupon extends Model
         if ($this->type === 'percentage') {
             return "{$this->value}%";
         } elseif ($this->type === 'fixed_amount') {
-            return "{$this->value} ر.س";
+            return "{$this->value} $";
         }
         return $this->value;
     }

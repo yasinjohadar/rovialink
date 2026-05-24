@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     إنشاء كوبون جديد
@@ -134,7 +134,7 @@
                                     <label class="form-label">نوع الخصم <span class="text-danger">*</span></label>
                                     <select name="type" class="form-select" required>
                                         <option value="percentage" {{ old('type', 'percentage') == 'percentage' ? 'selected' : '' }}>نسبة مئوية (%)</option>
-                                        <option value="fixed_amount" {{ old('type') == 'fixed_amount' ? 'selected' : '' }}>مبلغ ثابت (ر.س)</option>
+                                        <option value="fixed_amount" {{ old('type') == 'fixed_amount' ? 'selected' : '' }}>مبلغ ثابت ($)</option>
                                         <option value="buy_x_get_y" {{ old('type') == 'buy_x_get_y' ? 'selected' : '' }}>اشترِ واحصل على</option>
                                     </select>
                                 </div>
@@ -144,7 +144,7 @@
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label">حد أدنى للطلب <span class="text-muted">(اختياري)</span></label>
-                                    <input type="number" min="0" step="0.01" class="form-control" name="minimum_order_amount" value="{{ old('minimum_order_amount', 0) }}" placeholder="0 ر.س">
+                                    <input type="number" min="0" step="0.01" class="form-control" name="minimum_order_amount" value="{{ old('minimum_order_amount', 0) }}" placeholder="0 $">
                                 </div>
                             </div>
                         </div>

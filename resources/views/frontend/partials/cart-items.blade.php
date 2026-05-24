@@ -1,4 +1,4 @@
-<div id="cart-server-rendered">
+﻿<div id="cart-server-rendered">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-bold text-white m-0">
             العناصر في السلة (<span class="en-text text-accent" id="cart-items-count">{{ collect($cartItems)->sum('quantity') }}</span>)
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="text-center d-flex flex-column align-items-end justify-content-between py-1">
-            <span class="text-accent fw-bold fs-5 en-text cart-line-subtotal">{{ number_format($item['subtotal'], 2) }} ر.س</span>
+            <span class="text-accent fw-bold fs-5 en-text cart-line-subtotal">{{ format_money($item['subtotal']) }}</span>
             <button type="button" class="btn btn-sm text-danger bg-transparent border-0 p-0 text-decoration-underline small mt-2" data-cart-remove data-row-id="{{ $item['row_id'] }}">
                 <i class="fas fa-trash-alt me-1"></i>إزالة
             </button>

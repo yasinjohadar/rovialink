@@ -1,4 +1,4 @@
-<div class="dashboard-section active" id="section-overview">
+﻿<div class="dashboard-section active" id="section-overview">
     <div class="row g-3 mb-4 section-fade-up">
         <div class="col-6 col-md-3">
             <div class="glass-card account-stat">
@@ -55,7 +55,7 @@
                         <td class="py-3 en-text fw-bold">#{{ $order->order_number }}</td>
                         <td class="py-3 en-text">{{ $order->created_at->format('Y-m-d') }}</td>
                         <td class="py-3">@include('frontend.pages.account.partials.order-status-badge', ['order' => $order])</td>
-                        <td class="py-3 en-text text-accent fw-bold">{{ number_format($order->total, 2) }} ر.س</td>
+                        <td class="py-3 en-text text-accent fw-bold">{{ format_money($order->total) }}</td>
                         <td class="py-3">
                             <a href="{{ route('frontend.account.orders.show', $order) }}" class="btn btn-sm btn-glass rounded-pill px-3">التفاصيل</a>
                         </td>

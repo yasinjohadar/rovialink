@@ -126,7 +126,7 @@ class CartController extends Controller
             return $this->cartErrorResponse($request, $result['message'], 'coupon');
         }
 
-        $message = 'تم تطبيق الكوبون بنجاح. الخصم: ' . number_format($result['discount_amount'], 2) . ' ر.س';
+        $message = 'تم تطبيق الكوبون بنجاح. الخصم: ' . format_money($result['discount_amount']);
 
         if ($this->wantsCartJson($request)) {
             return $this->cartJsonResponse($message);

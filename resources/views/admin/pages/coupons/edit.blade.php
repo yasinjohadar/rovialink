@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     تعديل الكوبون: {{ $coupon->code }}
@@ -134,7 +134,7 @@
                                     <label class="form-label">نوع الخصم <span class="text-danger">*</span></label>
                                     <select name="type" class="form-select" required>
                                         <option value="percentage" {{ old('type', $coupon->type) == 'percentage' ? 'selected' : '' }}>نسبة مئوية (%)</option>
-                                        <option value="fixed_amount" {{ old('type', $coupon->type) == 'fixed_amount' ? 'selected' : '' }}>مبلغ ثابت (ر.س)</option>
+                                        <option value="fixed_amount" {{ old('type', $coupon->type) == 'fixed_amount' ? 'selected' : '' }}>مبلغ ثابت ($)</option>
                                         <option value="buy_x_get_y" {{ old('type', $coupon->type) == 'buy_x_get_y' ? 'selected' : '' }}>اشترِ واحصل على</option>
                                     </select>
                                 </div>

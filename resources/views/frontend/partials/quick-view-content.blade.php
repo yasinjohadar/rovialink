@@ -1,4 +1,4 @@
-    <div class="row gutter-lg">
+﻿    <div class="row gutter-lg">
         <div class="col-md-6 mb-4 mb-md-0">
             <div class="product-gallery product-gallery-sticky">
                 <div class="swiper-container product-single-swiper swiper-theme nav-inner">
@@ -69,10 +69,10 @@
 
                 <div class="product-price">
                     @if($product->compare_at_price && $product->compare_at_price > $product->price)
-                        <ins class="new-price">{{ $product->price }} ر.س</ins>
-                        <del class="old-price">{{ $product->compare_at_price }} ر.س</del>
+                        <ins class="new-price">{{ format_money($product->price) }}</ins>
+                        <del class="old-price">{{ format_money($product->compare_at_price) }}</del>
                     @else
-                        <ins class="new-price">{{ $product->price }} ر.س</ins>
+                        <ins class="new-price">{{ format_money($product->price) }}</ins>
                     @endif
                 </div>
 

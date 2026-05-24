@@ -36,7 +36,8 @@
         "files": [
             "app/Helpers/StorageHelper.php",
             "app/Helpers/SiteSettingsHelper.php",
-            "app/Helpers/ActivityLogHelper.php"
+            "app/Helpers/ActivityLogHelper.php",
+            "app/Helpers/MoneyHelper.php"
         ]
     },
     "autoload-dev": {

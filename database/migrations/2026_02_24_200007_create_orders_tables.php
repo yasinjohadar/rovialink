@@ -39,7 +39,7 @@ return new class extends Migration
             $table->decimal('discount_amount', 12, 2)->default(0);
             $table->decimal('total', 12, 2)->default(0);
             $table->string('coupon_code')->nullable();
-            $table->string('currency', 3)->default('SAR');
+            $table->string('currency', 3)->default('USD');
             $table->text('customer_note')->nullable();
             $table->text('admin_note')->nullable();
             $table->string('ip_address')->nullable();

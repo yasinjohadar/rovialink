@@ -1,4 +1,4 @@
-@php
+﻿@php
     $discount = $discount ?? session('discount', 0);
     $total = max(0, $cartTotal - $discount);
 @endphp
@@ -8,12 +8,12 @@
 
         <div class="d-flex justify-content-between mb-3 text-secondary">
             <span>المجموع الفرعي:</span>
-            <span class="en-text">{{ number_format($cartTotal, 2) }} ر.س</span>
+            <span class="en-text">{{ format_money($cartTotal) }}</span>
         </div>
         @if($discount > 0)
         <div class="d-flex justify-content-between mb-3 text-success">
             <span>الخصم:</span>
-            <span class="en-text">-{{ number_format($discount, 2) }} ر.س</span>
+            <span class="en-text">-{{ format_money($discount) }}</span>
         </div>
         @endif
 
@@ -21,7 +21,7 @@
 
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h5 class="fw-bold text-white m-0">الإجمالي:</h5>
-            <h3 class="fw-bold text-accent m-0 en-text">{{ number_format($total, 2) }} ر.س</h3>
+            <h3 class="fw-bold text-accent m-0 en-text">{{ format_money($total) }}</h3>
         </div>
 
         <form method="POST" action="{{ route('frontend.cart.apply-coupon') }}" class="input-group mb-2" id="cart-coupon-form" data-cart-coupon-form>

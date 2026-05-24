@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     مقارنة المنتجات
@@ -43,7 +43,7 @@
 
             @php
                 $formatPrice = function ($amount) {
-                    return isset($currencyService) ? $currencyService->format((float) $amount) : number_format((float) $amount, 2) . ' ر.س';
+                    return isset($currencyService) ? $currencyService->format((float) $amount) : format_money((float) $amount);
                 };
                 $diffClass = function (array $values) {
                     $unique = collect($values)->unique()->count();

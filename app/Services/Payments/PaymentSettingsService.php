@@ -22,7 +22,7 @@ class PaymentSettingsService
         $raw = $this->rawSettings();
 
         return [
-            'payment_default_currency' => strtoupper($raw['payment_default_currency'] ?? 'SAR'),
+            'payment_default_currency' => 'USD',
             'stripe_publishable_key' => $raw['stripe_publishable_key'] ?? '',
             'stripe_secret_key' => $this->decryptIfEncrypted($raw['stripe_secret_key'] ?? ''),
             'stripe_webhook_secret' => $this->decryptIfEncrypted($raw['stripe_webhook_secret'] ?? ''),
@@ -68,7 +68,7 @@ class PaymentSettingsService
                     $value = Crypt::encryptString((string) $value);
                 }
             } elseif ($key === 'payment_default_currency') {
-                $value = strtoupper((string) $value);
+                $value = 'USD';
             }
 
             SystemSetting::set($key, (string) $value, 'string', self::GROUP);
@@ -127,7 +127,7 @@ class PaymentSettingsService
     protected function defaultKeys(): array
     {
         return [
-            'payment_default_currency' => 'SAR',
+            'payment_default_currency' => 'USD',
             'stripe_publishable_key' => '',
             'stripe_secret_key' => '',
             'stripe_webhook_secret' => '',

@@ -30,7 +30,6 @@ class PaymentSettingsController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'payment_default_currency' => 'required|string|size:3',
             'stripe_publishable_key' => 'nullable|string|max:255',
             'stripe_secret_key' => 'nullable|string|max:255',
             'stripe_webhook_secret' => 'nullable|string|max:255',
@@ -39,8 +38,6 @@ class PaymentSettingsController extends Controller
             'paypal_webhook_id' => 'nullable|string|max:255',
             'paypal_mode' => 'required|in:sandbox,live',
         ], [
-            'payment_default_currency.required' => 'العملة الافتراضية مطلوبة.',
-            'payment_default_currency.size' => 'رمز العملة يجب أن يكون 3 أحرف (مثل SAR).',
             'paypal_mode.in' => 'وضع PayPal غير صالح.',
         ]);
 

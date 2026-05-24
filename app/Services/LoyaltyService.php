@@ -94,7 +94,7 @@ class LoyaltyService
         if ($minOrder > 0 && $orderSubtotal < $minOrder) {
             return [
                 'success' => false,
-                'message' => 'الحد الأدنى للطلب لاستخدام النقاط هو ' . number_format($minOrder, 2) . ' ر.س.',
+                'message' => 'الحد الأدنى للطلب لاستخدام النقاط هو ' . format_money($minOrder) . '.',
             ];
         }
 

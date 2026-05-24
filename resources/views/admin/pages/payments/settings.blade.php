@@ -27,7 +27,7 @@
             <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
                 <div>
                     <h5 class="page-title fs-21 mb-1">إعدادات الدفع</h5>
-                    <p class="text-muted mb-0 small">ضبط مفاتيح Stripe وPayPal والعملة الافتراضية من لوحة التحكم — بدون ملف .env.</p>
+                    <p class="text-muted mb-0 small">ضبط مفاتيح Stripe وPayPal من لوحة التحكم — بدون ملف .env. جميع الأسعار بالدولار الأمريكي (USD).</p>
                 </div>
             </div>
 
@@ -42,12 +42,9 @@
                     <div class="card-body">
                         <div class="row g-3">
                             <div class="col-md-4">
-                                <label class="form-label">العملة الافتراضية</label>
-                                <input type="text" name="payment_default_currency" maxlength="3"
-                                    class="form-control text-uppercase @error('payment_default_currency') is-invalid @enderror"
-                                    value="{{ old('payment_default_currency', $settings['payment_default_currency'] ?? 'SAR') }}">
-                                <small class="text-muted">مثال: SAR, USD, EUR</small>
-                                @error('payment_default_currency')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                <label class="form-label">العملة</label>
+                                <input type="text" class="form-control text-uppercase" value="USD ($)" readonly disabled>
+                                <small class="text-muted">الموقع يستخدم الدولار الأمريكي فقط.</small>
                             </div>
                         </div>
                     </div>

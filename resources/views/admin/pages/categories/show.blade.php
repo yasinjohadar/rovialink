@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     تفاصيل التصنيف
@@ -217,7 +217,7 @@
                                             </td>
                                             <td><code>{{ $product->sku ?? '—' }}</code></td>
                                             <td>{{ $product->brand->name ?? '—' }}</td>
-                                            <td class="text-nowrap">{{ number_format((float) $product->effective_price, 2) }} ر.س</td>
+                                            <td class="text-nowrap">{{ format_money((float) $product->effective_price) }}</td>
                                             <td>
                                                 @if($product->status === 'active')
                                                     <span class="badge bg-success">نشط</span>

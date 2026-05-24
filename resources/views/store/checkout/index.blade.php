@@ -1,4 +1,4 @@
-@extends('store.layouts.master')
+﻿@extends('store.layouts.master')
 
 @section('title', 'إتمام الطلب')
 
@@ -54,11 +54,11 @@
                                     {{ $item->product->name }}
                                     @if($item->variant)<br><small class="text-muted">{{ $item->variant->display_name }}</small>@endif
                                 </span>
-                                <span>{{ $item->quantity }} × {{ number_format($item->unit_price, 2) }} ر.س</span>
+                                <span>{{ $item->quantity }} × {{ format_money($item->unit_price) }}</span>
                             </li>
                         @endforeach
                     </ul>
-                    <p class="mt-2 mb-0"><strong>المجموع: {{ number_format($cart->subtotal, 2) }} ر.س</strong></p>
+                    <p class="mt-2 mb-0"><strong>المجموع: {{ format_money($cart->subtotal) }}</strong></p>
                     <p class="text-muted small mb-0">التسليم رقمي فوري بعد إتمام الطلب</p>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     ملف العميل {{ $customer->name }}
@@ -36,10 +36,10 @@
                                 </div>
                             </div>
                             <div class="text-end">
-                                <span class="badge bg-primary">إجمالي الإنفاق: {{ number_format($totalSpent, 2) }} ر.س</span>
+                                <span class="badge bg-primary">إجمالي الإنفاق: {{ format_money($totalSpent) }}</span>
                                 <div class="small text-muted mt-1">
                                     عدد الطلبات: {{ $ordersCount }}<br>
-                                    متوسط قيمة الطلب: {{ number_format($averageOrderValue, 2) }} ر.س
+                                    متوسط قيمة الطلب: {{ format_money($averageOrderValue) }}
                                 </div>
                             </div>
                         </div>
@@ -147,7 +147,7 @@
                                                 {{ $order->status->name ?? '—' }}
                                             </span>
                                         </td>
-                                        <td>{{ number_format($order->total, 2) }} ر.س</td>
+                                        <td>{{ format_money($order->total) }}</td>
                                         <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
                                         <td>
                                             <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-primary">عرض</a>
@@ -187,7 +187,7 @@
                                                 {{ $order->status->name ?? '—' }}
                                             </span>
                                         </td>
-                                        <td>{{ number_format($order->total, 2) }} ر.س</td>
+                                        <td>{{ format_money($order->total) }}</td>
                                         <td>{{ $order->created_at->format('Y-m-d H:i') }}</td>
                                         <td>
                                             <a href="{{ route('admin.orders.show', $order) }}" class="btn btn-sm btn-outline-primary">عرض</a>

@@ -116,7 +116,7 @@ class CouponService
         if ($minAmount > 0 && $applicableSubtotal < $minAmount) {
             return [
                 'success' => false,
-                'message' => 'الحد الأدنى للطلب لهذا الكوبون هو ' . number_format($minAmount, 2) . ' ر.س.',
+                'message' => 'الحد الأدنى للطلب لهذا الكوبون هو ' . format_money($minAmount) . '.',
             ];
         }
 

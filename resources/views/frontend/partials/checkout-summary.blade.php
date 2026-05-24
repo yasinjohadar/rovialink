@@ -1,4 +1,4 @@
-@php
+﻿@php
     $discount = $discount ?? 0;
     $shippingCost = $shippingCost ?? 0;
     $taxAmount = $taxAmount ?? 0;
@@ -12,7 +12,7 @@
             @foreach($cartItems as $item)
             <div class="d-flex justify-content-between align-items-center text-secondary small border-bottom border-secondary border-opacity-25 pb-2">
                 <span>{{ Str::limit($item['name'], 40) }} <span class="en-text">x{{ $item['quantity'] }}</span></span>
-                <span class="en-text text-accent fw-bold">{{ number_format($item['subtotal'], 2) }} ر.س</span>
+                <span class="en-text text-accent fw-bold">{{ format_money($item['subtotal']) }}</span>
             </div>
             @endforeach
         </div>
@@ -21,30 +21,30 @@
 
         <div class="d-flex justify-content-between text-secondary mb-2">
             <span>المجموع:</span>
-            <span class="en-text">{{ number_format($cartTotal, 2) }} ر.س</span>
+            <span class="en-text">{{ format_money($cartTotal) }}</span>
         </div>
         @if($taxAmount > 0)
         <div class="d-flex justify-content-between text-secondary mb-2">
             <span>الضريبة:</span>
-            <span class="en-text">{{ number_format($taxAmount, 2) }} ر.س</span>
+            <span class="en-text">{{ format_money($taxAmount) }}</span>
         </div>
         @endif
         @if($shippingCost > 0)
         <div class="d-flex justify-content-between text-secondary mb-2">
             <span>الشحن:</span>
-            <span class="en-text">{{ number_format($shippingCost, 2) }} ر.س</span>
+            <span class="en-text">{{ format_money($shippingCost) }}</span>
         </div>
         @endif
         @if($discount > 0)
         <div class="d-flex justify-content-between text-success mb-2">
             <span>الخصم:</span>
-            <span class="en-text">-{{ number_format($discount, 2) }} ر.س</span>
+            <span class="en-text">-{{ format_money($discount) }}</span>
         </div>
         @endif
         <hr class="border-secondary border-opacity-25">
         <div class="d-flex justify-content-between align-items-center">
             <h5 class="fw-bold m-0">الإجمالي:</h5>
-            <h3 class="fw-bold text-accent m-0 en-text">{{ number_format($total, 2) }} ر.س</h3>
+            <h3 class="fw-bold text-accent m-0 en-text">{{ format_money($total) }}</h3>
         </div>
     </div>
 </div>

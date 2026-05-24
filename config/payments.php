@@ -10,5 +10,5 @@ return [
     | and managed from Admin → إعدادات الدفع. Use PaymentSettingsService at runtime.
     |
     */
-    'default_currency' => 'SAR',
+    'default_currency' => 'USD',
 ];

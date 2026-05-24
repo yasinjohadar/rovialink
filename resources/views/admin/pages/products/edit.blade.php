@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     تعديل المنتج
@@ -74,7 +74,7 @@
                                 @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">السعر (ر.س) <span class="text-danger">*</span></label>
+                                <label class="form-label">السعر ($) <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" min="0" class="form-control" name="price" value="{{ old('price', $product->price) }}" required>
                             </div>
                             <div class="col-md-4">

@@ -1,4 +1,4 @@
-@extends('store.layouts.master')
+﻿@extends('store.layouts.master')
 
 @section('title', $product->name)
 
@@ -49,7 +49,7 @@
                     @endforeach
                 </div>
 
-                <p class="mb-2"><strong>السعر:</strong> <span id="variant-price">{{ $product->effective_price ? number_format($product->effective_price, 2) . ' ر.س' : '—' }}</span></p>
+                <p class="mb-2"><strong>السعر:</strong> <span id="variant-price">{{ $product->effective_price ? format_money($product->effective_price) : '—' }}</span></p>
 
                 <form action="{{ route('store.cart.store') }}" method="POST" class="row g-2 align-items-end" id="add-to-cart-form">
                     @csrf
@@ -65,7 +65,7 @@
                 </form>
             @else
                 {{-- منتج بسيط بدون متغيرات --}}
-                <p class="mb-2"><strong>السعر:</strong> {{ number_format($product->effective_price, 2) }} ر.س</p>
+                <p class="mb-2"><strong>السعر:</strong> {{ format_money($product->effective_price) }}</p>
                 <form action="{{ route('store.cart.store') }}" method="POST" class="row g-2 align-items-end">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -129,7 +129,37 @@
                 document.querySelectorAll('.variant-required-msg').forEach(el => el.style.display = 'none');
                 if (variant) {
                     variantIdInput.value = variant.id;
-                    priceEl.textContent = (variant.price != null ? Number(variant.price).toFixed(2) : '—') + ' ر.س';
+                    priceEl.textContent = (variant.price != null ? Number(variant.price).toFixed(2) : '—') + ' $';
+                    addBtn.disabled = !productInStock;
+                    addBtn.textContent = productInStock ? 'إضافة للسلة' : 'غير متوفر';
+                } else {
+                    variantIdInput.value = '';
+                    const missing = attributeIds.filter(aid => !getSelectedValueIds()[aid]);
+                    if (missing.length) {
+                        const firstAttr = document.querySelector('.variant-required-msg[data-attribute-id="' + missing[0] + '"]');
+                        if (firstAttr) firstAttr.style.display = 'inline';
+                    }
+                    priceEl.textContent = '—';
+                    addBtn.disabled = true;
+                    addBtn.textContent = 'اختر الخيارات أعلاه';
+                }
+            }
+
+            document.querySelectorAll('.variant-option').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    const aid = parseInt(this.dataset.attributeId, 10);
+                    document.querySelectorAll('.variant-option[data-attribute-id="' + aid + '"]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateUI();
+                });
+            });
+            updateUI();
+        })();
+        </script>
+        @endpush
+    @endif
+@endsection
+;
                     addBtn.disabled = !productInStock;
                     addBtn.textContent = productInStock ? 'إضافة للسلة' : 'غير متوفر';
                 } else {

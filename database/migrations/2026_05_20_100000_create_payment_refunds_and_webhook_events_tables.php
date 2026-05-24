@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('payment_id')->constrained('payments')->cascadeOnDelete();
             $table->decimal('amount', 12, 2);
-            $table->string('currency', 3)->default('SAR');
+            $table->string('currency', 3)->default('USD');
             $table->string('gateway_refund_id')->nullable();
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->string('reason')->nullable();

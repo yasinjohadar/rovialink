@@ -34,7 +34,7 @@
                                 'admin.categories.*', 'admin.brands.*', 'admin.products.*', 'admin.attributes.*',
                                 'admin.orders.*', 'admin.order-returns.*', 'admin.customers.*', 'admin.wishlists.*',
                                 'admin.reviews.*', 'admin.review-settings.*', 'admin.coupons.*', 'admin.loyalty.*',
-                                'admin.payment-methods.*', 'admin.payments.settings.*', 'admin.payments.*', 'admin.tax.*', 'admin.currencies.*',
+                                'admin.payment-methods.*', 'admin.payments.settings.*', 'admin.payments.*', 'admin.tax.*',
                                 'admin.reports.*'
                             );
                             $contentActive = request()->routeIs('admin.blog.*');
@@ -120,9 +120,6 @@
                                 </li>
                                 <li class="slide {{ request()->routeIs('admin.tax.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.tax.index') }}" class="side-menu__item">فئات ومعدلات الضرائب</a>
-                                </li>
-                                <li class="slide {{ request()->routeIs('admin.currencies.*') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.currencies.index') }}" class="side-menu__item">العملات</a>
                                 </li>
                                 <li class="slide {{ request()->routeIs('admin.reports.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.reports.dashboard') }}" class="side-menu__item">تقارير المتجر</a>

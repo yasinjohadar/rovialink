@@ -1,4 +1,4 @@
-@extends('store.layouts.master')
+﻿@extends('store.layouts.master')
 
 @section('title', 'السلة')
 
@@ -27,7 +27,7 @@
                                 <br><small class="text-muted">{{ $item->variant->display_name }}</small>
                             @endif
                         </td>
-                        <td>{{ number_format($item->unit_price, 2) }} ر.س</td>
+                        <td>{{ format_money($item->unit_price) }}</td>
                         <td>
                             <form action="{{ route('store.cart.update', $item->id) }}" method="POST" class="d-inline">
                                 @csrf
@@ -36,7 +36,7 @@
                                 <button type="submit" class="btn btn-sm btn-outline-secondary">تحديث</button>
                             </form>
                         </td>
-                        <td>{{ number_format($item->line_total, 2) }} ر.س</td>
+                        <td>{{ format_money($item->line_total) }}</td>
                         <td>
                             <form action="{{ route('store.cart.destroy', $item->id) }}" method="POST" class="d-inline" onsubmit="return confirm('إزالة من السلة؟');">
                                 @csrf
@@ -48,9 +48,9 @@
                 @endforeach
             </tbody>
         </table>
-        <p><strong>المجموع:</strong> {{ number_format($cart->subtotal, 2) }} ر.س</p>
+        <p><strong>المجموع:</strong> {{ format_money($cart->subtotal) }}</p>
         @if($cart->coupon_code)
-            <p class="text-success">كوبون: {{ $cart->coupon_code }} — خصم: {{ number_format($cart->discount_amount, 2) }} ر.س</p>
+            <p class="text-success">كوبون: {{ $cart->coupon_code }} — خصم: {{ format_money($cart->discount_amount) }}</p>
             <form action="{{ route('store.cart.remove-coupon') }}" method="POST" class="mb-3">
                 @csrf
                 <button type="submit" class="btn btn-sm btn-outline-danger">إزالة الكوبون</button>
@@ -71,7 +71,7 @@
             @enderror
         @endif
         @if($cart->discount_amount > 0)
-            <p><strong>الإجمالي بعد الخصم:</strong> {{ number_format(max(0, $cart->subtotal - $cart->discount_amount), 2) }} ر.س</p>
+            <p><strong>الإجمالي بعد الخصم:</strong> {{ number_format(max(0, $cart->subtotal - $cart->discount_amount), 2) }}</p>
         @endif
         <div class="mt-3">
             <a href="{{ route('store.products.index') }}" class="btn btn-outline-secondary">متابعة التسوق</a>

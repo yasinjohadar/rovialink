@@ -1,4 +1,4 @@
-@extends('admin.layouts.master')
+﻿@extends('admin.layouts.master')
 
 @section('page-title')
     لوحة التقارير
@@ -181,7 +181,7 @@
                     labels: labels,
                     datasets: [
                         {
-                            label: 'إجمالي المبيعات (ر.س)',
+                            label: 'إجمالي المبيعات ($)',
                             data: totals,
                             borderColor: '#4f46e5',
                             backgroundColor: 'rgba(79, 70, 229, 0.1)',

@@ -1,4 +1,4 @@
-@php
+﻿@php
     $filterAction = $filterAction ?? route('frontend.shop.index');
     $maxPrice = $maxProductPrice ?? 2000;
     $currentMax = (int) request('max_price', $maxPrice);
@@ -69,7 +69,7 @@
                 <h3 class="shop-filters__section-title">
                     نطاق السعر
                     <span class="shop-filters__price-value en-text">
-                        حتى <strong id="price-val">{{ min($currentMax, $maxPrice) }}</strong> ر.س
+                        حتى <strong id="price-val">{{ min($currentMax, $maxPrice) }}</strong> $
                     </span>
                 </h3>
                 <div class="shop-filters__range-wrap">
