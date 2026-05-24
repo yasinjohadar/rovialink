@@ -5,7 +5,7 @@
 @stop
 
 @section('css')
-<link href="{{ asset('assets/css/admin-dashboard.css') }}" rel="stylesheet">
+<link href="{{ asset('assets/css/admin-dashboard.css') }}?v=3" rel="stylesheet">
 @stop
 
 @section('content')
@@ -19,14 +19,9 @@
                             <li class="breadcrumb-item active" aria-current="page">الرئيسية</li>
                         </ol>
                     </div>
-                    <div class="ms-auto">
-                        <a href="{{ route('admin.reports.dashboard') }}" class="btn btn-primary btn-sm">
-                            <i class="fe fe-bar-chart-2 me-1"></i> تقارير المتجر
-                        </a>
-                    </div>
                 </div>
 
-                <div class="row g-3 mb-4">
+                <div class="row g-3 mb-4 dash-widgets-row">
                     @foreach($widgets as $widget)
                         @include('admin.partials.dashboard-stat-widget', ['widget' => $widget])
                     @endforeach
@@ -34,12 +29,12 @@
 
                 <div class="row g-3">
                     <div class="col-xl-6">
-                        <div class="card custom-card">
-                            <div class="card-header justify-content-between">
+                        <div class="card custom-card dash-table-card">
+                            <div class="card-header justify-content-between align-items-center">
                                 <div class="card-title mb-0">أحدث الطلبات</div>
                                 <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-outline-primary">عرض الكل</a>
                             </div>
-                            <div class="card-body p-0">
+                            <div class="card-body dash-table-card__body">
                                 @if($recentOrders->isNotEmpty())
                                     <div class="table-responsive">
                                         <table class="table table-hover mb-0">
@@ -83,12 +78,12 @@
                     </div>
 
                     <div class="col-xl-6">
-                        <div class="card custom-card">
-                            <div class="card-header justify-content-between">
+                        <div class="card custom-card dash-table-card">
+                            <div class="card-header justify-content-between align-items-center">
                                 <div class="card-title mb-0">آراء العملاء الأخيرة</div>
                                 <a href="{{ route('admin.reviews.index') }}" class="btn btn-sm btn-outline-primary">عرض الكل</a>
                             </div>
-                            <div class="card-body p-0">
+                            <div class="card-body dash-table-card__body">
                                 @if($recentReviews->isNotEmpty())
                                     <div class="table-responsive">
                                         <table class="table table-hover mb-0">
@@ -148,14 +143,15 @@
                                             ['route' => 'admin.customers.index', 'icon' => 'fe-users', 'title' => 'العملاء', 'desc' => 'حسابات ومشتريات العملاء'],
                                             ['route' => 'admin.coupons.index', 'icon' => 'fe-tag', 'title' => 'الكوبونات', 'desc' => 'خصومات وعروض'],
                                             ['route' => 'admin.categories.index', 'icon' => 'fe-folder', 'title' => 'التصنيفات', 'desc' => 'تنظيم كتالوج المنتجات'],
-                                            ['route' => 'admin.reports.dashboard', 'icon' => 'fe-bar-chart-2', 'title' => 'التقارير', 'desc' => 'إحصائيات المبيعات'],
                                         ];
                                     @endphp
                                     @foreach($quickLinks as $link)
-                                        <div class="col-md-4 col-lg-2">
-                                            <a href="{{ route($link['route']) }}" class="list-group-item list-group-item-action dash-quick-link border rounded-3 p-3 h-100">
-                                                <i class="{{ $link['icon'] }} text-primary mb-2 d-block" style="font-size:1.25rem"></i>
-                                                <h6 class="mb-1 fs-13">{{ $link['title'] }}</h6>
+                                        <div class="col-6 col-md-4 col-lg-2">
+                                            <a href="{{ route($link['route']) }}" class="dash-quick-link border rounded-3 p-3 h-100 d-flex flex-column align-items-center text-center">
+                                                <span class="dash-quick-link__icon" aria-hidden="true">
+                                                    <i class="fe {{ $link['icon'] }}"></i>
+                                                </span>
+                                                <h6 class="mb-1 fs-13 fw-semibold">{{ $link['title'] }}</h6>
                                                 <p class="text-muted mb-0 small">{{ $link['desc'] }}</p>
                                             </a>
                                         </div>

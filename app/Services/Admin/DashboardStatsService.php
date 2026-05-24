@@ -4,7 +4,6 @@ namespace App\Services\Admin;
 
 use App\Models\BlogPost;
 use App\Models\Category;
-use App\Models\Coupon;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Product;
@@ -26,8 +25,18 @@ class DashboardStatsService
         $ordersToday = Order::whereDate('created_at', $today)->count();
         $ordersPending = Order::whereHas('status', fn ($q) => $q->where('slug', 'pending'))->count();
 
-        $salesMonth = (float) Order::query()
+        $monthOrdersQuery = Order::query()
             ->where('created_at', '>=', $monthStart)
+            ->whereHas('status', fn ($q) => $q->whereIn('slug', ['processing', 'completed', 'shipped']));
+
+        $salesMonth = (float) (clone $monthOrdersQuery)->sum('total');
+        $ordersMonth = (clone $monthOrdersQuery)->count();
+        $avgOrderValue = $ordersMonth > 0 ? $salesMonth / $ordersMonth : 0.0;
+
+        $prevMonthStart = $monthStart->copy()->subMonth();
+        $prevMonthEnd = $monthStart->copy()->subSecond();
+        $salesPrevMonth = (float) Order::query()
+            ->whereBetween('created_at', [$prevMonthStart, $prevMonthEnd])
             ->whereHas('status', fn ($q) => $q->whereIn('slug', ['processing', 'completed', 'shipped']))
             ->sum('total');
 
@@ -46,6 +55,9 @@ class DashboardStatsService
             'orders_today' => $ordersToday,
             'orders_pending' => $ordersPending,
             'sales_month' => $salesMonth,
+            'orders_month' => $ordersMonth,
+            'avg_order_value' => $avgOrderValue,
+            'sales_month_trend' => $this->percentTrend($salesMonth, $salesPrevMonth),
             'products_total' => $productsTotal,
             'products_active' => $productsActive,
             'customers_total' => $customersTotal,
@@ -53,7 +65,6 @@ class DashboardStatsService
             'reviews_total' => $reviewsTotal,
             'categories_total' => Category::count(),
             'blog_posts_total' => BlogPost::count(),
-            'coupons_total' => Coupon::count(),
             'orders_sparkline' => $this->buildDailySparkline(Order::query(), $weekStart, 7),
             'sales_sparkline' => $this->buildDailySparkline(
                 Order::query()->whereHas('status', fn ($q) => $q->whereIn('slug', ['processing', 'completed', 'shipped'])),
@@ -91,11 +102,26 @@ class DashboardStatsService
                 'subtitle' => now()->translatedFormat('F Y'),
                 'badge' => null,
                 'badge_type' => 'success',
-                'url' => route('admin.reports.dashboard'),
+                'url' => route('admin.orders.index'),
                 'icon' => 'trending-up',
                 'variant' => 'emerald',
                 'sparkline' => $stats['sales_sparkline'],
                 'trend' => null,
+            ],
+            [
+                'key' => 'reports',
+                'title' => 'تقارير المتجر',
+                'value' => number_format($stats['orders_month']),
+                'subtitle' => format_money($stats['sales_month']).' مبيعات '.now()->translatedFormat('F'),
+                'badge' => $stats['avg_order_value'] > 0
+                    ? 'متوسط الطلب: '.format_money($stats['avg_order_value'])
+                    : null,
+                'badge_type' => 'success',
+                'url' => route('admin.reports.dashboard'),
+                'icon' => 'bar-chart-2',
+                'variant' => 'purple',
+                'sparkline' => $stats['sales_sparkline'],
+                'trend' => $stats['sales_month_trend'],
             ],
             [
                 'key' => 'products',
@@ -146,19 +172,6 @@ class DashboardStatsService
                 'url' => route('admin.categories.index'),
                 'icon' => 'grid',
                 'variant' => 'indigo',
-                'sparkline' => null,
-                'trend' => null,
-            ],
-            [
-                'key' => 'coupons',
-                'title' => 'الكوبونات',
-                'value' => number_format($stats['coupons_total']),
-                'subtitle' => 'كوبونات وخصومات',
-                'badge' => null,
-                'badge_type' => 'info',
-                'url' => route('admin.coupons.index'),
-                'icon' => 'tag',
-                'variant' => 'teal',
                 'sparkline' => null,
                 'trend' => null,
             ],

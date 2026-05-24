@@ -11,7 +11,8 @@ test('dashboard loads with stat widgets for authenticated user', function () {
         ->assertOk()
         ->assertSee('الطلبات')
         ->assertSee('مبيعات الشهر')
-        ->assertSee('المنتجات');
+        ->assertSee('المنتجات')
+        ->assertSee('تقارير المتجر');
 });
 
 test('dashboard stats service returns widget collection', function () {
@@ -19,7 +20,7 @@ test('dashboard stats service returns widget collection', function () {
     $stats = $service->getStats();
     $widgets = $service->getWidgets($stats);
 
-    expect($stats)->toHaveKeys(['orders_total', 'sales_month', 'products_total'])
+    expect($stats)->toHaveKeys(['orders_total', 'sales_month', 'orders_month', 'avg_order_value'])
         ->and($widgets)->toHaveCount(8)
-        ->and($widgets[0]['key'])->toBe('orders');
+        ->and(collect($widgets)->firstWhere('key', 'reports')['url'])->toBe(route('admin.reports.dashboard'));
 });
