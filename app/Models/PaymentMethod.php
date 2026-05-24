@@ -34,7 +34,7 @@ class PaymentMethod extends Model
 
     public function resolvedGateway(): string
     {
-        if ($this->driver === 'card') {
+        if ($this->isCardGateway()) {
             return strtolower((string) ($this->config['gateway'] ?? 'stripe'));
         }
 
@@ -52,8 +52,22 @@ class PaymentMethod extends Model
             'cod' => 'الدفع عند الاستلام',
             'bank_transfer' => 'تحويل بنكي',
             'paypal' => 'PayPal',
-            'card' => 'بطاقة ائتمان',
+            'card', 'stripe' => 'بطاقة ائتمان',
             default => $this->name,
         };
+    }
+
+    /** Driver slug used for checkout UI panels (radio → panel visibility). */
+    public function checkoutUiDriver(): string
+    {
+        return match ($this->driver) {
+            'card', 'stripe' => 'card',
+            default => $this->driver,
+        };
+    }
+
+    public function isCardGateway(): bool
+    {
+        return in_array($this->driver, ['card', 'stripe'], true);
     }
 }

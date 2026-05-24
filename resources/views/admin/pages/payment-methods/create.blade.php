@@ -148,6 +148,15 @@
                                             <label class="form-check-label" for="card_sandbox">وضع التجربة (Sandbox)</label>
                                         </div>
                                     </div>
+                                    <div class="col-12">
+                                        <label class="form-label">تعليمات للعميل (اختياري)</label>
+                                        <textarea name="config[instructions]" class="form-control" rows="2" placeholder="مثال: يُقبل Visa و Mastercard">{{ old('config.instructions') }}</textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">ملاحظة بارزة للعميل (تظهر في صفحة الدفع عند اختيار البطاقة)</label>
+                                        <textarea name="config[customer_notice]" class="form-control" rows="3" placeholder="مثال: سيتم تحويلك إلى صفحة دفع آمنة">{{ old('config.customer_notice') }}</textarea>
+                                        <small class="text-muted">تُعرض في صندوق مميز أسفل معاينة البطاقة.</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>

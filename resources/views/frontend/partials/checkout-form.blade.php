@@ -58,17 +58,38 @@
             <label class="account-sidebar__link {{ old('payment_method_id', $paymentMethods->first()?->id) == $method->id ? 'active' : '' }}" style="cursor:pointer;">
                 <input type="radio" name="payment_method_id" value="{{ $method->id }}" class="d-none payment-method-radio"
                        data-driver="{{ $method->driver }}"
+                       data-ui-driver="{{ $method->checkoutUiDriver() }}"
                        @checked(old('payment_method_id', $paymentMethods->first()?->id) == $method->id)>
                 <span class="account-sidebar__indicator"></span>
-                <i class="fas fa-{{ match($method->driver) { 'paypal' => 'paypal', 'bank_transfer' => 'university', 'cod' => 'money-bill-wave', default => 'credit-card' } }} account-sidebar__icon"></i>
+                <i class="fas fa-{{ match($method->checkoutUiDriver()) { 'paypal' => 'paypal', 'bank_transfer' => 'university', 'cod' => 'money-bill-wave', default => 'credit-card' } }} account-sidebar__icon"></i>
                 <span class="shop-filters__option-text">{{ $method->name }}</span>
             </label>
             @endforeach
         </div>
 
-        @foreach($paymentMethods->where('driver', 'bank_transfer') as $bankMethod)
+        @foreach($paymentMethods->filter(fn ($m) => $m->checkoutUiDriver() === 'cod') as $codMethod)
+            @php $cfg = $codMethod->config ?? []; @endphp
+            <div class="checkout-method-panel checkout-cod-panel mt-3 d-none"
+                 data-checkout-panel="cod" data-method-id="{{ $codMethod->id }}">
+                <div class="checkout-method-panel__head">
+                    <i class="fas fa-truck-fast"></i>
+                    <div>
+                        <h6 class="checkout-method-panel__title mb-0">الدفع عند الاستلام</h6>
+                        <p class="checkout-method-panel__subtitle mb-0">تعليمات إتمام الطلب</p>
+                    </div>
+                </div>
+                @if(!empty($cfg['instructions']))
+                <div class="checkout-method-notice checkout-method-notice--info">{!! nl2br(e($cfg['instructions'])) !!}</div>
+                @else
+                <p class="checkout-method-panel__text mb-0">سيتواصل معك فريقنا لترتيب الدفع وتسليم منتجاتك.</p>
+                @endif
+            </div>
+        @endforeach
+
+        @foreach($paymentMethods->filter(fn ($m) => $m->checkoutUiDriver() === 'bank_transfer') as $bankMethod)
             @php $cfg = $bankMethod->config ?? []; @endphp
-            <div id="bank-transfer-panel-{{ $bankMethod->id }}" class="checkout-bank-panel mt-3 d-none" data-method-id="{{ $bankMethod->id }}">
+            <div id="bank-transfer-panel-{{ $bankMethod->id }}" class="checkout-bank-panel checkout-method-panel mt-3 d-none"
+                 data-checkout-panel="bank_transfer" data-method-id="{{ $bankMethod->id }}">
                 <div class="checkout-bank-details mb-3">
                     <h6 class="checkout-bank-details__title"><i class="fas fa-university me-2 text-accent"></i> بيانات الحساب البنكي</h6>
 
@@ -138,6 +159,115 @@
                 </div>
             </div>
         @endforeach
+
+        @foreach($paymentMethods->filter(fn ($m) => $m->checkoutUiDriver() === 'card') as $cardMethod)
+            @php
+                $cfg = $cardMethod->config ?? [];
+                $gateway = strtolower((string) ($cfg['gateway'] ?? 'stripe'));
+                $noticeText = trim((string) ($cfg['customer_notice'] ?? ''));
+                $instructions = trim((string) ($cfg['instructions'] ?? ''));
+            @endphp
+            <div class="checkout-card-panel checkout-method-panel mt-3 d-none"
+                 data-checkout-panel="card" data-method-id="{{ $cardMethod->id }}">
+                <div class="checkout-method-panel__head">
+                    <i class="fas fa-shield-halved"></i>
+                    <div>
+                        <h6 class="checkout-method-panel__title mb-0">الدفع الآمن بالبطاقة</h6>
+                        <p class="checkout-method-panel__subtitle mb-0">Visa · Mastercard · Mada · Amex</p>
+                    </div>
+                    <div class="checkout-card-brands" aria-hidden="true">
+                        <span class="checkout-card-brand checkout-card-brand--visa">VISA</span>
+                        <span class="checkout-card-brand checkout-card-brand--mc">MC</span>
+                        <span class="checkout-card-brand checkout-card-brand--mada">مدى</span>
+                    </div>
+                </div>
+
+                <div class="checkout-card-visual">
+                    <div class="checkout-card-visual__chip"><i class="fas fa-microchip"></i></div>
+                    <div class="checkout-card-visual__number en-text" dir="ltr">•••• &nbsp; •••• &nbsp; •••• &nbsp; ••••</div>
+                    <div class="checkout-card-visual__footer">
+                        <div>
+                            <span class="checkout-card-visual__label">VALID THRU</span>
+                            <span class="checkout-card-visual__value en-text">•• / ••</span>
+                        </div>
+                        <div>
+                            <span class="checkout-card-visual__label">CVC</span>
+                            <span class="checkout-card-visual__value en-text">•••</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="checkout-card-panel__lead">
+                    <i class="fas fa-arrow-left-long text-accent me-1"></i>
+                    بعد تأكيد الطلب ستُوجَّه إلى صفحة {{ $gateway === 'stripe' ? 'Stripe' : ucfirst($gateway) }} المؤمّنة لإدخال بيانات بطاقتك.
+                </p>
+
+                <div class="checkout-card-fields">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small mb-1">رقم البطاقة</label>
+                        <div class="checkout-card-field form-control bg-glass border-secondary en-text" dir="ltr" tabindex="-1" aria-hidden="true">0000 0000 0000 0000</div>
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label text-secondary small mb-1">تاريخ الانتهاء</label>
+                            <div class="checkout-card-field form-control bg-glass border-secondary en-text" dir="ltr" tabindex="-1" aria-hidden="true">MM / YY</div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label text-secondary small mb-1">رمز الأمان (CVC)</label>
+                            <div class="checkout-card-field form-control bg-glass border-secondary en-text" dir="ltr" tabindex="-1" aria-hidden="true">•••</div>
+                        </div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label text-secondary small mb-1">اسم حامل البطاقة</label>
+                        <div class="checkout-card-field form-control bg-glass border-secondary" tabindex="-1" aria-hidden="true">كما يظهر على البطاقة</div>
+                    </div>
+                </div>
+
+                @if($instructions !== '')
+                <p class="checkout-card-panel__hint mb-0 mt-3"><i class="fas fa-circle-info text-accent me-1"></i> {{ $instructions }}</p>
+                @endif
+
+                <div class="checkout-card-notice-wrap mt-3">
+                    <label class="form-label text-secondary small mb-1">
+                        <i class="fas fa-bell text-accent me-1"></i> ملاحظة مهمة
+                    </label>
+                    @if($noticeText !== '')
+                    <div class="checkout-card-notice-field form-control bg-glass border-secondary" role="note" aria-readonly="true">{!! nl2br(e($noticeText)) !!}</div>
+                    @else
+                    <div class="checkout-card-notice-field checkout-card-notice-field--empty form-control bg-glass border-secondary" role="note">
+                        يمكنك كتابة ملاحظة للعميل من لوحة الإدارة ← وسائل الدفع ← {{ $cardMethod->name }} ← «ملاحظة بارزة للعميل».
+                    </div>
+                    @endif
+                </div>
+
+                <ul class="checkout-card-trust">
+                    <li><i class="fas fa-lock"></i> تشفير SSL</li>
+                    <li><i class="fas fa-user-shield"></i> PCI DSS</li>
+                    <li><i class="fas fa-bolt"></i> دفع فوري</li>
+                </ul>
+            </div>
+        @endforeach
+
+        @foreach($paymentMethods->filter(fn ($m) => $m->checkoutUiDriver() === 'paypal') as $paypalMethod)
+            @php
+                $cfg = $paypalMethod->config ?? [];
+                $noticeText = trim((string) ($cfg['customer_notice'] ?? $cfg['instructions'] ?? ''));
+            @endphp
+            <div class="checkout-method-panel checkout-paypal-panel mt-3 d-none"
+                 data-checkout-panel="paypal" data-method-id="{{ $paypalMethod->id }}">
+                <div class="checkout-method-panel__head">
+                    <i class="fab fa-paypal"></i>
+                    <div>
+                        <h6 class="checkout-method-panel__title mb-0">الدفع عبر PayPal</h6>
+                        <p class="checkout-method-panel__subtitle mb-0">تسجيل دخول PayPal أو بطاقة ضمن حسابك</p>
+                    </div>
+                </div>
+                @if($noticeText !== '')
+                <div class="checkout-method-notice checkout-method-notice--info">{!! nl2br(e($noticeText)) !!}</div>
+                @endif
+                <p class="checkout-method-panel__text mb-0"><i class="fas fa-external-link-alt text-accent me-1"></i> سيتم تحويلك إلى PayPal لإتمام الدفع بأمان.</p>
+            </div>
+        @endforeach
     </div>
 
     <button type="submit" class="btn btn-accent w-100 py-3 fw-bold fs-5 rounded-3 mb-2 section-fade-up">
@@ -150,16 +280,17 @@
 <script>
 (function () {
     const radios = document.querySelectorAll('.payment-method-radio');
-    const bankPanels = document.querySelectorAll('.checkout-bank-panel');
+    const panels = document.querySelectorAll('[data-checkout-panel]');
 
     function syncPaymentPanels() {
         const selected = document.querySelector('.payment-method-radio:checked');
-        const driver = selected?.dataset.driver || '';
+        const uiDriver = selected?.dataset.uiDriver || selected?.dataset.driver || '';
         const methodId = selected?.value || '';
 
-        bankPanels.forEach(panel => {
-            const show = driver === 'bank_transfer' && panel.dataset.methodId === methodId;
+        panels.forEach(panel => {
+            const show = panel.dataset.checkoutPanel === uiDriver && panel.dataset.methodId === methodId;
             panel.classList.toggle('d-none', !show);
+
             const fileInput = panel.querySelector('.payment-receipt-input');
             if (fileInput) {
                 fileInput.required = show;

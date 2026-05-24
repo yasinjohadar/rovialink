@@ -7188,6 +7188,264 @@ html[data-theme="dark"] .quantity-selector input {
   50% { box-shadow: inset 0 0 0 1px rgba(255, 193, 7, 0.35), 0 0 12px rgba(255, 152, 0, 0.15); }
 }
 
+/* Checkout payment method panels (shared) */
+.checkout-method-panel {
+  padding: 1.15rem 1.25rem;
+  border: 1px solid rgba(var(--accent-rgb, 0, 212, 255), 0.22);
+  border-radius: 5px;
+  background: rgba(var(--accent-rgb, 0, 212, 255), 0.04);
+  color: var(--text-primary, #fff);
+}
+
+.checkout-method-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.checkout-method-panel__head > i,
+.checkout-method-panel__head > .fab {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  font-size: 1.15rem;
+  color: var(--accent-color);
+  background: rgba(var(--accent-rgb), 0.12);
+  border: 1px solid rgba(var(--accent-rgb), 0.22);
+}
+
+.checkout-method-panel__title {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary, #fff);
+}
+
+.checkout-method-panel__subtitle {
+  font-size: 0.82rem;
+  color: var(--text-secondary, #9ca3af);
+}
+
+.checkout-method-panel__text {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-secondary, #b0b8c4);
+}
+
+.checkout-method-notice {
+  padding: 0.85rem 1rem;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-bottom: 0.75rem;
+}
+
+.checkout-method-notice--info {
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--text-primary, #fff);
+}
+
+/* Credit card checkout panel */
+.checkout-card-panel {
+  border-color: rgba(var(--accent-rgb), 0.28);
+  background: linear-gradient(145deg, rgba(var(--accent-rgb), 0.07) 0%, rgba(var(--accent-rgb), 0.02) 100%);
+}
+
+.checkout-card-brands {
+  display: flex;
+  gap: 0.4rem;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.checkout-card-brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 5px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text-primary, #fff);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.checkout-card-brand--visa {
+  color: #1a1f71;
+  background: #f8fafc;
+  border-color: #dbeafe;
+}
+
+.checkout-card-brand--mc {
+  color: #fff;
+  background: linear-gradient(135deg, #eb001b 0%, #f79e1b 100%);
+  border-color: transparent;
+}
+
+.checkout-card-brand--mada {
+  font-size: 0.72rem;
+  color: #0d9488;
+  background: #ecfdf5;
+  border-color: #99f6e4;
+}
+
+.checkout-card-visual {
+  position: relative;
+  padding: 1.35rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 45%, #134e4a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+}
+
+.checkout-card-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.12) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+.checkout-card-visual__chip {
+  width: 42px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  border-radius: 5px;
+  color: #fcd34d;
+  background: linear-gradient(135deg, #fde68a 0%, #d97706 100%);
+  font-size: 1rem;
+}
+
+.checkout-card-visual__number {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #f8fafc;
+  margin-bottom: 1rem;
+  font-family: ui-monospace, monospace;
+}
+
+.checkout-card-visual__footer {
+  display: flex;
+  gap: 2rem;
+}
+
+.checkout-card-visual__label {
+  display: block;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 0.15rem;
+}
+
+.checkout-card-visual__value {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  font-family: ui-monospace, monospace;
+}
+
+.checkout-card-panel__lead {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--text-primary, #fff);
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 5px;
+  background: rgba(var(--accent-rgb), 0.08);
+  border: 1px solid rgba(var(--accent-rgb), 0.15);
+}
+
+.checkout-card-fields {
+  padding: 0.85rem;
+  border-radius: 5px;
+  border: 1px dashed rgba(var(--accent-rgb), 0.22);
+  background: rgba(var(--accent-rgb), 0.03);
+}
+
+.checkout-card-field {
+  min-height: calc(1.5em + 0.75rem + 2px);
+  color: var(--text-secondary, #9ca3af) !important;
+  cursor: default;
+  user-select: none;
+  font-style: italic;
+  opacity: 0.85;
+}
+
+.checkout-card-panel__hint {
+  font-size: 0.88rem;
+  color: var(--text-secondary, #b0b8c4);
+  line-height: 1.6;
+}
+
+.checkout-card-notice-field {
+  min-height: 4.5rem;
+  padding: 0.85rem 1rem;
+  line-height: 1.75;
+  color: var(--text-primary, #fff);
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 5px;
+  border-color: rgba(var(--accent-rgb), 0.35) !important;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.12) 0%, rgba(var(--accent-rgb), 0.05) 100%) !important;
+  box-shadow: inset 0 0 0 1px rgba(var(--accent-rgb), 0.12);
+}
+
+.checkout-card-notice-field--empty {
+  color: var(--text-secondary, #9ca3af);
+  border-color: var(--glass-border, rgba(255, 255, 255, 0.12)) !important;
+  background: var(--glass-bg, rgba(255, 255, 255, 0.03)) !important;
+  font-size: 0.88rem;
+  font-style: normal;
+}
+
+.checkout-card-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem 1rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0.75rem 0 0;
+  border-top: 1px solid rgba(var(--accent-rgb), 0.12);
+}
+
+.checkout-card-trust li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary, #9ca3af);
+}
+
+.checkout-card-trust i {
+  color: var(--accent-color);
+  font-size: 0.85rem;
+}
+
+html[data-theme="light"] .checkout-card-visual {
+  box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.18);
+}
+
+html[data-theme="light"] .checkout-card-brand--visa,
+html[data-theme="light"] .checkout-card-brand--mada {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
 /* Checkout pending — luxury layout */
 .page-hero--pending .page-hero-icon--pending {
   background: linear-gradient(135deg, rgba(255, 193, 7, 0.22) 0%, rgba(var(--accent-rgb), 0.12) 100%);
