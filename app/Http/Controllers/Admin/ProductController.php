@@ -246,6 +246,13 @@ class ProductController extends Controller
             $data['slug'] = Str::slug($data['name']);
         }
         unset($data['attribute_ids'], $data['variants'], $data['digital_files']);
+
+        foreach (['meta_title', 'meta_description', 'meta_keywords'] as $seoField) {
+            if ($request->has($seoField)) {
+                $data[$seoField] = $request->input($seoField);
+            }
+        }
+
         $product->update($data);
 
         $product->attributes()->sync($request->input('attribute_ids', []));

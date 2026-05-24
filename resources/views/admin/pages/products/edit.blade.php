@@ -28,7 +28,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
+                    <form id="product-edit-form" method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="row g-3">
@@ -76,7 +76,6 @@
                         </div>
 
                         @include('admin.pages.products.partials.ai-tools', ['aiModels' => $aiModels ?? collect()])
-                        @include('admin.pages.products.partials.seo-fields', ['product' => $product])
 
                         <div class="row g-3">
                             <div class="col-md-4">
@@ -149,15 +148,14 @@
                                     <small class="text-muted d-block mt-1">في حال اختيار صورة هنا سيتم استخدامها كصورة رئيسية جديدة.</small>
                                 </div>
                                 <label class="form-label">معرض الصور الحالي</label>
-                                <div class="d-flex gap-2 flex-wrap mb-2">
+                                <div class="d-flex gap-2 flex-wrap mb-2" id="product-gallery-images">
                                     @foreach($product->images as $img)
-                                        <div class="position-relative">
+                                        <div class="position-relative product-gallery-item" data-image-id="{{ $img->id }}">
                                             <img src="{{ $img->url }}" alt="" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
-                                            <form action="{{ route('admin.products.images.delete', [$product, $img]) }}" method="POST" class="position-absolute top-0 start-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger p-1" onclick="return confirm('حذف الصورة؟');">&times;</button>
-                                            </form>
+                                            <button type="button"
+                                                class="btn btn-sm btn-danger p-1 position-absolute top-0 start-0 product-image-delete"
+                                                data-delete-url="{{ route('admin.products.images.delete', [$product, $img]) }}"
+                                                title="حذف الصورة">&times;</button>
                                         </div>
                                     @endforeach
                                 </div>
@@ -286,6 +284,8 @@
                                 </div>
                             </div>
 
+                            @include('admin.pages.products.partials.seo-fields', ['product' => $product, 'aiModels' => $aiModels ?? collect()])
+
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">حفظ التعديلات</button>
                                 <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">إلغاء</a>
@@ -360,9 +360,39 @@ function initProductDescriptionEditor() {
     }).catch(function(err) { console.error('TinyMCE init error:', err); });
 }
 document.addEventListener('DOMContentLoaded', function() { setTimeout(initProductDescriptionEditor, 200); });
+
+document.getElementById('product-edit-form')?.addEventListener('submit', function () {
+    if (window.tinymce) {
+        tinymce.triggerSave();
+    }
+});
 </script>
 <script>
 (function() {
+    const csrf = @json(csrf_token());
+    document.querySelectorAll('.product-image-delete').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+            if (!confirm('حذف الصورة؟')) return;
+            const wrap = this.closest('.product-gallery-item');
+            const url = this.getAttribute('data-delete-url');
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrf,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ _method: 'DELETE' }),
+                });
+                if (!res.ok) throw new Error('فشل حذف الصورة');
+                wrap?.remove();
+            } catch (e) {
+                alert(e.message || 'تعذر حذف الصورة');
+            }
+        });
+    });
+
     const digitalCb = document.getElementById('is_digital_cb');
     const digitalSection = document.getElementById('digital-files-section');
     const digitalTbody = document.getElementById('digital-files-tbody');

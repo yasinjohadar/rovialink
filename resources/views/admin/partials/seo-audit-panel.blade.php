@@ -51,36 +51,41 @@
       return el.closest('.seo-audit-panel');
     }
 
+    function formField(name) {
+      return document.querySelector('#product-edit-form [name="' + name + '"]')
+        || document.querySelector('[name="' + name + '"]');
+    }
+
     function fieldMap(panel) {
       const type = panel.dataset.seoAuditType || 'product';
       const isBlog = type === 'blog_post';
-      const productOrPostName = document.querySelector('[name="title"]')?.value?.trim()
-          || document.querySelector('[name="name"]')?.value?.trim() || '';
+      const productOrPostName = formField('title')?.value?.trim()
+          || formField('name')?.value?.trim() || '';
       const payload = {
         type: type,
         title: productOrPostName,
         name: productOrPostName,
-        slug: document.querySelector('[name="slug"]')?.value?.trim() || '',
-        meta_title: document.querySelector('[name="meta_title"]')?.value?.trim() || '',
-        meta_description: document.querySelector('[name="meta_description"]')?.value?.trim() || '',
-        meta_keywords: document.querySelector('[name="meta_keywords"]')?.value?.trim() || '',
+        slug: formField('slug')?.value?.trim() || '',
+        meta_title: formField('meta_title')?.value?.trim() || '',
+        meta_description: formField('meta_description')?.value?.trim() || '',
+        meta_keywords: formField('meta_keywords')?.value?.trim() || '',
         ai_model_id: panel.querySelector('.seo-audit-model')?.value || null,
       };
       if (isBlog) {
-        payload.content = document.querySelector('[name="content"]')?.value || '';
+        payload.content = formField('content')?.value || '';
         if (window.tinymce?.get('content')) {
           payload.content = window.tinymce.get('content').getContent();
         }
-        payload.excerpt = document.querySelector('[name="excerpt"]')?.value?.trim() || '';
-        payload.focus_keyword = document.querySelector('[name="focus_keyword"]')?.value?.trim() || '';
-        payload.featured_image_alt = document.querySelector('[name="featured_image_alt"]')?.value?.trim() || '';
-        payload.canonical_url = document.querySelector('[name="canonical_url"]')?.value?.trim() || '';
+        payload.excerpt = formField('excerpt')?.value?.trim() || '';
+        payload.focus_keyword = formField('focus_keyword')?.value?.trim() || '';
+        payload.featured_image_alt = formField('featured_image_alt')?.value?.trim() || '';
+        payload.canonical_url = formField('canonical_url')?.value?.trim() || '';
       } else {
-        payload.description = document.querySelector('[name="description"]')?.value || '';
+        payload.description = formField('description')?.value || '';
         if (window.tinymce?.get('description')) {
           payload.description = window.tinymce.get('description').getContent();
         }
-        payload.short_description = document.querySelector('[name="short_description"]')?.value?.trim() || '';
+        payload.short_description = formField('short_description')?.value?.trim() || '';
       }
       return payload;
     }
@@ -136,13 +141,21 @@
       panel.querySelector('.seo-audit-apply')?.removeAttribute('disabled');
     }
 
+    function setFieldValue(name, value) {
+      const el = document.querySelector('#product-edit-form [name="' + name + '"]')
+        || document.querySelector('[name="' + name + '"]');
+      if (!el || value == null || value === '') return;
+      el.value = value;
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
     function fillFields(panel, fields) {
       const type = panel.dataset.seoAuditType || 'product';
       const map = ['meta_title', 'meta_description', 'meta_keywords', 'slug', 'focus_keyword', 'excerpt'];
       map.forEach(function (key) {
         if (!fields[key]) return;
-        const el = document.querySelector('[name="' + key + '"]');
-        if (el) el.value = fields[key];
+        setFieldValue(key, fields[key]);
       });
       if (fields.excerpt && type === 'blog_post') {
         const ex = document.querySelector('[name="excerpt"]');
@@ -208,7 +221,7 @@
           refreshed.recommendations = recs;
           const data = await post(auditUrl, refreshed);
           renderReport(panel, data);
-          setStatus(panel, 'تم تطبيق التوصيات وإعادة الفحص — احفظ النموذج لحفظ التغييرات في قاعدة البيانات.', false);
+          setStatus(panel, 'تم التطبيق وإعادة الفحص — اضغط «حفظ التعديلات» أسفل الصفحة لحفظ SEO في قاعدة البيانات.', false);
         } catch (e) {
           setStatus(panel, e.message, true);
         } finally {
