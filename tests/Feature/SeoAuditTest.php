@@ -60,6 +60,7 @@ test('seo apply returns meta fields', function () {
                 'meta_title' => 'عنوان محسّن للمنتج التجريبي',
                 'meta_description' => str_repeat('وصف ', 30),
                 'meta_keywords' => 'منتج, تجريبي',
+                'slug' => 'product-demo',
             ]);
     });
 

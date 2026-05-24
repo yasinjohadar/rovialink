@@ -28,6 +28,7 @@ class SeoApplyAgent implements Agent, Conversational, HasStructuredOutput
 أنت خبير SEO. طبّق التوصيات على حقول meta فقط دون إعادة كتابة المقال/الوصف الكامل.
 {$extra}
 احترم حدود الطول: meta_title 30-60 حرفاً، meta_description 120-160 حرفاً.
+أعد **جميع** الحقول المطلوبة في المخطط. لحقل slug: أعد slug محسّناً بالإنجليزية (شرطات)، أو سلسلة فارغة "" إذا لم يُطلب تغييره.
 INSTRUCTIONS;
     }
 
@@ -42,7 +43,7 @@ INSTRUCTIONS;
             'meta_title' => $schema->string()->required(),
             'meta_description' => $schema->string()->required(),
             'meta_keywords' => $schema->string()->required(),
-            'slug' => $schema->string(),
+            'slug' => $schema->string()->required(),
         ];
 
         if ($this->entityType === 'blog_post') {

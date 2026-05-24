@@ -40,11 +40,11 @@ class ContentToolsAgent implements Agent, Conversational, HasStructuredOutput
             ],
             'grammar' => [
                 'corrected_text' => $schema->string()->required(),
-                'errors' => $schema->array()->items($schema->string()),
+                'errors' => $schema->array()->items($schema->string())->required(),
             ],
             default => [
                 'content' => $schema->string()->required(),
-                'suggestions' => $schema->array()->items($schema->string()),
+                'suggestions' => $schema->array()->items($schema->string())->required(),
             ],
         };
     }

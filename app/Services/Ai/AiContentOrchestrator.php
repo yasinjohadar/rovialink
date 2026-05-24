@@ -497,11 +497,20 @@ slug: {$ctx->slug}
 أعد الحقول المحسّنة فقط.
 PROMPT;
 
-        $agent = new SeoApplyAgent(
-            entityType: $ctx->type,
-            language: $ctx->language,
-        );
-        $data = $this->bridge->promptStructured($agent, $prompt, $model, 120);
+        try {
+            $agent = new SeoApplyAgent(
+                entityType: $ctx->type,
+                language: $ctx->language,
+            );
+            $data = $this->bridge->promptStructured($agent, $prompt, $model, 120);
+        } catch (\Throwable $e) {
+            Log::warning('SeoApplyAgent structured output failed, using SeoOptimizerAgent: '.$e->getMessage());
+            $agent = new SeoOptimizerAgent(
+                language: $ctx->language,
+                includeBlogFields: $ctx->isBlogPost(),
+            );
+            $data = $this->bridge->promptStructured($agent, $prompt, $model, 120);
+        }
 
         $result = [
             'meta_title' => $this->cleanText($data['meta_title'] ?? $ctx->metaTitle),
@@ -509,8 +518,11 @@ PROMPT;
             'meta_keywords' => $this->cleanKeywords($data['meta_keywords'] ?? $ctx->metaKeywords),
         ];
 
-        if (! empty($data['slug'])) {
-            $result['slug'] = Str::slug($data['slug']);
+        $slug = trim((string) ($data['slug'] ?? ''));
+        if ($slug !== '') {
+            $result['slug'] = Str::slug($slug);
+        } elseif ($ctx->slug === '' && $ctx->title !== '') {
+            $result['slug'] = Str::slug($ctx->title);
         }
 
         if ($ctx->isBlogPost()) {

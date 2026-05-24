@@ -89,9 +89,14 @@ class AISeoAuditController extends Controller
         } catch (\Throwable $e) {
             Log::error('SEO apply failed: '.$e->getMessage());
 
+            $message = $e->getMessage();
+            if (str_contains($message, 'JSON schema') || str_contains($message, 'response_format')) {
+                $message = 'مزود AI رفض مخطط الاستجابة. جرّب مرة أخرى بعد التحديث، أو غيّر النموذج (OpenAI/Gemini).';
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $message,
             ], 500);
         }
     }
