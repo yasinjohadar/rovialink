@@ -7092,49 +7092,8 @@ html[data-theme="dark"] .quantity-selector input {
   background: rgba(var(--accent-rgb, 0, 212, 255), 0.04);
 }
 
-.checkout-bank-notice {
-  display: flex;
-  gap: 0.85rem;
-  align-items: flex-start;
-  padding: 1rem 1.1rem;
-  border-radius: 5px;
-  border: 1px solid rgba(255, 193, 7, 0.55);
-  background: linear-gradient(135deg, rgba(255, 193, 7, 0.14) 0%, rgba(255, 152, 0, 0.08) 100%);
-  box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.12), 0 8px 24px rgba(255, 152, 0, 0.12);
-  animation: checkout-bank-notice-pulse 2.5s ease-in-out infinite;
-}
-
-.checkout-bank-notice__icon {
-  flex-shrink: 0;
-  width: 2.25rem;
-  height: 2.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 5px;
-  background: rgba(255, 193, 7, 0.25);
-  color: #ffc107;
-  font-size: 1.1rem;
-}
-
-.checkout-bank-notice__title {
-  display: block;
-  color: #ffc107;
-  margin-bottom: 0.35rem;
-  font-size: 0.95rem;
-}
-
-.checkout-bank-notice__body {
-  color: var(--text-primary, #f5f5f5);
-  font-size: 0.92rem;
-  line-height: 1.6;
-}
-
 .checkout-bank-details {
-  padding: 1rem;
-  border-radius: 5px;
-  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.12));
-  background: var(--glass-bg, rgba(255, 255, 255, 0.03));
+  padding: 0;
 }
 
 .checkout-bank-details__title {
@@ -7144,39 +7103,89 @@ html[data-theme="dark"] .quantity-selector input {
   color: var(--text-primary, #fff);
 }
 
-.checkout-bank-details__list li {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  padding: 0.55rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+.checkout-bank-notice-field {
+  min-height: 5.5rem;
+  height: auto;
+  padding: 0.85rem 1rem;
+  line-height: 1.7;
+  color: var(--text-primary, #fff);
+  white-space: pre-wrap;
+  word-break: break-word;
+  border-radius: 5px;
+  border-color: rgba(255, 193, 7, 0.45) !important;
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(255, 152, 0, 0.06) 100%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255, 193, 7, 0.15);
+  animation: checkout-bank-notice-pulse 2.5s ease-in-out infinite;
 }
 
-.checkout-bank-details__list li:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.checkout-bank-details__list .label {
-  min-width: 5.5rem;
-  font-size: 0.82rem;
+.checkout-bank-notice-field--empty {
   color: var(--text-secondary, #9ca3af);
-  font-weight: 600;
+  border-color: var(--glass-border, rgba(255, 255, 255, 0.12)) !important;
+  background: var(--glass-bg, rgba(255, 255, 255, 0.03)) !important;
+  animation: none;
+  font-size: 0.88rem;
 }
 
-.checkout-bank-details__list .value {
+.checkout-bank-field {
+  min-height: calc(1.5em + 0.75rem + 2px);
+  height: auto;
+  color: var(--text-primary, #fff);
+  cursor: default;
+  user-select: all;
+}
+
+.checkout-file-upload {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.12));
+  border-radius: 5px;
+  background: var(--glass-bg, rgba(255, 255, 255, 0.03));
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.checkout-file-upload.is-invalid {
+  border-color: #dc3545;
+}
+
+.checkout-file-upload__input {
+  position: absolute;
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.checkout-file-upload__btn {
+  margin: 0;
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  pointer-events: none;
+}
+
+.checkout-file-upload__name {
   flex: 1;
+  min-width: 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary, #9ca3af);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkout-file-upload__name.has-file {
   color: var(--text-primary, #fff);
   font-weight: 500;
 }
 
-.checkout-bank-details__instructions .value {
-  line-height: 1.65;
-}
-
 @keyframes checkout-bank-notice-pulse {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.12), 0 8px 24px rgba(255, 152, 0, 0.1); }
-  50% { box-shadow: 0 0 0 1px rgba(255, 193, 7, 0.28), 0 8px 28px rgba(255, 152, 0, 0.22); }
+  0%, 100% { box-shadow: inset 0 0 0 1px rgba(255, 193, 7, 0.15); }
+  50% { box-shadow: inset 0 0 0 1px rgba(255, 193, 7, 0.35), 0 0 12px rgba(255, 152, 0, 0.15); }
 }
 
 /* Payment Methods */

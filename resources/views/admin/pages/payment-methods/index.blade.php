@@ -72,13 +72,26 @@
                                         </td>
                                         <td>{{ $method->payments_count ?? 0 }}</td>
                                         <td>
-                                            <a href="{{ route('admin.payment-methods.edit', $method) }}" class="btn btn-sm btn-primary">تعديل</a>
-                                            @if(!$method->payments_count)
-                                                <form action="{{ route('admin.payment-methods.destroy', $method) }}" method="POST" class="d-inline" onsubmit="return confirm('هل تريد حذف وسيلة الدفع هذه؟');">
+                                            <div class="d-flex flex-wrap gap-1">
+                                                <a href="{{ route('admin.payment-methods.edit', $method) }}" class="btn btn-sm btn-primary">تعديل</a>
+                                                <form action="{{ route('admin.payment-methods.toggle-active', $method) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-sm {{ $method->is_active ? 'btn-outline-warning' : 'btn-outline-success' }}">
+                                                        {{ $method->is_active ? 'تعطيل' : 'تفعيل' }}
+                                                    </button>
+                                                </form>
+                                                <form action="{{ route('admin.payment-methods.destroy', $method) }}" method="POST" class="d-inline payment-method-delete-form">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger">حذف</button>
+                                                    <button type="submit" class="btn btn-sm btn-danger"
+                                                        data-payments-count="{{ (int) ($method->payments_count ?? 0) }}"
+                                                        data-method-name="{{ $method->name }}">
+                                                        حذف
+                                                    </button>
                                                 </form>
+                                            </div>
+                                            @if(($method->payments_count ?? 0) > 0)
+                                                <small class="text-muted d-block mt-1">لا يمكن الحذف — {{ $method->payments_count }} مدفوعة مرتبطة</small>
                                             @endif
                                         </td>
                                     </tr>
@@ -97,3 +110,25 @@
         </div>
     </div>
 @stop
+
+@section('script')
+<script>
+document.querySelectorAll('.payment-method-delete-form').forEach(form => {
+    form.addEventListener('submit', function (e) {
+        const btn = form.querySelector('button[type="submit"]');
+        const count = parseInt(btn?.dataset.paymentsCount || '0', 10);
+        const name = btn?.dataset.methodName || 'وسيلة الدفع';
+
+        if (count > 0) {
+            e.preventDefault();
+            alert('لا يمكن حذف «' + name + '» لوجود ' + count + ' مدفوعة مرتبطة.\n\nاستخدم «تعطيل» لإخفائها من صفحة الدفع.');
+            return;
+        }
+
+        if (!confirm('هل تريد حذف «' + name + '» نهائياً؟')) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+@endsection

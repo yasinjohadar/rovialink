@@ -69,36 +69,50 @@
         @foreach($paymentMethods->where('driver', 'bank_transfer') as $bankMethod)
             @php $cfg = $bankMethod->config ?? []; @endphp
             <div id="bank-transfer-panel-{{ $bankMethod->id }}" class="checkout-bank-panel mt-3 d-none" data-method-id="{{ $bankMethod->id }}">
-                @if(!empty($cfg['customer_notice']))
-                <div class="checkout-bank-notice mb-3" role="alert">
-                    <div class="checkout-bank-notice__icon"><i class="fas fa-exclamation-triangle"></i></div>
-                    <div class="checkout-bank-notice__body">
-                        <strong class="checkout-bank-notice__title">تنبيه مهم</strong>
-                        <p class="mb-0">{!! nl2br(e($cfg['customer_notice'])) !!}</p>
-                    </div>
-                </div>
-                @endif
-
                 <div class="checkout-bank-details mb-3">
                     <h6 class="checkout-bank-details__title"><i class="fas fa-university me-2 text-accent"></i> بيانات الحساب البنكي</h6>
-                    @if(!empty($cfg['bank_name']) || !empty($cfg['iban']) || !empty($cfg['account_name']) || !empty($cfg['instructions']))
-                    <ul class="checkout-bank-details__list list-unstyled mb-0">
+
+                    @if(!empty($cfg['bank_name']) || !empty($cfg['iban']) || !empty($cfg['account_name']))
+                    <div class="checkout-bank-fields mb-3">
                         @if(!empty($cfg['bank_name']))
-                        <li><span class="label">البنك</span><span class="value">{{ $cfg['bank_name'] }}</span></li>
+                        <div class="mb-2">
+                            <label class="form-label text-secondary small mb-1">البنك</label>
+                            <div class="checkout-bank-field form-control bg-glass border-secondary">{{ $cfg['bank_name'] }}</div>
+                        </div>
                         @endif
                         @if(!empty($cfg['iban']))
-                        <li><span class="label">IBAN</span><span class="value en-text" dir="ltr">{{ $cfg['iban'] }}</span></li>
+                        <div class="mb-2">
+                            <label class="form-label text-secondary small mb-1">IBAN</label>
+                            <div class="checkout-bank-field form-control bg-glass border-secondary en-text" dir="ltr">{{ $cfg['iban'] }}</div>
+                        </div>
                         @endif
                         @if(!empty($cfg['account_name']))
-                        <li><span class="label">اسم الحساب</span><span class="value">{{ $cfg['account_name'] }}</span></li>
+                        <div class="mb-0">
+                            <label class="form-label text-secondary small mb-1">اسم الحساب</label>
+                            <div class="checkout-bank-field form-control bg-glass border-secondary">{{ $cfg['account_name'] }}</div>
+                        </div>
                         @endif
-                        @if(!empty($cfg['instructions']))
-                        <li class="checkout-bank-details__instructions"><span class="label">تعليمات</span><span class="value">{!! nl2br(e($cfg['instructions'])) !!}</span></li>
-                        @endif
-                    </ul>
-                    @else
-                    <p class="text-secondary small mb-0">لم تُضبط بيانات التحويل بعد. تواصل مع الدعم أو اختر وسيلة دفع أخرى.</p>
+                    </div>
                     @endif
+
+                    @php
+                        $noticeText = trim((string) ($cfg['customer_notice'] ?? ''));
+                        if ($noticeText === '' && !empty($cfg['instructions'])) {
+                            $noticeText = trim((string) $cfg['instructions']);
+                        }
+                    @endphp
+                    <div class="checkout-bank-notice-wrap">
+                        <label class="form-label text-secondary small mb-1">
+                            <i class="fas fa-bell text-accent me-1"></i> ملاحظة مهمة
+                        </label>
+                        @if($noticeText !== '')
+                        <div class="checkout-bank-notice-field form-control bg-glass border-secondary" role="note" aria-readonly="true">{!! nl2br(e($noticeText)) !!}</div>
+                        @else
+                        <div class="checkout-bank-notice-field checkout-bank-notice-field--empty form-control bg-glass border-secondary" role="note">
+                            لم تُضبط بيانات التحويل أو الملاحظة بعد. يمكنك ضبطها من لوحة الإدارة ← وسائل الدفع ← تحويل بنكي.
+                        </div>
+                        @endif
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -110,10 +124,16 @@
 
                 <div>
                     <label class="form-label text-secondary small">إيصال التحويل <span class="text-accent">*</span></label>
-                    <input type="file" name="payment_receipt" id="payment_receipt_{{ $bankMethod->id }}"
-                           class="form-control bg-glass border-secondary @error('payment_receipt') is-invalid @enderror"
-                           accept=".jpg,.jpeg,.png,.webp,.pdf,image/*,application/pdf">
-                    <small class="text-secondary d-block mt-1">صورة (JPG, PNG, WEBP) أو ملف PDF — حد أقصى 5 م.ب</small>
+                    <label class="checkout-file-upload @error('payment_receipt') is-invalid @enderror" for="payment_receipt_{{ $bankMethod->id }}">
+                        <input type="file" name="payment_receipt" id="payment_receipt_{{ $bankMethod->id }}"
+                               class="checkout-file-upload__input payment-receipt-input"
+                               accept=".jpg,.jpeg,.png,.webp,.pdf,image/*,application/pdf">
+                        <span class="btn btn-accent checkout-file-upload__btn">
+                            <i class="fas fa-cloud-upload-alt me-1"></i> اختيار ملف
+                        </span>
+                        <span class="checkout-file-upload__name" data-empty="لم يُختَر أي ملف بعد">لم يُختَر أي ملف بعد</span>
+                    </label>
+                    <small class="text-secondary d-block mt-2">صورة (JPG, PNG, WEBP) أو ملف PDF — حد أقصى 5 م.ب</small>
                     @error('payment_receipt')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                 </div>
             </div>
@@ -140,13 +160,35 @@
         bankPanels.forEach(panel => {
             const show = driver === 'bank_transfer' && panel.dataset.methodId === methodId;
             panel.classList.toggle('d-none', !show);
-            const fileInput = panel.querySelector('input[type="file"]');
+            const fileInput = panel.querySelector('.payment-receipt-input');
             if (fileInput) {
                 fileInput.required = show;
-                if (!show) fileInput.value = '';
+                if (!show) {
+                    fileInput.value = '';
+                    const nameEl = panel.querySelector('.checkout-file-upload__name');
+                    if (nameEl) {
+                        nameEl.textContent = nameEl.dataset.empty || 'لم يُختَر أي ملف بعد';
+                        nameEl.classList.remove('has-file');
+                    }
+                }
             }
         });
     }
+
+    document.querySelectorAll('.payment-receipt-input').forEach(input => {
+        input.addEventListener('change', function () {
+            const wrap = this.closest('.checkout-file-upload');
+            const nameEl = wrap?.querySelector('.checkout-file-upload__name');
+            if (!nameEl) return;
+            if (this.files && this.files.length > 0) {
+                nameEl.textContent = this.files[0].name;
+                nameEl.classList.add('has-file');
+            } else {
+                nameEl.textContent = nameEl.dataset.empty || 'لم يُختَر أي ملف بعد';
+                nameEl.classList.remove('has-file');
+            }
+        });
+    });
 
     radios.forEach(radio => {
         radio.addEventListener('change', () => {

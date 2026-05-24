@@ -12,6 +12,7 @@ use App\Services\Payments\OrderPaymentSyncService;
 use App\Services\Payments\PaymentOrchestrator;
 use App\Services\Payments\PaymentSettingsService;
 use App\Services\Seo\SeoBuilder;
+use App\Services\Storage\StorageHelperService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -26,6 +27,7 @@ class CheckoutController extends Controller
         protected OrderPaymentSyncService $syncService,
         protected PayPalGateway $payPalGateway,
         protected PaymentSettingsService $paymentSettings,
+        protected StorageHelperService $storageHelper,
     ) {}
 
     public function index()
@@ -96,7 +98,21 @@ class CheckoutController extends Controller
 
         if ($request->hasFile('payment_receipt')) {
             $file = $request->file('payment_receipt');
-            $validated['payment_receipt_path'] = $file->store('payment-receipts', 'public');
+            $fileType = str_starts_with((string) $file->getMimeType(), 'image/') ? 'image' : 'document';
+            $receiptPath = $this->storageHelper->storeUploadedFileWithFailover(
+                $this->storageHelper->mediaDisk(),
+                'payment-receipts',
+                $file,
+                $fileType
+            );
+
+            if (! $receiptPath) {
+                return back()->withInput()->withErrors([
+                    'payment_receipt' => 'فشل رفع إيصال التحويل. يرجى المحاولة مرة أخرى.',
+                ]);
+            }
+
+            $validated['payment_receipt_path'] = $receiptPath;
             $validated['payment_receipt_original_name'] = $file->getClientOriginalName();
         }
 

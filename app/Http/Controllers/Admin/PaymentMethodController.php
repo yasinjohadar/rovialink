@@ -104,10 +104,21 @@ class PaymentMethodController extends Controller
     {
         if ($paymentMethod->payments()->exists()) {
             return redirect()->route('admin.payment-methods.index')
-                ->with('error', 'لا يمكن حذف وسيلة الدفع لوجود مدفوعات مرتبطة بها.');
+                ->with('error', 'لا يمكن حذف وسيلة الدفع لوجود مدفوعات مرتبطة بها. استخدم «تعطيل» لإخفائها من صفحة الدفع.');
         }
         $paymentMethod->delete();
         return redirect()->route('admin.payment-methods.index')->with('success', 'تم حذف وسيلة الدفع.');
+    }
+
+    public function toggleActive(PaymentMethod $paymentMethod)
+    {
+        $paymentMethod->update(['is_active' => ! $paymentMethod->is_active]);
+
+        $message = $paymentMethod->is_active
+            ? 'تم تفعيل وسيلة الدفع «' . $paymentMethod->name . '».'
+            : 'تم تعطيل وسيلة الدفع «' . $paymentMethod->name . '» — لن تظهر للعملاء في صفحة الدفع.';
+
+        return redirect()->route('admin.payment-methods.index')->with('success', $message);
     }
 
     private function buildConfigFromRequest(string $driver, Request $request): array

@@ -114,6 +114,7 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
     Route::post('order-returns/{orderReturn}/reject', [OrderReturnController::class, 'reject'])->name('order-returns.reject');
 
     // Payment methods
+    Route::post('payment-methods/{payment_method}/toggle-active', [PaymentMethodController::class, 'toggleActive'])->name('payment-methods.toggle-active');
     Route::resource('payment-methods', PaymentMethodController::class)->except(['show']);
 
     // Payment settings (before payments/{payment} to avoid conflict with "settings" id)

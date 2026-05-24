@@ -31,7 +31,7 @@
                             @endif
                             @if(!empty($payment->metadata['payment_receipt_path']))
                             <p><strong>إيصال التحويل:</strong>
-                                <a href="{{ asset('storage/'.$payment->metadata['payment_receipt_path']) }}" target="_blank" rel="noopener">
+                                <a href="{{ media_url($payment->metadata['payment_receipt_path']) }}" target="_blank" rel="noopener">
                                     {{ $payment->metadata['payment_receipt_original_name'] ?? 'عرض الملف' }}
                                 </a>
                             </p>
