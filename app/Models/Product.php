@@ -101,6 +101,14 @@ class Product extends Model
         return $this->hasMany(ProductImage::class)->orderBy('order')->orderBy('id');
     }
 
+    public function primaryImage()
+    {
+        return $this->hasOne(ProductImage::class)
+            ->orderByDesc('is_primary')
+            ->orderBy('order')
+            ->orderBy('id');
+    }
+
     public function files()
     {
         return $this->hasMany(ProductFile::class)->orderBy('order')->orderBy('id');
@@ -169,6 +177,14 @@ class Product extends Model
 
     public function getPrimaryImageAttribute()
     {
+        if ($this->relationLoaded('primaryImage') && $this->getRelation('primaryImage')) {
+            return $this->getRelation('primaryImage');
+        }
+
+        if ($this->relationLoaded('images') && $this->images->isNotEmpty()) {
+            return $this->images->firstWhere('is_primary', true) ?? $this->images->first();
+        }
+
         return $this->images()->where('is_primary', true)->first()
             ?? $this->images()->first();
     }
