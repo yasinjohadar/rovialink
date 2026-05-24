@@ -135,9 +135,11 @@ class CheckoutService
                 'amount' => $totals['total'],
                 'currency' => $currency,
                 'status' => 'pending',
-                'metadata' => [
+                'metadata' => array_filter([
                     'bank_reference' => $input['bank_reference'] ?? null,
-                ],
+                    'payment_receipt_path' => $input['payment_receipt_path'] ?? null,
+                    'payment_receipt_original_name' => $input['payment_receipt_original_name'] ?? null,
+                ], fn ($v) => $v !== null && $v !== ''),
             ]);
 
             if ($coupon && $totals['discount'] > 0) {

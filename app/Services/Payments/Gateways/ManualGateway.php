@@ -18,10 +18,12 @@ class ManualGateway implements PaymentGatewayInterface
 
     public function initiate(Payment $payment, Order $order, PaymentMethod $method, array $context = []): PaymentInitiationResult
     {
-        $metadata = array_merge($payment->metadata ?? [], [
+        $metadata = array_merge($payment->metadata ?? [], array_filter([
             'bank_reference' => $context['bank_reference'] ?? null,
+            'payment_receipt_path' => $context['payment_receipt_path'] ?? null,
+            'payment_receipt_original_name' => $context['payment_receipt_original_name'] ?? null,
             'manual_driver' => $method->driver,
-        ]);
+        ], fn ($v) => $v !== null && $v !== ''));
 
         $payment->update(['metadata' => $metadata]);
 

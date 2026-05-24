@@ -1,4 +1,4 @@
-<form method="POST" action="{{ route('frontend.checkout.store') }}" id="checkout-form">
+<form method="POST" action="{{ route('frontend.checkout.store') }}" id="checkout-form" enctype="multipart/form-data">
     @csrf
 
     @if($errors->any())
@@ -57,6 +57,7 @@
             @foreach($paymentMethods as $method)
             <label class="account-sidebar__link {{ old('payment_method_id', $paymentMethods->first()?->id) == $method->id ? 'active' : '' }}" style="cursor:pointer;">
                 <input type="radio" name="payment_method_id" value="{{ $method->id }}" class="d-none payment-method-radio"
+                       data-driver="{{ $method->driver }}"
                        @checked(old('payment_method_id', $paymentMethods->first()?->id) == $method->id)>
                 <span class="account-sidebar__indicator"></span>
                 <i class="fas fa-{{ match($method->driver) { 'paypal' => 'paypal', 'bank_transfer' => 'university', 'cod' => 'money-bill-wave', default => 'credit-card' } }} account-sidebar__icon"></i>
@@ -65,10 +66,58 @@
             @endforeach
         </div>
 
-        <div id="bank-reference-wrap" class="mt-3 d-none">
-            <label class="form-label text-secondary small">مرجع التحويل (اختياري)</label>
-            <input type="text" name="bank_reference" class="form-control bg-glass border-secondary" value="{{ old('bank_reference') }}" placeholder="رقم العملية البنكية">
-        </div>
+        @foreach($paymentMethods->where('driver', 'bank_transfer') as $bankMethod)
+            @php $cfg = $bankMethod->config ?? []; @endphp
+            <div id="bank-transfer-panel-{{ $bankMethod->id }}" class="checkout-bank-panel mt-3 d-none" data-method-id="{{ $bankMethod->id }}">
+                @if(!empty($cfg['customer_notice']))
+                <div class="checkout-bank-notice mb-3" role="alert">
+                    <div class="checkout-bank-notice__icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="checkout-bank-notice__body">
+                        <strong class="checkout-bank-notice__title">تنبيه مهم</strong>
+                        <p class="mb-0">{!! nl2br(e($cfg['customer_notice'])) !!}</p>
+                    </div>
+                </div>
+                @endif
+
+                <div class="checkout-bank-details mb-3">
+                    <h6 class="checkout-bank-details__title"><i class="fas fa-university me-2 text-accent"></i> بيانات الحساب البنكي</h6>
+                    @if(!empty($cfg['bank_name']) || !empty($cfg['iban']) || !empty($cfg['account_name']) || !empty($cfg['instructions']))
+                    <ul class="checkout-bank-details__list list-unstyled mb-0">
+                        @if(!empty($cfg['bank_name']))
+                        <li><span class="label">البنك</span><span class="value">{{ $cfg['bank_name'] }}</span></li>
+                        @endif
+                        @if(!empty($cfg['iban']))
+                        <li><span class="label">IBAN</span><span class="value en-text" dir="ltr">{{ $cfg['iban'] }}</span></li>
+                        @endif
+                        @if(!empty($cfg['account_name']))
+                        <li><span class="label">اسم الحساب</span><span class="value">{{ $cfg['account_name'] }}</span></li>
+                        @endif
+                        @if(!empty($cfg['instructions']))
+                        <li class="checkout-bank-details__instructions"><span class="label">تعليمات</span><span class="value">{!! nl2br(e($cfg['instructions'])) !!}</span></li>
+                        @endif
+                    </ul>
+                    @else
+                    <p class="text-secondary small mb-0">لم تُضبط بيانات التحويل بعد. تواصل مع الدعم أو اختر وسيلة دفع أخرى.</p>
+                    @endif
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-secondary small">مرجع التحويل (اختياري)</label>
+                    <input type="text" name="bank_reference" class="form-control bg-glass border-secondary @error('bank_reference') is-invalid @enderror"
+                           value="{{ old('bank_reference') }}" placeholder="رقم العملية البنكية أو المرجع">
+                    @error('bank_reference')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                </div>
+
+                <div>
+                    <label class="form-label text-secondary small">إيصال التحويل <span class="text-accent">*</span></label>
+                    <input type="file" name="payment_receipt" id="payment_receipt_{{ $bankMethod->id }}"
+                           class="form-control bg-glass border-secondary @error('payment_receipt') is-invalid @enderror"
+                           accept=".jpg,.jpeg,.png,.webp,.pdf,image/*,application/pdf">
+                    <small class="text-secondary d-block mt-1">صورة (JPG, PNG, WEBP) أو ملف PDF — حد أقصى 5 م.ب</small>
+                    @error('payment_receipt')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                </div>
+            </div>
+        @endforeach
     </div>
 
     <button type="submit" class="btn btn-accent w-100 py-3 fw-bold fs-5 rounded-3 mb-2 section-fade-up">
@@ -79,16 +128,35 @@
 
 @push('scripts')
 <script>
-document.querySelectorAll('.payment-method-radio').forEach(radio => {
-    radio.addEventListener('change', () => {
-        document.querySelectorAll('label.account-sidebar__link').forEach(l => l.classList.remove('active'));
-        radio.closest('label')?.classList.add('active');
-        const slug = radio.closest('label')?.querySelector('.shop-filters__option-text')?.textContent || '';
-        const bankWrap = document.getElementById('bank-reference-wrap');
-        if (bankWrap) {
-            bankWrap.classList.toggle('d-none', !/تحويل|bank/i.test(slug));
-        }
+(function () {
+    const radios = document.querySelectorAll('.payment-method-radio');
+    const bankPanels = document.querySelectorAll('.checkout-bank-panel');
+
+    function syncPaymentPanels() {
+        const selected = document.querySelector('.payment-method-radio:checked');
+        const driver = selected?.dataset.driver || '';
+        const methodId = selected?.value || '';
+
+        bankPanels.forEach(panel => {
+            const show = driver === 'bank_transfer' && panel.dataset.methodId === methodId;
+            panel.classList.toggle('d-none', !show);
+            const fileInput = panel.querySelector('input[type="file"]');
+            if (fileInput) {
+                fileInput.required = show;
+                if (!show) fileInput.value = '';
+            }
+        });
+    }
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            document.querySelectorAll('label.account-sidebar__link').forEach(l => l.classList.remove('active'));
+            radio.closest('label')?.classList.add('active');
+            syncPaymentPanels();
+        });
     });
-});
+
+    syncPaymentPanels();
+})();
 </script>
 @endpush

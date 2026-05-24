@@ -14,6 +14,7 @@ use App\Services\Payments\PaymentSettingsService;
 use App\Services\Seo\SeoBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 
@@ -66,6 +67,8 @@ class CheckoutController extends Controller
             return redirect()->route('frontend.cart.index')->withErrors(['cart' => 'السلة فارغة']);
         }
 
+        $paymentMethod = PaymentMethod::active()->findOrFail($request->input('payment_method_id'));
+
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -78,15 +81,32 @@ class CheckoutController extends Controller
             'payment_method_id' => 'required|exists:payment_methods,id',
             'bank_reference' => 'nullable|string|max:100',
             'country' => 'nullable|string|size:2',
+            'payment_receipt' => [
+                Rule::requiredIf($paymentMethod->driver === 'bank_transfer'),
+                'nullable',
+                'file',
+                'mimes:jpg,jpeg,png,webp,pdf',
+                'max:5120',
+            ],
+        ], [
+            'payment_receipt.required' => 'يرجى إرفاق إيصال التحويل البنكي.',
+            'payment_receipt.mimes' => 'إيصال التحويل يجب أن يكون صورة أو PDF.',
+            'payment_receipt.max' => 'حجم إيصال التحويل يجب ألا يتجاوز 5 م.ب.',
         ]);
 
-        $paymentMethod = PaymentMethod::active()->findOrFail($validated['payment_method_id']);
+        if ($request->hasFile('payment_receipt')) {
+            $file = $request->file('payment_receipt');
+            $validated['payment_receipt_path'] = $file->store('payment-receipts', 'public');
+            $validated['payment_receipt_original_name'] = $file->getClientOriginalName();
+        }
 
         try {
             $order = $this->checkoutService->createOrderFromCart($validated, $paymentMethod);
             $result = $this->paymentOrchestrator->initiate($order, [
                 'email' => $validated['email'],
                 'bank_reference' => $validated['bank_reference'] ?? null,
+                'payment_receipt_path' => $validated['payment_receipt_path'] ?? null,
+                'payment_receipt_original_name' => $validated['payment_receipt_original_name'] ?? null,
             ]);
 
             if ($result->requiresRedirect()) {

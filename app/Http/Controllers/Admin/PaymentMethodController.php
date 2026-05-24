@@ -20,7 +20,7 @@ class PaymentMethodController extends Controller
     {
         return [
             'cod' => ['label' => 'الدفع عند الاستلام', 'config_keys' => ['instructions']],
-            'bank_transfer' => ['label' => 'التحويل البنكي / الآيبان', 'config_keys' => ['bank_name', 'iban', 'account_name', 'instructions']],
+            'bank_transfer' => ['label' => 'التحويل البنكي / الآيبان', 'config_keys' => ['bank_name', 'iban', 'account_name', 'instructions', 'customer_notice']],
             'paypal' => ['label' => 'باي بال', 'config_keys' => ['client_id', 'client_secret', 'sandbox']],
             'card' => ['label' => 'فيزا / ماستركارد (بوابة دفع)', 'config_keys' => ['gateway', 'public_key', 'secret_key', 'sandbox']],
         ];

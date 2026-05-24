@@ -19,12 +19,29 @@
 
                     @if($method->driver === 'bank_transfer')
                         @php $cfg = $method->config ?? []; @endphp
+
+                        @if(!empty($cfg['customer_notice']))
+                        <div class="checkout-bank-notice mb-3" role="alert">
+                            <div class="checkout-bank-notice__icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="checkout-bank-notice__body">
+                                <strong class="checkout-bank-notice__title">تنبيه مهم</strong>
+                                <p class="mb-0">{!! nl2br(e($cfg['customer_notice'])) !!}</p>
+                            </div>
+                        </div>
+                        @endif
+
                         <ul class="list-unstyled mb-0">
                             @if(!empty($cfg['bank_name']))<li class="mb-2"><strong>البنك:</strong> {{ $cfg['bank_name'] }}</li>@endif
                             @if(!empty($cfg['iban']))<li class="mb-2"><strong>IBAN:</strong> <span class="en-text">{{ $cfg['iban'] }}</span></li>@endif
                             @if(!empty($cfg['account_name']))<li class="mb-2"><strong>اسم الحساب:</strong> {{ $cfg['account_name'] }}</li>@endif
-                            @if(!empty($cfg['instructions']))<li class="mb-2 text-secondary">{{ $cfg['instructions'] }}</li>@endif
+                            @if(!empty($cfg['instructions']))<li class="mb-2 text-secondary">{!! nl2br(e($cfg['instructions'])) !!}</li>@endif
                         </ul>
+                        @if(!empty($payment?->metadata['bank_reference']))
+                        <p class="mt-2 mb-0 small"><strong>مرجع التحويل:</strong> <span class="en-text">{{ $payment->metadata['bank_reference'] }}</span></p>
+                        @endif
+                        @if(!empty($payment?->metadata['payment_receipt_path']))
+                        <p class="mt-2 mb-0 small text-success"><i class="fas fa-check-circle me-1"></i> تم استلام إيصال التحويل وسيتم مراجعته.</p>
+                        @endif
                         <p class="mt-3 mb-0 text-secondary small">المبلغ المطلوب: <strong class="text-accent en-text">{{ number_format($order->total, 2) }} {{ $order->currency ?? 'SAR' }}</strong></p>
                     @elseif($method->driver === 'cod')
                         <p class="text-secondary mb-0">{{ $method->config['instructions'] ?? 'سيتواصل معك فريقنا لإتمام الدفع.' }}</p>

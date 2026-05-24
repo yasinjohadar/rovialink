@@ -94,7 +94,11 @@
                                     </div>
                                     <div class="col-12">
                                         <label class="form-label">تعليمات التحويل للعميل</label>
-                                        <textarea name="config[instructions]" class="form-control" rows="3">{{ old('config.instructions') }}</textarea>
+                                        <textarea name="config[instructions]" class="form-control" rows="3" placeholder="خطوات التحويل، مدة المراجعة، إلخ">{{ old('config.instructions') }}</textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">ملاحظة بارزة للعميل (تظهر بتمييز في صفحة الدفع)</label>
+                                        <textarea name="config[customer_notice]" class="form-control" rows="3" placeholder="مثال: يرجى إرفاق إيصال التحويل خلال 24 ساعة">{{ old('config.customer_notice') }}</textarea>
                                     </div>
                                 </div>
                             </div>

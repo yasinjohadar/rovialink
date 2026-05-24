@@ -26,6 +26,16 @@
                             @if($payment->order)
                             <p><strong>الطلب:</strong> <a href="{{ route('admin.orders.show', $payment->order) }}">#{{ $payment->order->order_number }}</a></p>
                             @endif
+                            @if(!empty($payment->metadata['bank_reference']))
+                            <p><strong>مرجع التحويل:</strong> <code>{{ $payment->metadata['bank_reference'] }}</code></p>
+                            @endif
+                            @if(!empty($payment->metadata['payment_receipt_path']))
+                            <p><strong>إيصال التحويل:</strong>
+                                <a href="{{ asset('storage/'.$payment->metadata['payment_receipt_path']) }}" target="_blank" rel="noopener">
+                                    {{ $payment->metadata['payment_receipt_original_name'] ?? 'عرض الملف' }}
+                                </a>
+                            </p>
+                            @endif
                         </div>
                     </div>
                 </div>

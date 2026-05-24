@@ -46,6 +46,7 @@ class UpdatePaymentMethodRequest extends FormRequest
                 'iban' => ['nullable', 'string', 'max:50'],
                 'account_name' => ['nullable', 'string', 'max:255'],
                 'instructions' => ['nullable', 'string', 'max:2000'],
+                'customer_notice' => ['nullable', 'string', 'max:2000'],
             ],
             'paypal' => [
                 'client_id' => ['nullable', 'string', 'max:255'],
