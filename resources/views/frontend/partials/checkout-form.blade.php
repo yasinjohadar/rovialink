@@ -13,40 +13,49 @@
 
     <div class="glass-panel p-4 mb-4 section-fade-up">
         <h5 class="account-panel__title mb-4"><i class="fas fa-user-circle me-2"></i> معلومات المشتري</h5>
-        <div class="row g-3">
-            <div class="col-sm-6">
-                <label class="form-label text-secondary small">الاسم الأول</label>
-                <input type="text" name="first_name" class="form-control bg-glass border-secondary @error('first_name') is-invalid @enderror"
-                       value="{{ old('first_name', auth()->user()->name ? explode(' ', auth()->user()->name)[0] : '') }}" required>
-            </div>
-            <div class="col-sm-6">
-                <label class="form-label text-secondary small">الاسم الأخير</label>
-                <input type="text" name="last_name" class="form-control bg-glass border-secondary @error('last_name') is-invalid @enderror"
-                       value="{{ old('last_name', '') }}" required>
+        @php
+            $phoneCountryIsoList = $phoneCountryIsoList ?? \App\Support\CheckoutPhoneCountries::iso2List();
+            $initialPhoneCountry = $initialPhoneCountry ?? \App\Support\CheckoutPhoneCountries::defaultIso2();
+            $defaultFullName = $defaultFullName ?? old('full_name', auth()->user()?->name ?? '');
+            $oldPhoneE164 = old('phone', auth()->user()->phone ?? '');
+        @endphp
+        <div class="row g-3 checkout-buyer-grid">
+            <div class="col-12">
+                <label class="checkout-field-label" for="checkout-full-name">الاسم الكامل</label>
+                <input type="text" name="full_name" id="checkout-full-name"
+                       class="form-control checkout-field @error('full_name') is-invalid @enderror"
+                       value="{{ $defaultFullName }}" required autocomplete="name">
+                @error('full_name')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
             </div>
             <div class="col-12">
-                <label class="form-label text-secondary small">البريد الإلكتروني</label>
-                <input type="email" name="email" class="form-control bg-glass border-secondary @error('email') is-invalid @enderror"
-                       value="{{ old('email', auth()->user()->email ?? '') }}" required>
+                <label class="checkout-field-label" for="checkout-email">البريد الإلكتروني</label>
+                <input type="email" name="email" id="checkout-email"
+                       class="form-control checkout-field @error('email') is-invalid @enderror"
+                       value="{{ old('email', auth()->user()->email ?? '') }}" required autocomplete="email">
+                @error('email')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
             </div>
             <div class="col-12">
-                <label class="form-label text-secondary small">رقم الهاتف</label>
-                <input type="tel" name="phone" class="form-control bg-glass border-secondary @error('phone') is-invalid @enderror"
-                       value="{{ old('phone', auth()->user()->phone ?? '') }}" required>
+                <label class="checkout-field-label" for="checkout-phone-input">رقم الهاتف</label>
+                <input type="hidden" name="phone" id="checkout-phone-hidden" value="{{ $oldPhoneE164 }}">
+                <input type="hidden" name="country" id="checkout-country-hidden" value="{{ old('country', $initialPhoneCountry) }}">
+                <div class="checkout-phone-wrap @error('phone') is-invalid @enderror @error('country') is-invalid @enderror">
+                    <input type="tel" id="checkout-phone-input" class="checkout-field checkout-phone-input"
+                           value="{{ $oldPhoneE164 }}" autocomplete="tel" inputmode="tel" dir="ltr">
+                </div>
+                @error('phone')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                @error('country')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
             </div>
-            <div class="col-md-6">
-                <label class="form-label text-secondary small">المدينة</label>
-                <input type="text" name="city" class="form-control bg-glass border-secondary" value="{{ old('city', 'الرياض') }}" required>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label text-secondary small">الرمز البريدي (اختياري)</label>
-                <input type="text" name="zip_code" class="form-control bg-glass border-secondary" value="{{ old('zip_code') }}">
+            <div class="col-12">
+                <label class="checkout-field-label" for="checkout-city">المدينة</label>
+                <input type="text" name="city" id="checkout-city"
+                       class="form-control checkout-field @error('city') is-invalid @enderror"
+                       value="{{ old('city', 'الرياض') }}" required autocomplete="address-level2">
+                @error('city')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
             </div>
             <input type="hidden" name="address" value="{{ old('address', 'تسليم رقمي') }}">
-            <input type="hidden" name="country" value="SA">
             <div class="col-12">
-                <label class="form-label text-secondary small">ملاحظات الطلب (اختياري)</label>
-                <textarea name="notes" class="form-control bg-glass border-secondary" rows="2">{{ old('notes') }}</textarea>
+                <label class="checkout-field-label" for="checkout-notes">ملاحظات الطلب (اختياري)</label>
+                <textarea name="notes" id="checkout-notes" class="form-control checkout-field" rows="2">{{ old('notes') }}</textarea>
             </div>
         </div>
     </div>
@@ -198,31 +207,10 @@
                     </div>
                 </div>
 
-                <p class="checkout-card-panel__lead">
+                <p class="checkout-card-panel__lead mb-0">
                     <i class="fas fa-arrow-left-long text-accent me-1"></i>
                     بعد تأكيد الطلب ستُوجَّه إلى صفحة {{ $gateway === 'stripe' ? 'Stripe' : ucfirst($gateway) }} المؤمّنة لإدخال بيانات بطاقتك.
                 </p>
-
-                <div class="checkout-card-fields">
-                    <div class="mb-3">
-                        <label class="form-label text-secondary small mb-1">رقم البطاقة</label>
-                        <div class="checkout-card-field form-control bg-glass border-secondary en-text" dir="ltr" tabindex="-1" aria-hidden="true">0000 0000 0000 0000</div>
-                    </div>
-                    <div class="row g-3 mb-3">
-                        <div class="col-6">
-                            <label class="form-label text-secondary small mb-1">تاريخ الانتهاء</label>
-                            <div class="checkout-card-field form-control bg-glass border-secondary en-text" dir="ltr" tabindex="-1" aria-hidden="true">MM / YY</div>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label text-secondary small mb-1">رمز الأمان (CVC)</label>
-                            <div class="checkout-card-field form-control bg-glass border-secondary en-text" dir="ltr" tabindex="-1" aria-hidden="true">•••</div>
-                        </div>
-                    </div>
-                    <div class="mb-0">
-                        <label class="form-label text-secondary small mb-1">اسم حامل البطاقة</label>
-                        <div class="checkout-card-field form-control bg-glass border-secondary" tabindex="-1" aria-hidden="true">كما يظهر على البطاقة</div>
-                    </div>
-                </div>
 
                 @if($instructions !== '')
                 <p class="checkout-card-panel__hint mb-0 mt-3"><i class="fas fa-circle-info text-accent me-1"></i> {{ $instructions }}</p>
@@ -277,7 +265,22 @@
     <p class="text-center text-secondary small"><i class="fas fa-shield-alt me-1 text-accent"></i> جميع بياناتك محمية ومشفرة</p>
 </form>
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/css/intlTelInput.css">
+@endpush
+
 @push('scripts')
+<script>
+    window.CHECKOUT_PHONE = {
+        onlyCountries: @json(array_map('strtolower', $phoneCountryIsoList)),
+        initialCountry: @json(strtolower($initialPhoneCountry)),
+        defaultCountry: @json(strtolower($initialPhoneCountry ?? \App\Support\CheckoutPhoneCountries::defaultIso2())),
+        utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/utils.js',
+        initialNumber: @json($oldPhoneE164),
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script>
+<script src="{{ asset('frontend/assets/js/checkout-phone.js') }}"></script>
 <script>
 (function () {
     const form = document.getElementById('checkout-form');

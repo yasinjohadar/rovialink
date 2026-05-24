@@ -7094,10 +7094,159 @@ html[data-theme="dark"] .quantity-selector input {
   outline-offset: 2px;
 }
 
-  padding: 1rem;
-  border: 1px solid rgba(var(--accent-rgb, 0, 212, 255), 0.35);
+/* Checkout buyer fields */
+.checkout-field-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: var(--text-secondary);
+}
+
+.checkout-field {
+  width: 100%;
   border-radius: 5px;
-  background: rgba(var(--accent-rgb, 0, 212, 255), 0.04);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  padding: 0.65rem 0.9rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.checkout-field::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
+.checkout-field:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.15);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
+
+html[data-theme="light"] .checkout-field {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html[data-theme="light"] .checkout-field:focus {
+  background: #fff;
+  border-color: var(--accent-color);
+}
+
+html[data-theme="dark"] .checkout-field {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+html[data-theme="dark"] .checkout-field:focus {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.checkout-buyer-grid .checkout-phone-wrap {
+  width: 100%;
+}
+
+.checkout-buyer-grid .checkout-phone-wrap.is-invalid .iti {
+  border-color: #dc3545;
+}
+
+.checkout-buyer-grid .iti {
+  width: 100%;
+  display: block;
+}
+
+.checkout-buyer-grid .iti__country-container {
+  border-radius: 5px 0 0 5px;
+}
+
+.checkout-buyer-grid .iti__selected-country {
+  border-radius: 5px 0 0 5px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-left: none;
+  padding: 0 0.5rem;
+}
+
+.checkout-buyer-grid .iti__selected-dial-code {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  margin-left: 0.25rem;
+}
+
+.checkout-buyer-grid .iti .checkout-phone-input,
+.checkout-buyer-grid .iti input.checkout-phone-input {
+  width: 100%;
+  padding-right: 0.9rem;
+  padding-left: 6.5rem;
+  border-radius: 5px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  min-height: calc(1.5em + 1.3rem + 2px);
+}
+
+html[data-theme="light"] .checkout-buyer-grid .iti__selected-country,
+html[data-theme="light"] .checkout-buyer-grid .iti .checkout-phone-input {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0f172a;
+}
+
+html[data-theme="dark"] .checkout-buyer-grid .iti__selected-country,
+html[data-theme="dark"] .checkout-buyer-grid .iti .checkout-phone-input {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.checkout-buyer-grid .iti__dropdown-content {
+  border-radius: 5px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  max-height: 240px;
+}
+
+html[data-theme="dark"] .checkout-buyer-grid .iti__dropdown-content {
+  background: #1a2332;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.checkout-buyer-grid .iti__search-input {
+  border-radius: 5px;
+  margin: 0.5rem;
+  width: calc(100% - 1rem);
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-primary);
+}
+
+.checkout-buyer-grid .iti__country {
+  padding: 0.45rem 0.75rem;
+  color: var(--text-primary);
+}
+
+.checkout-buyer-grid .iti__country.iti__highlight {
+  background: rgba(var(--accent-rgb), 0.15);
+}
+
+.checkout-buyer-grid .iti__country-name,
+.checkout-buyer-grid .iti__dial-code {
+  color: var(--text-primary);
+}
+
+[dir="rtl"] .checkout-buyer-grid .iti .checkout-phone-input {
+  padding-left: 0.9rem;
+  padding-right: 6.5rem;
+  text-align: left;
 }
 
 .checkout-bank-details {

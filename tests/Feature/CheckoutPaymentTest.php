@@ -28,10 +28,9 @@ test('checkout with cod creates pending payment and order', function () {
     app(CartService::class)->add($product->id, 1);
 
     $response = $this->post(route('frontend.checkout.store'), [
-        'first_name' => 'Test',
-        'last_name' => 'User',
+        'full_name' => 'Test User',
         'email' => $user->email,
-        'phone' => '0500000000',
+        'phone' => '+966500000000',
         'city' => 'Riyadh',
         'payment_method_id' => $cod->id,
         'address' => 'digital',
@@ -43,5 +42,12 @@ test('checkout with cod creates pending payment and order', function () {
     $this->assertDatabaseHas('payments', [
         'payment_method_id' => $cod->id,
         'status' => 'pending',
+    ]);
+    $this->assertDatabaseHas('order_addresses', [
+        'first_name' => 'Test',
+        'last_name' => 'User',
+        'phone' => '+966500000000',
+        'country' => 'SA',
+        'postal_code' => null,
     ]);
 });

@@ -13,6 +13,7 @@ use App\Models\ShoppingCart;
 use App\Services\CartService;
 use App\Services\CouponService;
 use App\Services\TaxService;
+use App\Support\CheckoutPhoneCountries;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -67,10 +68,11 @@ class CheckoutService
 
         return DB::transaction(function () use ($cart, $input, $paymentMethod) {
             $totals = $this->calculateTotals($cart, [
-                'country' => $input['country'] ?? 'SA',
+                'country' => $input['country'] ?? CheckoutPhoneCountries::defaultIso2(),
                 'city' => $input['city'] ?? null,
-                'postal_code' => $input['zip_code'] ?? null,
             ]);
+
+            $nameParts = static::splitFullName((string) ($input['full_name'] ?? ''));
 
             $coupon = null;
             if ($cart->coupon_code) {
@@ -124,14 +126,14 @@ class CheckoutService
             OrderAddress::create([
                 'order_id' => $order->id,
                 'type' => 'billing',
-                'first_name' => $input['first_name'],
-                'last_name' => $input['last_name'],
+                'first_name' => $nameParts['first_name'],
+                'last_name' => $nameParts['last_name'],
                 'phone' => $input['phone'],
                 'address_line_1' => $input['address'] ?? 'تسليم رقمي',
                 'address_line_2' => $input['email'],
                 'city' => $input['city'] ?? '—',
-                'postal_code' => $input['zip_code'] ?? null,
-                'country' => $input['country'] ?? 'SA',
+                'postal_code' => null,
+                'country' => strtoupper($input['country'] ?? CheckoutPhoneCountries::defaultIso2()),
             ]);
 
             Payment::create([
@@ -153,6 +155,26 @@ class CheckoutService
 
             return $order->fresh(['items', 'payments', 'addresses']);
         });
+    }
+
+    /**
+     * @return array{first_name: string, last_name: string}
+     */
+    public static function splitFullName(string $fullName): array
+    {
+        $fullName = trim(preg_replace('/\s+/u', ' ', $fullName) ?? '');
+
+        if ($fullName === '') {
+            return ['first_name' => '—', 'last_name' => '—'];
+        }
+
+        $parts = preg_split('/\s+/u', $fullName, 2, PREG_SPLIT_NO_EMPTY);
+
+        if (count($parts) === 1) {
+            return ['first_name' => $parts[0], 'last_name' => $parts[0]];
+        }
+
+        return ['first_name' => $parts[0], 'last_name' => $parts[1]];
     }
 
     public function clearCheckoutCart(): void

@@ -13,6 +13,7 @@ use App\Services\Payments\PaymentOrchestrator;
 use App\Services\Payments\PaymentSettingsService;
 use App\Services\Seo\SeoBuilder;
 use App\Services\Storage\StorageHelperService;
+use App\Support\CheckoutPhoneCountries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -44,6 +45,11 @@ class CheckoutController extends Controller
         $shippingCost = $totals['shipping'];
         $taxAmount = $totals['tax'];
         $paymentMethods = PaymentMethod::active()->orderBy('order')->get();
+        $phoneCountries = CheckoutPhoneCountries::all();
+        $phoneCountryIsoList = CheckoutPhoneCountries::iso2List();
+        $defaultPhoneCountry = CheckoutPhoneCountries::defaultIso2();
+        $initialPhoneCountry = old('country', CheckoutPhoneCountries::guessIso2FromPhone(old('phone')) ?? $defaultPhoneCountry);
+        $defaultFullName = old('full_name', auth()->user()?->name ?? '');
 
         $seo = SeoBuilder::forPage(
             'إتمام الدفع - ' . site_brand_name(),
@@ -58,6 +64,11 @@ class CheckoutController extends Controller
             'shippingCost',
             'taxAmount',
             'paymentMethods',
+            'phoneCountries',
+            'phoneCountryIsoList',
+            'defaultPhoneCountry',
+            'initialPhoneCountry',
+            'defaultFullName',
             'seo'
         ));
     }
@@ -71,18 +82,18 @@ class CheckoutController extends Controller
 
         $paymentMethod = PaymentMethod::active()->findOrFail($request->input('payment_method_id'));
 
+        $allowedCountries = CheckoutPhoneCountries::iso2List();
+
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
+            'phone' => ['required', 'string', 'max:20', 'regex:/^\+[1-9]\d{6,14}$/'],
             'city' => 'required|string|max:255',
-            'zip_code' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
             'notes' => 'nullable|string|max:1000',
             'payment_method_id' => 'required|exists:payment_methods,id',
             'bank_reference' => 'nullable|string|max:100',
-            'country' => 'nullable|string|size:2',
+            'country' => ['required', 'string', 'size:2', Rule::in($allowedCountries)],
             'payment_receipt' => [
                 Rule::requiredIf($paymentMethod->checkoutUiDriver() === 'bank_transfer'),
                 'nullable',
@@ -91,6 +102,11 @@ class CheckoutController extends Controller
                 'max:5120',
             ],
         ], [
+            'full_name.required' => 'يرجى إدخال الاسم الكامل.',
+            'phone.required' => 'يرجى إدخال رقم الهاتف.',
+            'phone.regex' => 'رقم الهاتف غير صالح. اختر الدولة وأدخل الرقم بشكل صحيح.',
+            'country.required' => 'يرجى اختيار رمز الدولة.',
+            'country.in' => 'الدولة المختارة غير مدعومة.',
             'payment_receipt.required' => 'يرجى إرفاق إيصال التحويل البنكي.',
             'payment_receipt.mimes' => 'إيصال التحويل يجب أن يكون صورة أو PDF.',
             'payment_receipt.max' => 'حجم إيصال التحويل يجب ألا يتجاوز 5 م.ب.',
