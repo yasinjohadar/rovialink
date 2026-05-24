@@ -58,7 +58,7 @@ class StoreChatController extends Controller
         $validated = $request->validate([
             'message' => 'required|string|max:2000',
             'product_slug' => 'nullable|string|max:255',
-            'session_token' => 'nullable|uuid',
+            'session_token' => 'nullable|string|max:64',
         ]);
 
         try {

@@ -2,7 +2,34 @@
     const cfg = window.STORE_CHAT_CONFIG;
     if (!cfg || !cfg.enabled) return;
 
-    const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    let csrfToken = cfg.csrfToken || document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    function readXsrfCookie() {
+        const match = document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : '';
+    }
+
+    function setCsrfToken(token) {
+        if (!token) return;
+        csrfToken = token;
+        const meta = document.querySelector('meta[name="csrf-token"]');
+        if (meta) meta.setAttribute('content', token);
+    }
+
+    async function refreshCsrf() {
+        try {
+            const res = await fetch(cfg.configUrl, {
+                credentials: 'same-origin',
+                headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            });
+            const data = await parseJsonResponse(res);
+            if (data.data?.csrf_token) {
+                setCsrfToken(data.data.csrf_token);
+            }
+        } catch (e) {
+            /* ignore */
+        }
+    }
 
     function detectProductSlug() {
         const m = window.location.pathname.match(/\/product\/([^/]+)/);
@@ -69,9 +96,6 @@
             }
         }
 
-        if (res.status === 419) {
-            throw new Error('انتهت الجلسة. حدّث الصفحة وحاول مرة أخرى.');
-        }
         if (res.status === 404) {
             throw new Error('مسار المحادثة غير موجود (404). تأكد من رفع التحديثات وتشغيل migrate على الخادم.');
         }
@@ -82,16 +106,42 @@
         throw new Error('الخادم أعاد صفحة HTML بدل JSON. راجع السجلات أو شغّل php artisan migrate.');
     }
 
-    async function api(url, options) {
-        const res = await fetch(url, Object.assign({
+    function apiHeaders() {
+        const xsrf = readXsrfCookie();
+        const headers = {
+            Accept: 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        };
+        if (csrfToken) headers['X-CSRF-TOKEN'] = csrfToken;
+        if (xsrf) headers['X-XSRF-TOKEN'] = xsrf;
+        return headers;
+    }
+
+    async function api(url, options, retried) {
+        const opts = Object.assign({
             credentials: 'same-origin',
-            headers: {
-                'Accept': 'application/json',
-                'X-CSRF-TOKEN': csrf,
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        }, options || {}));
+            headers: apiHeaders(),
+        }, options || {});
+
+        if (opts.body && typeof opts.body === 'string' && csrfToken) {
+            try {
+                const parsed = JSON.parse(opts.body);
+                parsed._token = csrfToken;
+                opts.body = JSON.stringify(parsed);
+            } catch (e) {
+                /* not json */
+            }
+        }
+
+        const res = await fetch(url, opts);
+
+        if (res.status === 419 && !retried) {
+            await refreshCsrf();
+            return api(url, options, true);
+        }
+
         const data = await parseJsonResponse(res);
+
         if (!res.ok || !data.success) {
             throw new Error(data.message || 'فشل الطلب');
         }
@@ -106,7 +156,7 @@
         const data = await api(cfg.sessionUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: '{}',
+            body: JSON.stringify({}),
         });
         sessionToken = data.session_token;
         if (data.history && data.history.length) {
@@ -126,6 +176,7 @@
         appendBubble('user', text, []);
 
         try {
+            await refreshCsrf();
             await ensureSession();
             const data = await api(cfg.messageUrl, {
                 method: 'POST',
@@ -148,6 +199,7 @@
 
     function bindUi() {
         showWelcome();
+        refreshCsrf();
 
         const launcher = el('store-chat-launcher');
         const panel = el('store-chat-panel');
@@ -159,7 +211,9 @@
             panel?.classList.toggle('is-open');
             if (panel?.classList.contains('is-open')) {
                 showWelcome();
-                ensureSession().catch(function () {});
+                refreshCsrf().then(function () {
+                    return ensureSession();
+                }).catch(function () {});
                 input?.focus();
             }
         });

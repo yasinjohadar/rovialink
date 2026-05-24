@@ -22,11 +22,12 @@
     window.STORE_CHAT_CONFIG = {
         enabled: true,
         welcomeMessage: @json(\App\Models\AISetting::getValue('store_chat_welcome_message', 'مرحباً! اسألني عن منتجاتنا.')),
+        csrfToken: @json(csrf_token()),
         configUrl: @json(route('frontend.chat.config')),
         sessionUrl: @json(route('frontend.chat.session')),
         messageUrl: @json(route('frontend.chat.message')),
         historyUrl: @json(route('frontend.chat.history')),
     };
 </script>
-<script src="{{ asset('frontend/assets/js/store-chat-widget.js') }}?v=2"></script>
+<script src="{{ asset('frontend/assets/js/store-chat-widget.js') }}?v=3"></script>
 @endif

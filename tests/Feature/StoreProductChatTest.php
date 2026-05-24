@@ -29,7 +29,8 @@ beforeEach(function () {
 test('chat config returns public settings', function () {
     $this->getJson(route('frontend.chat.config'))
         ->assertOk()
-        ->assertJsonPath('data.enabled', true);
+        ->assertJsonPath('data.enabled', true)
+        ->assertJsonStructure(['data' => ['csrf_token']]);
 });
 
 test('casual greeting is refused without calling ai bridge', function () {

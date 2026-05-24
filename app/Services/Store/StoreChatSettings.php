@@ -41,6 +41,7 @@ class StoreChatSettings
             'enabled' => $this->isEnabled(),
             'welcome_message' => $this->welcomeMessage(),
             'store_name' => config('app.name', 'المتجر'),
+            'csrf_token' => csrf_token(),
         ];
     }
 }
