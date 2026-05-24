@@ -36,16 +36,50 @@
         box.scrollTop = box.scrollHeight;
     }
 
+    function showWelcome() {
+        const box = el('store-chat-messages');
+        if (!box || box.dataset.welcomeShown === '1') return;
+        box.innerHTML = '';
+        appendBubble('assistant', cfg.welcomeMessage, []);
+        box.dataset.welcomeShown = '1';
+    }
+
     function renderHistory(history) {
         const box = el('store-chat-messages');
         if (!box) return;
         box.innerHTML = '';
+        box.dataset.welcomeShown = '1';
         appendBubble('assistant', cfg.welcomeMessage, []);
         (history || []).forEach(function (m) {
             if (m.role === 'user' || m.role === 'assistant') {
                 appendBubble(m.role, m.content, []);
             }
         });
+    }
+
+    async function parseJsonResponse(res) {
+        const contentType = res.headers.get('content-type') || '';
+        const text = await res.text();
+
+        if (contentType.includes('application/json') || text.trim().startsWith('{')) {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                throw new Error('رد الخادم غير صالح.');
+            }
+        }
+
+        if (res.status === 419) {
+            throw new Error('انتهت الجلسة. حدّث الصفحة وحاول مرة أخرى.');
+        }
+        if (res.status === 404) {
+            throw new Error('مسار المحادثة غير موجود (404). تأكد من رفع التحديثات وتشغيل migrate على الخادم.');
+        }
+        if (res.status === 502 || res.status === 504) {
+            throw new Error('انتهت مهلة الخادم. حاول بعد قليل.');
+        }
+
+        throw new Error('الخادم أعاد صفحة HTML بدل JSON. راجع السجلات أو شغّل php artisan migrate.');
     }
 
     async function api(url, options) {
@@ -57,7 +91,7 @@
                 'X-Requested-With': 'XMLHttpRequest',
             },
         }, options || {}));
-        const data = await res.json();
+        const data = await parseJsonResponse(res);
         if (!res.ok || !data.success) {
             throw new Error(data.message || 'فشل الطلب');
         }
@@ -75,7 +109,9 @@
             body: '{}',
         });
         sessionToken = data.session_token;
-        renderHistory(data.history || []);
+        if (data.history && data.history.length) {
+            renderHistory(data.history);
+        }
         return sessionToken;
     }
 
@@ -111,6 +147,8 @@
     }
 
     function bindUi() {
+        showWelcome();
+
         const launcher = el('store-chat-launcher');
         const panel = el('store-chat-panel');
         const closeBtn = el('store-chat-close');
@@ -120,6 +158,7 @@
         launcher?.addEventListener('click', function () {
             panel?.classList.toggle('is-open');
             if (panel?.classList.contains('is-open')) {
+                showWelcome();
                 ensureSession().catch(function () {});
                 input?.focus();
             }

@@ -7,6 +7,7 @@ test('clearly off topic messages are detected', function () {
 
     expect($guard->isClearlyOffTopic('ما هو الطقس في الرياض اليوم؟'))->toBeTrue();
     expect($guard->isClearlyOffTopic('اكتب لي قصة رومانسية'))->toBeTrue();
+    expect($guard->isClearlyOffTopic('كيفك ياحبيب'))->toBeTrue();
 });
 
 test('product related messages are not flagged off topic', function () {

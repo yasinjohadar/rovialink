@@ -28,5 +28,5 @@
         historyUrl: @json(route('frontend.chat.history')),
     };
 </script>
-<script src="{{ asset('frontend/assets/js/store-chat-widget.js') }}?v=1"></script>
+<script src="{{ asset('frontend/assets/js/store-chat-widget.js') }}?v=2"></script>
 @endif

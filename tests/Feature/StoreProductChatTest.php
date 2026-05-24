@@ -32,6 +32,22 @@ test('chat config returns public settings', function () {
         ->assertJsonPath('data.enabled', true);
 });
 
+test('casual greeting is refused without calling ai bridge', function () {
+    $this->mock(DynamicAiBridge::class, function ($mock) {
+        $mock->shouldNotReceive('promptText');
+    });
+
+    $session = StoreChatSession::createGuest();
+
+    $this->withCookie(StoreProductChatService::COOKIE_NAME, $session->token)
+        ->postJson(route('frontend.chat.message'), [
+            'message' => 'كيفك ياحبيب',
+            'session_token' => $session->token,
+        ])
+        ->assertOk()
+        ->assertJsonPath('data.refused', true);
+});
+
 test('off topic message is refused without calling ai bridge', function () {
     $this->mock(DynamicAiBridge::class, function ($mock) {
         $mock->shouldNotReceive('promptText');

@@ -33,15 +33,24 @@ class StoreChatController extends Controller
             ], 403);
         }
 
-        $session = $this->chatService->resolveSession($request);
+        try {
+            $session = $this->chatService->resolveSession($request);
 
-        return $this->withSessionCookie(response()->json([
-            'success' => true,
-            'data' => [
-                'session_token' => $session->token,
-                'history' => $this->chatService->getHistory($session),
-            ],
-        ]), $session->token);
+            return $this->withSessionCookie(response()->json([
+                'success' => true,
+                'data' => [
+                    'session_token' => $session->token,
+                    'history' => $this->chatService->getHistory($session),
+                ],
+            ]), $session->token);
+        } catch (\Throwable $e) {
+            Log::error('Store chat session error: '.$e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => $this->friendlyError($e),
+            ], 500);
+        }
     }
 
     public function message(Request $request): JsonResponse
@@ -85,7 +94,7 @@ class StoreChatController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage(),
+                'message' => $this->friendlyError($e),
             ], 500);
         }
     }
@@ -102,6 +111,21 @@ class StoreChatController extends Controller
             'success' => true,
             'data' => ['history' => $this->chatService->getHistory($session)],
         ]), $session->token);
+    }
+
+    protected function friendlyError(\Throwable $e): string
+    {
+        $msg = $e->getMessage();
+
+        if (str_contains($msg, 'store_chat_sessions') || str_contains($msg, "doesn't exist")) {
+            return 'خدمة المحادثة غير جاهزة على الخادم. يرجى تشغيل php artisan migrate.';
+        }
+
+        if (str_contains($msg, '419') || str_contains(strtolower($msg), 'csrf')) {
+            return 'انتهت الجلسة. حدّث الصفحة وحاول مرة أخرى.';
+        }
+
+        return $msg !== '' ? $msg : 'تعذر إتمام الطلب. حاول لاحقاً.';
     }
 
     protected function withSessionCookie(JsonResponse $response, string $token): JsonResponse
