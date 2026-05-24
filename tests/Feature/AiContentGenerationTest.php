@@ -64,7 +64,7 @@ test('product ai generate copy fills description fields', function () {
             ->once()
             ->andReturn([
                 'short_description' => 'وصف قصير',
-                'description' => '<p>وصف كامل</p>',
+                'description' => '<p>'.str_repeat('وصف كامل للمنتج. ', 40).'</p>',
             ]);
     });
 

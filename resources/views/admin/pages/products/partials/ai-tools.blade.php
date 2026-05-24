@@ -95,16 +95,34 @@
         this.disabled = true;
         try {
             const data = await post(copyUrl, base);
+
+            function isBadDescription(html) {
+                if (!html || typeof html !== 'string') return true;
+                const plain = html.replace(/<[^>]+>/g, '').trim();
+                if (plain.length < 200) return true;
+                return /^\|?\s*(short_description|description)\s*$/i.test(plain);
+            }
+
             const shortEl = document.querySelector('[name="short_description"]');
             const descEl = document.querySelector('[name="description"]');
-            if (shortEl && data.short_description) shortEl.value = data.short_description;
-            if (descEl && data.description) {
-                descEl.value = data.description;
-                if (window.tinymce?.get('description')) {
-                    window.tinymce.get('description').setContent(data.description);
-                }
+            const editor = window.tinymce?.get('description');
+
+            if (shortEl && data.short_description) {
+                shortEl.value = data.short_description;
             }
-            status('تم توليد الوصف بنجاح');
+
+            if (data.description && !isBadDescription(data.description)) {
+                if (descEl) descEl.value = data.description;
+                if (editor) {
+                    editor.setContent(data.description);
+                    editor.save();
+                }
+                status('تم توليد الوصف بنجاح');
+            } else if (data.description && isBadDescription(data.description)) {
+                status('الوصف الكامل ضعيف من النموذج — جرّب نموذجاً أقوى (مثل gemini-2.0-flash) أو أعد المحاولة.', true);
+            } else {
+                status('تم الوصف المختصر فقط — فشل الوصف الطويل. غيّر النموذج أو زِد max tokens.', true);
+            }
         } catch (e) {
             status(e.message, true);
         } finally {

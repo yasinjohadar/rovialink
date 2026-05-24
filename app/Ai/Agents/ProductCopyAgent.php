@@ -43,6 +43,8 @@ class ProductCopyAgent implements Agent, Conversational, HasStructuredOutput
 8. خاتمة تحفيزية للشراء
 
 لا تختصر. لا تكتفِ بفقرتين. اذكر تفاصيل واقعية معقولة مستنتجة من اسم المنتج والتصنيف.
+
+مهم: قيمة description يجب أن تكون HTML فعلياً وليس اسم الحقل ولا |short_description ولا أي placeholder.
 INSTRUCTIONS;
     }
 

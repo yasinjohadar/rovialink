@@ -5,6 +5,7 @@ namespace App\Services\Ai;
 use App\Ai\Agents\BlogWriterAgent;
 use App\Ai\Agents\ContentToolsAgent;
 use App\Ai\Agents\ProductCopyAgent;
+use App\Ai\Agents\ProductLongDescriptionAgent;
 use App\Ai\Agents\SeoApplyAgent;
 use App\Ai\Agents\SeoAuditAgent;
 use App\Ai\Agents\SeoOptimizerAgent;
@@ -208,10 +209,124 @@ PROMPT;
         $agent = new ProductCopyAgent(language: $language);
         $data = $this->bridge->promptStructured($agent, $prompt, $model, 420);
 
+        $short = $this->sanitizeProductCopyField($data['short_description'] ?? '', 'short_description');
+        $description = $this->sanitizeProductCopyField($data['description'] ?? '', 'description');
+
+        if (! $this->isValidProductDescription($description)) {
+            Log::info('Product description invalid from first pass, retrying with long-description agent.', [
+                'snippet' => mb_substr($description, 0, 80),
+            ]);
+            $description = $this->generateProductLongDescription(
+                $productName,
+                $short,
+                $model,
+                $language,
+                $category,
+                $features,
+                $price
+            );
+        }
+
         return [
-            'short_description' => $data['short_description'] ?? '',
-            'description' => $data['description'] ?? '',
+            'short_description' => $short,
+            'description' => $description,
         ];
+    }
+
+    protected function generateProductLongDescription(
+        string $productName,
+        string $shortDescription,
+        AIModel $model,
+        string $language,
+        string $category,
+        string $features,
+        string $price,
+    ): string {
+        $prompt = <<<PROMPT
+اكتب وصفاً تسويقياً **طويلاً جداً** (HTML) لصفحة منتج:
+
+المنتج: {$productName}
+التصنيف: {$category}
+السعر: {$price}
+الوصف المختصر الحالي: {$shortDescription}
+معلومات إضافية: {$features}
+
+المطلوب: HTML كامل بأقسام (مقدمة، مميزات، مواصفات، لمن يناسب، أسئلة شائعة، خاتمة).
+لا تكرر الوصف المختصر فقط — وسّعه إلى 800+ كلمة.
+PROMPT;
+
+        $agent = new ProductLongDescriptionAgent(language: $language);
+        $data = $this->bridge->promptStructured($agent, $prompt, $model, 420);
+        $description = $this->sanitizeProductCopyField($data['description'] ?? '', 'description');
+
+        if (! $this->isValidProductDescription($description)) {
+            return $this->fallbackProductDescriptionHtml($productName, $shortDescription);
+        }
+
+        return $description;
+    }
+
+    protected function sanitizeProductCopyField(string $value, string $fieldName): string
+    {
+        $value = trim($value);
+        $value = preg_replace('/^\|+\s*/u', '', $value) ?? $value;
+        $value = trim($value);
+
+        $placeholders = [
+            'short_description',
+            'description',
+            '|short_description',
+            '|description',
+            '{{short_description}}',
+            '{{description}}',
+        ];
+
+        if (in_array(strtolower($value), array_map('strtolower', $placeholders), true)) {
+            return '';
+        }
+
+        if (preg_match('/^\{?\s*"?'.preg_quote($fieldName, '/').'"?\s*\}?\s*$/i', $value)) {
+            return '';
+        }
+
+        return $value;
+    }
+
+    protected function isValidProductDescription(string $description): bool
+    {
+        $plain = trim(strip_tags($description));
+        $len = mb_strlen($plain);
+
+        if ($len < 200) {
+            return false;
+        }
+
+        if (preg_match('/^\|?\s*(short_description|description)\s*$/iu', $plain)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function fallbackProductDescriptionHtml(string $productName, string $shortDescription): string
+    {
+        $short = e($shortDescription);
+        $name = e($productName);
+
+        return <<<HTML
+<h2>نظرة عامة</h2>
+<p>{$short}</p>
+<h2>لماذا {$name}؟</h2>
+<p>يقدّم هذا المنتج قيمة عملية للمستخدمين الذين يبحثون عن حل موثوق وسهل الاستخدام. راجع التفاصيل أدناه ثم أكمل الطلب.</p>
+<h2>المميزات الرئيسية</h2>
+<ul>
+<li>تجربة استخدام واضحة ومناسبة للمتاجر الرقمية</li>
+<li>محتوى قابل للتوسعة لاحقاً من لوحة الإدارة</li>
+<li>دعم كامل للغة العربية واتجاه RTL</li>
+</ul>
+<h2>ملاحظة</h2>
+<p>تم إنشاء هذا الهيكل تلقائياً لأن النموذج لم يُرجع وصفاً طويلاً. يُفضّل إعادة التوليد بنموذج أقوى أو زيادة max tokens ثم تعديل النص يدوياً.</p>
+HTML;
     }
 
     /**
