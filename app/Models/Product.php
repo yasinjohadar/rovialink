@@ -109,6 +109,14 @@ class Product extends Model
             ->orderBy('id');
     }
 
+    /**
+     * For nested route model binding: products/{product}/images/{productImage}
+     */
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
     public function primaryImage()
     {
         return $this->hasOne(ProductImage::class)->where('is_primary', true);

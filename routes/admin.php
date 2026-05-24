@@ -87,11 +87,9 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
     Route::delete('products/compare/clear', [ProductCompareController::class, 'clear'])->name('products.compare.clear');
     Route::post('products/bulk-update', [ProductController::class, 'bulkUpdate'])->name('products.bulk-update');
     Route::post('products/{product}/duplicate', [ProductController::class, 'duplicate'])->name('products.duplicate');
-    Route::post('products/{product}/images/{image}/delete', [ProductController::class, 'deleteImage'])
-        ->scopeBindings()
+    Route::match(['post', 'delete'], 'products/{product}/images/{productImage}', [ProductController::class, 'deleteImage'])
         ->name('products.images.delete');
-    Route::delete('products/{product}/images/{image}', [ProductController::class, 'deleteImage'])
-        ->scopeBindings();
+    Route::post('products/{product}/images/{productImage}/delete', [ProductController::class, 'deleteImage']);
     Route::resource('products', ProductController::class);
 
     // Product attributes (for variants: color, size, etc.)

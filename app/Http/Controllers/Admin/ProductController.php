@@ -342,15 +342,22 @@ class ProductController extends Controller
         $product->delete();
     }
 
-    public function deleteImage(Request $request, Product $product, ProductImage $image)
+    public function deleteImage(Request $request, Product $product, ProductImage $productImage)
     {
-        if ($image->product_id !== $product->id) {
+        if ((int) $productImage->product_id !== (int) $product->id) {
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'الصورة لا تتبع هذا المنتج.',
+                ], 404);
+            }
+
             abort(404);
         }
 
-        $wasPrimary = (bool) $image->is_primary;
-        $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $image->path);
-        $image->delete();
+        $wasPrimary = (bool) $productImage->is_primary;
+        $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $productImage->path);
+        $productImage->delete();
 
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([

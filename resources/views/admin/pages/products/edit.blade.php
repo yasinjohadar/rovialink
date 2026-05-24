@@ -320,17 +320,35 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
 
-        const response = await fetch(url, {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
+        async function sendDeleteRequest(requestUrl, method) {
+            const headers = {
                 'X-CSRF-TOKEN': csrfToken(),
                 'Accept': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({ _token: csrfToken() }),
-        });
+            };
+            const options = {
+                method: method,
+                credentials: 'same-origin',
+                headers: headers,
+            };
+
+            if (method === 'POST') {
+                headers['Content-Type'] = 'application/x-www-form-urlencoded';
+                options.body = new URLSearchParams({ _token: csrfToken() });
+            }
+
+            return fetch(requestUrl, options);
+        }
+
+        let response = await sendDeleteRequest(url, 'POST');
+
+        if (response.status === 404 && url.indexOf('/delete') !== -1) {
+            response = await sendDeleteRequest(url.replace(/\/delete\/?$/, ''), 'POST');
+        }
+
+        if (response.status === 404 || response.status === 405) {
+            response = await sendDeleteRequest(url.replace(/\/delete\/?$/, ''), 'DELETE');
+        }
 
         let data = null;
         try {
