@@ -93,6 +93,7 @@ class BlogPostController extends Controller
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string',
             'focus_keyword' => 'nullable|string|max:255',
+            'seo_score' => 'nullable|integer|min:0|max:100',
 
             // Schema.org
             'schema_type' => 'nullable|string|max:50',
@@ -226,8 +227,9 @@ class BlogPostController extends Controller
         $categories = BlogCategory::orderBy('name')->get();
         $tags = BlogTag::orderBy('name')->get();
         $post->load('tags');
+        $aiModels = app(\App\Services\Ai\AIModelService::class)->getAvailableModels('all');
 
-        return view('admin.blog.posts.edit', compact('post', 'categories', 'tags'));
+        return view('admin.blog.posts.edit', compact('post', 'categories', 'tags', 'aiModels'));
     }
 
     /**
@@ -272,6 +274,7 @@ class BlogPostController extends Controller
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string',
             'focus_keyword' => 'nullable|string|max:255',
+            'seo_score' => 'nullable|integer|min:0|max:100',
 
             // Schema.org
             'schema_type' => 'nullable|string|max:50',

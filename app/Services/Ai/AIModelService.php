@@ -6,10 +6,14 @@ use App\Models\AIModel;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use App\Services\Ai\AIProviderFactory;
+use Illuminate\Support\Str;
+use App\Ai\Agents\ConnectionTestAgent;
 
 class AIModelService
 {
+    public function __construct(
+        protected DynamicAiBridge $bridge,
+    ) {}
     /**
      * إنشاء موديل جديد
      */
@@ -125,55 +129,7 @@ class AIModelService
                 ];
             }
 
-            // إنشاء Provider واختبار الاتصال
-            $provider = AIProviderFactory::create($model);
-            $startTime = microtime(true);
-            $success = $provider->testConnection();
-            $endTime = microtime(true);
-            $responseTime = round(($endTime - $startTime) * 1000, 2); // milliseconds
-
-            if ($success) {
-                return [
-                    'success' => true,
-                    'message' => 'الاتصال ناجح! API Key يعمل بشكل صحيح.',
-                    'response_time_ms' => $responseTime,
-                    'provider' => $model->provider,
-                    'model_key' => $model->model_key,
-                ];
-            } else {
-                // الحصول على رسالة الخطأ من Provider
-                $testResult = $provider->chat([
-                    ['role' => 'user', 'content' => 'Say "OK" only.']
-                ], ['max_tokens' => 10]);
-                
-                // محاولة الحصول على الخطأ من getLastError أولاً
-                $lastError = method_exists($provider, 'getLastError') ? $provider->getLastError() : null;
-                $errorMessage = $lastError ?? $testResult['error'] ?? 'فشل الاتصال. يرجى التحقق من API Key و Model Key.';
-                $statusCode = $testResult['status_code'] ?? null;
-                
-                // إضافة معلومات إضافية للرسالة
-                $detailedMessage = $errorMessage;
-                if ($statusCode) {
-                    $detailedMessage .= " (رمز الخطأ: $statusCode)";
-                }
-                
-                // إضافة معلومات عن Model Key و API Key
-                $detailedMessage .= "\n\nمعلومات التكوين:";
-                $detailedMessage .= "\n- Provider: " . $model->provider;
-                $detailedMessage .= "\n- Model Key: " . $model->model_key;
-                $detailedMessage .= "\n- API Key موجود: " . (!empty($apiKey) ? 'نعم (' . strlen($apiKey) . ' حرف)' : 'لا');
-                $detailedMessage .= "\n- Base URL: " . ($model->base_url ?: 'الافتراضي');
-                $detailedMessage .= "\n- API Endpoint: " . ($model->api_endpoint ?: 'الافتراضي');
-                
-                return [
-                    'success' => false,
-                    'message' => $detailedMessage,
-                    'response_time_ms' => $responseTime,
-                    'provider' => $model->provider,
-                    'model_key' => $model->model_key,
-                    'status_code' => $statusCode,
-                ];
-            }
+            return $this->runConnectionTest($model);
         } catch (\Exception $e) {
             Log::error('Error testing AI model: ' . $e->getMessage(), [
                 'model_id' => $model->id,
@@ -215,78 +171,8 @@ class AIModelService
             $tempModel->fill($data);
             // تعيين API Key مباشرة للاختبار (بدون تشفير)
             $tempModel->setRawApiKeyForTesting($rawApiKey);
-            
-            $apiKey = $rawApiKey;
 
-            // إنشاء Provider واختبار الاتصال
-            $provider = AIProviderFactory::create($tempModel);
-            $startTime = microtime(true);
-            $success = $provider->testConnection();
-            $endTime = microtime(true);
-            $responseTime = round(($endTime - $startTime) * 1000, 2); // milliseconds
-
-            if ($success) {
-                return [
-                    'success' => true,
-                    'message' => 'الاتصال ناجح! API Key يعمل بشكل صحيح.',
-                    'response_time_ms' => $responseTime,
-                    'provider' => $tempModel->provider,
-                    'model_key' => $tempModel->model_key,
-                ];
-            } else {
-                // الحصول على رسالة الخطأ من Provider
-                $testResult = $provider->chat([
-                    ['role' => 'user', 'content' => 'Say "OK" only.']
-                ], ['max_tokens' => 10]);
-                
-                // محاولة الحصول على الخطأ من getLastError أولاً
-                $lastError = method_exists($provider, 'getLastError') ? $provider->getLastError() : null;
-                $errorMessage = $lastError ?? $testResult['error'] ?? 'فشل الاتصال. يرجى التحقق من API Key و Model Key.';
-                $statusCode = $testResult['status_code'] ?? null;
-                
-                // إضافة معلومات إضافية للرسالة
-                $detailedMessage = $errorMessage;
-                if ($statusCode) {
-                    $detailedMessage .= " (رمز الخطأ: $statusCode)";
-                }
-                
-                // إضافة معلومات عن Model Key و API Key
-                $detailedMessage .= "\n\nمعلومات التكوين:";
-                $detailedMessage .= "\n- Provider: " . $tempModel->provider;
-                $detailedMessage .= "\n- Model Key: " . $tempModel->model_key;
-                $detailedMessage .= "\n- API Key موجود: " . (!empty($apiKey) ? 'نعم (' . strlen($apiKey) . ' حرف)' : 'لا');
-                $detailedMessage .= "\n- Base URL: " . ($tempModel->base_url ?: 'الافتراضي');
-                $detailedMessage .= "\n- API Endpoint: " . ($tempModel->api_endpoint ?: 'الافتراضي');
-                
-                // إضافة نصائح حسب Provider
-                if ($tempModel->provider === 'openai') {
-                    $detailedMessage .= "\n\n💡 نصائح:";
-                    $detailedMessage .= "\n- تأكد من أن API Key صحيح من: https://platform.openai.com/api-keys";
-                    $detailedMessage .= "\n- تأكد من أن Model Key صحيح (مثل: gpt-4, gpt-3.5-turbo)";
-                    $detailedMessage .= "\n- تحقق من رصيد OpenAI الخاص بك";
-                } elseif ($tempModel->provider === 'google') {
-                    $detailedMessage .= "\n\n💡 نصائح:";
-                    $detailedMessage .= "\n- تأكد من تفعيل Billing في Google Cloud";
-                    $detailedMessage .= "\n- تحقق من أن API Key صحيح من: https://aistudio.google.com/apikey";
-                } elseif ($tempModel->provider === 'openrouter') {
-                    $detailedMessage .= "\n\n💡 نصائح:";
-                    $detailedMessage .= "\n- يمكنك الحصول على API Key مجاني من: https://openrouter.ai/keys";
-                    $detailedMessage .= "\n- الموديلات المجانية متاحة فوراً";
-                } elseif ($tempModel->provider === 'zai') {
-                    $detailedMessage .= "\n\n💡 نصائح:";
-                    $detailedMessage .= "\n- تأكد من أن API Key صحيح من: https://z.ai/subscribe";
-                    $detailedMessage .= "\n- تأكد من أن Model Key صحيح (مثل: glm-4.7, glm-4)";
-                }
-                
-                return [
-                    'success' => false,
-                    'message' => $detailedMessage,
-                    'response_time_ms' => $responseTime,
-                    'provider' => $tempModel->provider,
-                    'model_key' => $tempModel->model_key,
-                    'status_code' => $statusCode,
-                ];
-            }
+            return $this->runConnectionTest($tempModel);
         } catch (\Exception $e) {
             Log::error('Error testing model with raw API key: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString(),
@@ -351,6 +237,50 @@ class AIModelService
         }
 
         return $query->orderBy('priority', 'desc')->orderBy('name')->get();
+    }
+
+    protected function runConnectionTest(AIModel $model): array
+    {
+        $startTime = microtime(true);
+
+        try {
+            $text = $this->bridge->promptText(
+                new ConnectionTestAgent(),
+                'Say OK only.',
+                $model,
+                60
+            );
+            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+            $success = stripos($text, 'ok') !== false;
+
+            if ($success) {
+                return [
+                    'success' => true,
+                    'message' => 'الاتصال ناجح! API Key يعمل بشكل صحيح (Laravel AI).',
+                    'response_time_ms' => $responseTime,
+                    'provider' => $model->provider,
+                    'model_key' => $model->model_key,
+                ];
+            }
+
+            return [
+                'success' => false,
+                'message' => 'فشل الاتصال. الرد: '.Str::limit($text, 200),
+                'response_time_ms' => $responseTime,
+                'provider' => $model->provider,
+                'model_key' => $model->model_key,
+            ];
+        } catch (\Throwable $e) {
+            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+
+            return [
+                'success' => false,
+                'message' => 'خطأ في الاتصال: '.$e->getMessage(),
+                'response_time_ms' => $responseTime,
+                'provider' => $model->provider,
+                'model_key' => $model->model_key,
+            ];
+        }
     }
 }
 

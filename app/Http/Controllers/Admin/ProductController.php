@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Services\Ai\AIModelService;
 use App\Models\ProductAttribute;
 use App\Models\ProductFile;
 use App\Models\ProductImage;
@@ -149,14 +150,15 @@ class ProductController extends Controller
         return redirect()->route('admin.products.index')->with('success', $message);
     }
 
-    public function create(Request $request)
+    public function create(Request $request, AIModelService $modelService)
     {
         $categories = Category::orderBy('name')->get();
         $brands = Brand::orderBy('order')->orderBy('name')->get();
         $attributes = ProductAttribute::with('values')->orderBy('order')->get();
         $selectedCategoryId = $request->query('category_id');
+        $aiModels = $modelService->getAvailableModels('all');
 
-        return view('admin.pages.products.create', compact('categories', 'brands', 'attributes', 'selectedCategoryId'));
+        return view('admin.pages.products.create', compact('categories', 'brands', 'attributes', 'selectedCategoryId', 'aiModels'));
     }
 
     public function store(StoreProductRequest $request)
@@ -226,13 +228,15 @@ class ProductController extends Controller
         return view('admin.pages.products.show', compact('product'));
     }
 
-    public function edit(Product $product)
+    public function edit(Product $product, AIModelService $modelService)
     {
         $categories = Category::orderBy('name')->get();
         $brands = Brand::orderBy('order')->orderBy('name')->get();
         $attributes = ProductAttribute::with('values')->orderBy('order')->get();
         $product->load(['images', 'attributes', 'variants.attributeValues', 'files']);
-        return view('admin.pages.products.edit', compact('product', 'categories', 'brands', 'attributes'));
+        $aiModels = $modelService->getAvailableModels('all');
+
+        return view('admin.pages.products.edit', compact('product', 'categories', 'brands', 'attributes', 'aiModels'));
     }
 
     public function update(UpdateProductRequest $request, Product $product)

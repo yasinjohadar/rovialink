@@ -5,6 +5,7 @@ namespace App\Services\Ai;
 use App\Models\AIConversation;
 use App\Models\AIMessage;
 use App\Models\AIModel;
+use App\Ai\Agents\ChatReplyAgent;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -13,7 +14,8 @@ class AIChatbotService
 {
     public function __construct(
         private AIModelService $modelService,
-        private AIPromptService $promptService
+        private AIPromptService $promptService,
+        private DynamicAiBridge $bridge,
     ) {}
 
     /**
@@ -86,28 +88,26 @@ class AIChatbotService
             ];
         })->toArray();
 
-        // إرسال الطلب إلى AI
         try {
-            $provider = AIProviderFactory::create($model);
-            $response = $provider->chat($messages);
+            $prompt = collect($messages)
+                ->map(fn (array $msg) => strtoupper($msg['role']).': '.$msg['content'])
+                ->implode("\n");
 
-            if (!$response['success']) {
-                throw new \Exception($response['error'] ?? 'خطأ في الاتصال بـ AI');
-            }
+            $system = $this->promptService->getChatbotPrompt($conversation);
+            $agent = new ChatReplyAgent(systemInstructions: $system);
+            $content = $this->bridge->promptText($agent, $prompt, $model, 120);
 
-            // إضافة رد AI
-            $assistantMessage = $conversation->addMessage('assistant', $response['content'], [
-                'tokens_used' => $response['tokens_used'] ?? 0,
-                'prompt_tokens' => $response['prompt_tokens'] ?? 0,
-                'completion_tokens' => $response['completion_tokens'] ?? 0,
+            $tokensUsed = (int) ceil(mb_strlen($prompt.$content) / 4);
+
+            $assistantMessage = $conversation->addMessage('assistant', $content, [
+                'tokens_used' => $tokensUsed,
             ]);
 
-            // تحديث التكلفة والوقت
-            $responseTime = (microtime(true) - $startTime) * 1000; // بالمللي ثانية
-            $cost = $model->getCost($response['tokens_used'] ?? 0);
+            $responseTime = (microtime(true) - $startTime) * 1000;
+            $cost = $model->getCost($tokensUsed);
 
             $assistantMessage->update([
-                'tokens_used' => $response['tokens_used'] ?? 0,
+                'tokens_used' => $tokensUsed,
                 'cost' => $cost,
                 'response_time' => (int) $responseTime,
             ]);
@@ -154,9 +154,8 @@ class AIChatbotService
             return 0;
         }
 
-        $provider = AIProviderFactory::create($model);
-        $estimatedTokens = $provider->estimateTokens($message);
-        
+        $estimatedTokens = (int) ceil(mb_strlen($message) / 4);
+
         return $model->getCost($estimatedTokens);
     }
 }

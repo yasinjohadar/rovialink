@@ -87,6 +87,8 @@ class AIModel extends Model
      */
     public const CAPABILITIES = [
         'blog_generation' => 'إنشاء مقالات المدونة',
+        'product_copy' => 'وصف المنتجات',
+        'seo_generation' => 'تحسين SEO',
         'content_summary' => 'تلخيص المحتوى',
         'content_improvement' => 'تحسين المحتوى',
         'chat' => 'محادثة',
@@ -109,8 +111,11 @@ class AIModel extends Model
             'claude-3-haiku' => 'Claude 3 Haiku',
         ],
         'google' => [
-            'gemini-pro' => 'Gemini Pro',
-            'gemini-ultra' => 'Gemini Ultra',
+            'gemini-2.5-flash' => 'Gemini 2.5 Flash',
+            'gemini-2.5-pro' => 'Gemini 2.5 Pro',
+            'gemini-2.0-flash' => 'Gemini 2.0 Flash',
+            'gemini-1.5-flash' => 'Gemini 1.5 Flash',
+            'gemini-1.5-pro' => 'Gemini 1.5 Pro',
         ],
         'openrouter' => [
             'openai/gpt-4' => 'GPT-4 (via OpenRouter)',

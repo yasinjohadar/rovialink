@@ -55,7 +55,7 @@ class AIBlogPostController extends Controller
         ]);
 
         try {
-            $model = $validated['ai_model_id']
+            $model = ! empty($validated['ai_model_id'])
                 ? AIModel::find($validated['ai_model_id'])
                 : $this->modelService->getDefaultModel();
 
@@ -66,7 +66,7 @@ class AIBlogPostController extends Controller
                 ], 400);
             }
 
-            $category = $validated['category_id'] 
+            $category = ! empty($validated['category_id'])
                 ? BlogCategory::find($validated['category_id'])
                 : null;
 

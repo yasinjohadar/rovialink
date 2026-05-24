@@ -107,6 +107,11 @@
                             <div class="card-title">إعدادات SEO</div>
                         </div>
                         <div class="card-body">
+                            @include('admin.partials.seo-audit-panel', [
+                                'seoAuditType' => 'blog_post',
+                                'aiModels' => $aiModels ?? collect(),
+                            ])
+                            <input type="hidden" name="seo_score" value="{{ old('seo_score', $post->seo_score) }}">
                             <div class="mb-3">
                                 <label class="form-label">عنوان SEO</label>
                                 <input type="text" name="meta_title" class="form-control"

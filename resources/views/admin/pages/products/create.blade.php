@@ -90,6 +90,8 @@
                             </div>
                         </div>
 
+                        @include('admin.pages.products.partials.seo-fields')
+
                         <!-- المنتج الرقمي -->
                         <div class="card custom-card mb-4">
                             <div class="card-header">
@@ -207,6 +209,8 @@
 
                     <!-- الشريط الجانبي -->
                     <div class="col-lg-4">
+
+                        @include('admin.pages.products.partials.ai-tools', ['aiModels' => $aiModels ?? collect()])
 
                         <!-- الحالة والنشر -->
                         <div class="card custom-card mb-4">

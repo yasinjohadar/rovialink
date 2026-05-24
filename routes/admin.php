@@ -300,6 +300,12 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
         Route::post('content/summarize', [\App\Http\Controllers\Admin\AIContentController::class, 'summarize'])->name('content.summarize');
         Route::post('content/improve', [\App\Http\Controllers\Admin\AIContentController::class, 'improve'])->name('content.improve');
         Route::post('content/grammar-check', [\App\Http\Controllers\Admin\AIContentController::class, 'grammarCheck'])->name('content.grammar-check');
+
+        Route::post('products/generate-copy', [\App\Http\Controllers\Admin\AIProductController::class, 'generateCopy'])->name('products.generate-copy');
+        Route::post('products/generate-seo', [\App\Http\Controllers\Admin\AIProductController::class, 'generateSeo'])->name('products.generate-seo');
+
+        Route::post('seo/audit', [\App\Http\Controllers\Admin\AISeoAuditController::class, 'audit'])->name('seo.audit');
+        Route::post('seo/apply', [\App\Http\Controllers\Admin\AISeoAuditController::class, 'apply'])->name('seo.apply');
         
         // Settings
         Route::get('settings', [\App\Http\Controllers\Admin\AISettingsController::class, 'index'])->name('settings.index');

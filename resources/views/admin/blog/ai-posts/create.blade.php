@@ -239,6 +239,11 @@
                             </div>
                         </div>
                         <div class="card-body collapse show" id="seoCollapse">
+                            @include('admin.partials.seo-audit-panel', [
+                                'seoAuditType' => 'blog_post',
+                                'aiModels' => $models ?? collect(),
+                            ])
+                            <input type="hidden" name="seo_score" id="seo_score" value="">
                             <div class="mb-3">
                                 <label class="form-label">عنوان SEO (Meta Title)</label>
                                 <input type="text" name="meta_title" id="meta_title" class="form-control" maxlength="255">

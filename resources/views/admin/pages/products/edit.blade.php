@@ -73,6 +73,12 @@
                                 <textarea name="description" id="description" class="form-control @error('description') is-invalid @enderror" rows="10">{{ old('description', $product->description) }}</textarea>
                                 @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
+                        </div>
+
+                        @include('admin.pages.products.partials.ai-tools', ['aiModels' => $aiModels ?? collect()])
+                        @include('admin.pages.products.partials.seo-fields', ['product' => $product])
+
+                        <div class="row g-3">
                             <div class="col-md-4">
                                 <label class="form-label">السعر ($) <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" min="0" class="form-control" name="price" value="{{ old('price', $product->price) }}" required>

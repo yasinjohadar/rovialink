@@ -233,6 +233,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (apiEndpointInput && !apiEndpointInput.value) {
                 apiEndpointInput.value = '/chat/completions';
             }
+        } else if (provider === 'google') {
+            if (baseUrlInput) {
+                baseUrlInput.value = '';
+                baseUrlInput.placeholder = 'اتركه فارغاً — يستخدم Google AI الافتراضي';
+            }
+            if (apiEndpointInput) {
+                apiEndpointInput.value = '';
+                apiEndpointInput.placeholder = 'غير مطلوب لـ Gemini';
+            }
         } else if (provider === 'local') {
             if (baseUrlInput && !baseUrlInput.value) {
                 baseUrlInput.value = 'http://localhost:11434';
@@ -264,12 +273,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             html += `<option value="__custom__">✏️ موديل مخصص</option></select>`;
+            const customPlaceholder = provider === 'google'
+                ? 'مثال: gemini-2.5-flash (معرف API وليس اسم العرض)'
+                : 'أدخل معرف الموديل المخصص';
             html += `<input type="text" class="form-control mt-2" id="model_key_custom_input" 
-                    placeholder="أدخل معرف الموديل المخصص" style="display: none;">`;
+                    placeholder="${customPlaceholder}" style="display: none;">`;
             
             // إضافة hint
             if (provider === 'openrouter') {
                 html += `<small class="text-muted d-block mt-1">🆓 الموديلات المجانية لا تحتاج رصيد! | <a href="https://openrouter.ai/models" target="_blank">عرض كل الموديلات</a></small>`;
+            } else if (provider === 'google') {
+                html += `<small class="text-muted d-block mt-1">استخدم معرف API مثل <code>gemini-2.5-flash</code> — وليس اسم العرض. اترك Base URL فارغاً.</small>`;
             } else {
                 html += `<small class="text-muted d-block mt-1">اختر من القائمة أو أدخل موديل مخصص</small>`;
             }
