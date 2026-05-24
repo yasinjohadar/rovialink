@@ -33,20 +33,23 @@ test('chat config returns public settings', function () {
         ->assertJsonStructure(['data' => ['csrf_token']]);
 });
 
-test('casual greeting is refused without calling ai bridge', function () {
+test('casual greeting gets ai reply', function () {
     $this->mock(DynamicAiBridge::class, function ($mock) {
-        $mock->shouldNotReceive('promptText');
+        $mock->shouldReceive('promptText')
+            ->once()
+            ->andReturn('أهلاً وسهلاً! كيف يمكنني مساعدتك في اختيار منتج من متجرنا؟');
     });
 
     $session = StoreChatSession::createGuest();
 
     $this->withCookie(StoreProductChatService::COOKIE_NAME, $session->token)
         ->postJson(route('frontend.chat.message'), [
-            'message' => 'كيفك ياحبيب',
+            'message' => 'مرحبا',
             'session_token' => $session->token,
         ])
         ->assertOk()
-        ->assertJsonPath('data.refused', true);
+        ->assertJsonPath('data.refused', false)
+        ->assertJsonFragment(['reply' => 'أهلاً وسهلاً! كيف يمكنني مساعدتك في اختيار منتج من متجرنا؟']);
 });
 
 test('off topic message is refused without calling ai bridge', function () {

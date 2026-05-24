@@ -28,7 +28,7 @@ class StoreChatSettingsSeeder extends Seeder
             ],
             [
                 'key' => 'store_chat_refusal_message',
-                'value' => 'عذراً، أستطيع الإجابة فقط عن منتجات متجرنا. اسألني عن منتج معيّن أو تصفّح المتجر.',
+                'value' => 'عذراً، هذا السؤال خارج نطاق مساعدة المنتجات. اسألني عن منتج معيّن (سعر، مميزات، توافق) وسأسعد بمساعدتك.',
                 'type' => 'string',
                 'description' => 'رسالة رفض المواضيع خارج المنتجات',
                 'is_public' => true,
