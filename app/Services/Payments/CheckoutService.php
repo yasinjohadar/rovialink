@@ -82,8 +82,13 @@ class CheckoutService
 
             $currency = strtoupper($this->paymentSettings->defaultCurrency());
 
+            $userId = Auth::id();
+            if (! $userId) {
+                throw new \RuntimeException('يجب تسجيل الدخول لإتمام الطلب.');
+            }
+
             $order = Order::create([
-                'user_id' => Auth::id(),
+                'user_id' => $userId,
                 'order_status_id' => OrderStatus::idForRole(OrderStatus::ROLE_CHECKOUT)
                     ?? OrderStatus::ordered()->value('id'),
                 'subtotal' => $totals['subtotal'],

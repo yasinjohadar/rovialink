@@ -158,6 +158,7 @@ class CheckoutController extends Controller
     public function pending(Order $order)
     {
         $this->authorizeOrder($order);
+        $order->load(['items.product.primaryImage']);
         $payment = $order->payments()->latest()->with('paymentMethod')->first();
 
         return view('frontend.pages.checkout.pending', compact('order', 'payment'));
@@ -231,7 +232,9 @@ class CheckoutController extends Controller
 
     protected function authorizeOrder(Order $order): void
     {
-        abort_unless(Auth::id() === $order->user_id, 403);
+        $user = Auth::user();
+        abort_unless($user && $order->isOwnedBy($user), 403);
+        $order->assignToUserIfUnclaimed($user);
     }
 
     protected function verifyStripeSession(Payment $payment, string $sessionId): void

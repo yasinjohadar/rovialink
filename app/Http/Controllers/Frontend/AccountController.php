@@ -32,19 +32,19 @@ class AccountController extends Controller
         $user = $request->user();
 
         $stats = [
-            'orders_total' => $user->orders()->count(),
-            'orders_active' => $user->orders()->whereHas('status', fn ($q) => $q->where('is_final', false))->count(),
+            'orders_total' => Order::forCustomer($user)->count(),
+            'orders_active' => Order::forCustomer($user)->whereHas('status', fn ($q) => $q->where('is_final', false))->count(),
             'wishlist_count' => $user->wishlists()->count(),
             'loyalty_points' => (int) ($user->loyalty_points_balance ?? 0),
         ];
 
-        $recentOrders = $user->orders()
+        $recentOrders = Order::forCustomer($user)
             ->with(['status', 'items.product.images'])
             ->latest()
             ->limit(3)
             ->get();
 
-        $ordersQuery = $user->orders()
+        $ordersQuery = Order::forCustomer($user)
             ->with(['status', 'items.product.images']);
 
         if ($statusSlug = $request->input('status')) {
@@ -53,7 +53,7 @@ class AccountController extends Controller
 
         $orders = $ordersQuery->latest()->paginate(10)->withQueryString();
 
-        $activeOrder = $user->orders()
+        $activeOrder = Order::forCustomer($user)
             ->with(['status', 'items.product.images', 'statusHistory.newStatus'])
             ->whereHas('status', fn ($q) => $q->where('is_final', false))
             ->latest()
@@ -95,9 +95,16 @@ class AccountController extends Controller
         ));
     }
 
-    public function showOrder(Request $request, Order $order): View
+    public function showOrder(Request $request, Order $order): View|RedirectResponse
     {
-        abort_if($order->user_id !== $request->user()->id, 403);
+        $user = $request->user();
+
+        if (! $order->isOwnedBy($user)) {
+            return redirect()->route('frontend.account')
+                ->withErrors(['order' => 'لا يمكنك عرض هذا الطلب أو أنه غير مرتبط بحسابك.']);
+        }
+
+        $order->assignToUserIfUnclaimed($user);
 
         $order->load([
             'status',
@@ -205,7 +212,8 @@ class AccountController extends Controller
 
     public function reorder(Request $request, Order $order): RedirectResponse
     {
-        abort_if($order->user_id !== $request->user()->id, 403);
+        abort_unless($order->isOwnedBy($request->user()), 403);
+        $order->assignToUserIfUnclaimed($request->user());
 
         $order->load('items.product');
         $cartService = app(\App\Services\CartService::class);
@@ -229,7 +237,8 @@ class AccountController extends Controller
 
     public function storeReturn(StoreOrderReturnRequest $request, Order $order): RedirectResponse
     {
-        abort_if($order->user_id !== $request->user()->id, 403);
+        abort_unless($order->isOwnedBy($request->user()), 403);
+        $order->assignToUserIfUnclaimed($request->user());
 
         $order->load('status');
 

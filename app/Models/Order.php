@@ -111,4 +111,64 @@ class Order extends Model
         return $this->billing_address
             ?? $this->addresses->where('type', 'shipping')->first();
     }
+
+    public function billingEmail(): ?string
+    {
+        $email = $this->contact_address?->address_line_2;
+
+        if (! is_string($email) || $email === '') {
+            return null;
+        }
+
+        $email = trim($email);
+
+        return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : null;
+    }
+
+    public function isOwnedBy(?User $user): bool
+    {
+        if (! $user) {
+            return false;
+        }
+
+        if ($this->user_id !== null && (int) $this->user_id === (int) $user->id) {
+            return true;
+        }
+
+        $billingEmail = $this->billingEmail();
+
+        return $billingEmail !== null
+            && strcasecmp($billingEmail, trim($user->email)) === 0;
+    }
+
+    public function assignToUserIfUnclaimed(User $user): bool
+    {
+        if ($this->user_id !== null) {
+            return false;
+        }
+
+        if (! $this->isOwnedBy($user)) {
+            return false;
+        }
+
+        $this->forceFill(['user_id' => $user->id])->save();
+
+        return true;
+    }
+
+    public function scopeForCustomer($query, User $user)
+    {
+        $email = strtolower(trim($user->email));
+
+        return $query->where(function ($q) use ($user, $email) {
+            $q->where('user_id', $user->id)
+                ->orWhere(function ($q2) use ($email) {
+                    $q2->whereNull('user_id')
+                        ->whereHas('addresses', function ($addressQuery) use ($email) {
+                            $addressQuery->where('type', 'billing')
+                                ->whereRaw('LOWER(TRIM(address_line_2)) = ?', [$email]);
+                        });
+                });
+        });
+    }
 }

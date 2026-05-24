@@ -30,7 +30,7 @@ class ManualGateway implements PaymentGatewayInterface
         return new PaymentInitiationResult(
             view: 'frontend.pages.checkout.pending',
             viewData: [
-                'order' => $order->load(['items', 'payments.paymentMethod']),
+                'order' => $order->load(['items.product.primaryImage', 'payments.paymentMethod']),
                 'payment' => $payment->fresh('paymentMethod'),
                 'method' => $method,
             ],
