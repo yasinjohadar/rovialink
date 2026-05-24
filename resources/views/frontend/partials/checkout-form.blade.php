@@ -55,7 +55,8 @@
         <h5 class="account-panel__title mb-4"><i class="fas fa-wallet me-2"></i> وسيلة الدفع</h5>
         <div class="d-flex flex-column gap-2">
             @foreach($paymentMethods as $method)
-            <label class="account-sidebar__link {{ old('payment_method_id', $paymentMethods->first()?->id) == $method->id ? 'active' : '' }}" style="cursor:pointer;">
+            <div class="account-sidebar__link payment-method-option {{ old('payment_method_id', $paymentMethods->first()?->id) == $method->id ? 'active' : '' }}"
+                 role="button" tabindex="0" data-payment-option>
                 <input type="radio" name="payment_method_id" value="{{ $method->id }}" class="d-none payment-method-radio"
                        data-driver="{{ $method->driver }}"
                        data-ui-driver="{{ $method->checkoutUiDriver() }}"
@@ -63,7 +64,7 @@
                 <span class="account-sidebar__indicator"></span>
                 <i class="fas fa-{{ match($method->checkoutUiDriver()) { 'paypal' => 'paypal', 'bank_transfer' => 'university', 'cod' => 'money-bill-wave', default => 'credit-card' } }} account-sidebar__icon"></i>
                 <span class="shop-filters__option-text">{{ $method->name }}</span>
-            </label>
+            </div>
             @endforeach
         </div>
 
@@ -279,13 +280,29 @@
 @push('scripts')
 <script>
 (function () {
+    const form = document.getElementById('checkout-form');
     const radios = document.querySelectorAll('.payment-method-radio');
     const panels = document.querySelectorAll('[data-checkout-panel]');
+    const paymentOptions = document.querySelectorAll('[data-payment-option]');
+
+    function selectPaymentOption(option) {
+        const radio = option?.querySelector('.payment-method-radio');
+        if (!radio || radio.checked) {
+            return;
+        }
+        radio.checked = true;
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+    }
 
     function syncPaymentPanels() {
         const selected = document.querySelector('.payment-method-radio:checked');
         const uiDriver = selected?.dataset.uiDriver || selected?.dataset.driver || '';
         const methodId = selected?.value || '';
+
+        paymentOptions.forEach(option => {
+            const radio = option.querySelector('.payment-method-radio');
+            option.classList.toggle('active', radio?.checked === true);
+        });
 
         panels.forEach(panel => {
             const show = panel.dataset.checkoutPanel === uiDriver && panel.dataset.methodId === methodId;
@@ -306,6 +323,43 @@
         });
     }
 
+    if (form) {
+        form.addEventListener('keydown', function (e) {
+            if (e.key !== 'Enter') {
+                return;
+            }
+            const tag = e.target.tagName;
+            const type = e.target.type;
+            if (tag === 'TEXTAREA' || type === 'submit' || type === 'button') {
+                return;
+            }
+            e.preventDefault();
+        });
+
+        form.addEventListener('submit', function (e) {
+            if (form.dataset.submitting === '1') {
+                e.preventDefault();
+                return;
+            }
+            form.dataset.submitting = '1';
+        });
+    }
+
+    paymentOptions.forEach(option => {
+        option.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            selectPaymentOption(option);
+        });
+
+        option.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                selectPaymentOption(option);
+            }
+        });
+    });
+
     document.querySelectorAll('.payment-receipt-input').forEach(input => {
         input.addEventListener('change', function () {
             const wrap = this.closest('.checkout-file-upload');
@@ -322,11 +376,7 @@
     });
 
     radios.forEach(radio => {
-        radio.addEventListener('change', () => {
-            document.querySelectorAll('label.account-sidebar__link').forEach(l => l.classList.remove('active'));
-            radio.closest('label')?.classList.add('active');
-            syncPaymentPanels();
-        });
+        radio.addEventListener('change', syncPaymentPanels);
     });
 
     syncPaymentPanels();

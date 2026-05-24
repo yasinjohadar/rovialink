@@ -151,9 +151,26 @@ class CheckoutService
                 $this->couponService->recordUsage($coupon, $order, $totals['discount']);
             }
 
-            $this->cartService->clear();
-
             return $order->fresh(['items', 'payments', 'addresses']);
+        });
+    }
+
+    public function clearCheckoutCart(): void
+    {
+        $this->cartService->clear();
+    }
+
+    public function abortPendingCheckoutOrder(Order $order): void
+    {
+        if ($order->payments()->where('status', 'completed')->exists()) {
+            return;
+        }
+
+        DB::transaction(function () use ($order) {
+            $order->items()->delete();
+            $order->payments()->delete();
+            $order->addresses()->delete();
+            $order->delete();
         });
     }
 }

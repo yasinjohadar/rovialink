@@ -7084,8 +7084,16 @@ html[data-theme="dark"] .quantity-selector input {
   font-weight: 600;
 }
 
-/* Bank transfer checkout panel */
-.checkout-bank-panel {
+.payment-method-option {
+  cursor: pointer;
+  user-select: none;
+}
+
+.payment-method-option:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
   padding: 1rem;
   border: 1px solid rgba(var(--accent-rgb, 0, 212, 255), 0.35);
   border-radius: 5px;

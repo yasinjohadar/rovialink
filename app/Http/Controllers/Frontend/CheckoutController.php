@@ -84,7 +84,7 @@ class CheckoutController extends Controller
             'bank_reference' => 'nullable|string|max:100',
             'country' => 'nullable|string|size:2',
             'payment_receipt' => [
-                Rule::requiredIf($paymentMethod->driver === 'bank_transfer'),
+                Rule::requiredIf($paymentMethod->checkoutUiDriver() === 'bank_transfer'),
                 'nullable',
                 'file',
                 'mimes:jpg,jpeg,png,webp,pdf',
@@ -116,6 +116,8 @@ class CheckoutController extends Controller
             $validated['payment_receipt_original_name'] = $file->getClientOriginalName();
         }
 
+        $order = null;
+
         try {
             $order = $this->checkoutService->createOrderFromCart($validated, $paymentMethod);
             $result = $this->paymentOrchestrator->initiate($order, [
@@ -124,6 +126,8 @@ class CheckoutController extends Controller
                 'payment_receipt_path' => $validated['payment_receipt_path'] ?? null,
                 'payment_receipt_original_name' => $validated['payment_receipt_original_name'] ?? null,
             ]);
+
+            $this->checkoutService->clearCheckoutCart();
 
             if ($result->requiresRedirect()) {
                 return redirect()->away($result->redirectUrl);
@@ -137,7 +141,16 @@ class CheckoutController extends Controller
         } catch (\Throwable $e) {
             report($e);
 
-            return back()->withInput()->withErrors(['error' => 'حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.']);
+            if ($order) {
+                $this->checkoutService->abortPendingCheckoutOrder($order);
+            }
+
+            $message = 'حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.';
+            if ($paymentMethod->isCardGateway() && str_contains($e->getMessage(), 'Stripe')) {
+                $message = 'تعذر الاتصال ببوابة الدفع. تحقق من إعدادات Stripe في لوحة الإدارة ثم أعد المحاولة.';
+            }
+
+            return back()->withInput()->withErrors(['error' => $message]);
         }
     }
 
