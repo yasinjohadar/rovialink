@@ -194,6 +194,18 @@
                                 <li class="slide {{ request()->routeIs('admin.homepage.hero.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.homepage.hero.edit') }}" class="side-menu__item">هيرو الصفحة الرئيسية</a>
                                 </li>
+                                <li class="slide {{ request()->routeIs('admin.homepage.about.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.homepage.about.edit') }}" class="side-menu__item">صفحة من نحن</a>
+                                </li>
+                                <li class="slide {{ request()->routeIs('admin.homepage.faq.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.homepage.faq.edit') }}" class="side-menu__item">الأسئلة الشائعة</a>
+                                </li>
+                                <li class="slide {{ request()->routeIs('admin.homepage.terms.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.homepage.terms.edit') }}" class="side-menu__item">الشروط والأحكام</a>
+                                </li>
+                                <li class="slide {{ request()->routeIs('admin.homepage.privacy.*') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.homepage.privacy.edit') }}" class="side-menu__item">سياسة الخصوصية</a>
+                                </li>
                                 <li class="slide {{ request()->routeIs('admin.site-settings.*') ? 'active' : '' }}">
                                     <a href="{{ route('admin.site-settings.index') }}" class="side-menu__item">إعدادات الموقع</a>
                                 </li>

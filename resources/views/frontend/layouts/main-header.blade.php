@@ -24,24 +24,35 @@
 
 <nav class="navbar navbar-expand-lg main-nav glass-nav" id="siteMainNav" aria-label="التنقل الرئيسي">
     <div class="container main-nav__container">
-        <a class="navbar-brand main-nav__brand" href="{{ url('/') }}">
-            @if($siteLogoUrl)
-                <img src="{{ $siteLogoUrl }}" alt="{{ $siteName }}" class="main-nav__brand-logo" width="40" height="40">
-            @else
-                <span class="main-nav__brand-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
-            @endif
-            <span class="main-nav__brand-text">
-                <span class="main-nav__brand-name">{{ $siteName }}</span>
-            </span>
-        </a>
+        <div class="main-nav__topbar">
+            <div class="main-nav__topbar-actions d-lg-none">
+                <a href="{{ route('frontend.cart.index') }}" class="main-nav__icon-btn main-nav__cart-mobile {{ request()->routeIs('frontend.cart.*', 'frontend.checkout.*') ? 'is-active' : '' }}" aria-label="سلة التسوق">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" data-initial-count="{{ $headerCartCount }}">{{ $headerCartCount }}</span>
+                </a>
 
-        <button class="navbar-toggler main-nav__toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="فتح القائمة">
-            <span class="main-nav__toggler-bar"></span>
-            <span class="main-nav__toggler-bar"></span>
-            <span class="main-nav__toggler-bar"></span>
-        </button>
+                <button class="navbar-toggler main-nav__toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="فتح القائمة">
+                    <span class="main-nav__toggler-bar"></span>
+                    <span class="main-nav__toggler-bar"></span>
+                    <span class="main-nav__toggler-bar"></span>
+                </button>
+            </div>
 
-        <div class="collapse navbar-collapse main-nav__collapse" id="mainNav">
+            <a class="navbar-brand main-nav__brand" href="{{ url('/') }}">
+                @if($siteLogoUrl)
+                    <img src="{{ $siteLogoUrl }}" alt="{{ $siteName }}" class="main-nav__brand-logo" width="40" height="40">
+                @else
+                    <span class="main-nav__brand-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
+                @endif
+                <span class="main-nav__brand-text">
+                    <span class="main-nav__brand-name">{{ $siteName }}</span>
+                </span>
+            </a>
+
+            <div class="main-nav__topbar-spacer d-lg-none" aria-hidden="true"></div>
+        </div>
+
+        <div class="collapse navbar-collapse main-nav__collapse" id="mainNav" data-bs-scroll="false">
             <ul class="navbar-nav main-nav__menu mx-lg-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('frontend.home') ? 'active' : '' }}" href="{{ route('frontend.home') }}">الرئيسية</a>
@@ -56,7 +67,7 @@
                     <a class="nav-link {{ request()->routeIs('frontend.blog.*') ? 'active' : '' }}" href="{{ route('frontend.blog.index') }}">المدونة</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">من نحن</a>
+                    <a class="nav-link {{ request()->routeIs('frontend.about') ? 'active' : '' }}" href="{{ route('frontend.about') }}">من نحن</a>
                 </li>
             </ul>
 
@@ -89,7 +100,7 @@
                     <span class="wishlist-badge" data-initial-count="{{ $headerWishlistCount }}">{{ $headerWishlistCount }}</span>
                 </a>
 
-                <a href="{{ route('frontend.cart.index') }}" class="main-nav__icon-btn {{ request()->routeIs('frontend.cart.*', 'frontend.checkout.*') ? 'is-active' : '' }}" aria-label="سلة التسوق">
+                <a href="{{ route('frontend.cart.index') }}" class="main-nav__icon-btn main-nav__cart-desktop d-none d-lg-inline-flex {{ request()->routeIs('frontend.cart.*', 'frontend.checkout.*') ? 'is-active' : '' }}" aria-label="سلة التسوق">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-badge" data-initial-count="{{ $headerCartCount }}">{{ $headerCartCount }}</span>
                 </a>
@@ -101,7 +112,11 @@
                     @endphp
                     <div class="dropdown main-nav__user">
                         <a href="#" class="main-nav__user-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="main-nav__avatar">{{ $headerInitials }}</span>
+                            @if($headerUser->photoUrl())
+                                <img src="{{ $headerUser->photoUrl() }}" alt="" class="main-nav__avatar main-nav__avatar--img" width="36" height="36">
+                            @else
+                                <span class="main-nav__avatar">{{ $headerInitials }}</span>
+                            @endif
                             <span class="main-nav__user-name d-none d-xl-inline">حسابي</span>
                             <i class="fas fa-chevron-down main-nav__user-chevron"></i>
                         </a>

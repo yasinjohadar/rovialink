@@ -7,6 +7,24 @@
         \App\Services\SiteSettingsService::KEY_HERO_STATS,
         \App\Services\SiteSettingsService::KEY_HERO_IMAGE,
         \App\Services\SiteSettingsService::KEY_HERO_BG_IMAGE,
+        \App\Services\SiteSettingsService::KEY_ABOUT_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_ABOUT_STORY_TEXT_1,
+        \App\Services\SiteSettingsService::KEY_ABOUT_STORY_TEXT_2,
+        \App\Services\SiteSettingsService::KEY_ABOUT_STORY_IMAGE,
+        \App\Services\SiteSettingsService::KEY_ABOUT_VISION_TEXT,
+        \App\Services\SiteSettingsService::KEY_ABOUT_MISSION_TEXT,
+        \App\Services\SiteSettingsService::KEY_ABOUT_VALUES,
+        \App\Services\SiteSettingsService::KEY_ABOUT_STATS,
+        \App\Services\SiteSettingsService::KEY_ABOUT_CTA_TEXT,
+        \App\Services\SiteSettingsService::KEY_FAQ_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_FAQ_GROUPS,
+        \App\Services\SiteSettingsService::KEY_FAQ_CTA_TEXT,
+        \App\Services\SiteSettingsService::KEY_TERMS_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_TERMS_INTRO,
+        \App\Services\SiteSettingsService::KEY_TERMS_SECTIONS,
+        \App\Services\SiteSettingsService::KEY_PRIVACY_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_PRIVACY_INTRO,
+        \App\Services\SiteSettingsService::KEY_PRIVACY_SECTIONS,
         \App\Services\SiteSettingsService::KEY_SITE_DESCRIPTION,
         \App\Services\SiteSettingsService::KEY_SITE_MAINTENANCE_MESSAGE,
         \App\Services\SiteSettingsService::KEY_SITE_ADDRESS,
@@ -67,6 +85,16 @@
         <input type="file" class="form-control @error('hero_bg_image_file') is-invalid @enderror" name="hero_bg_image_file" accept="image/*">
         @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
         @error('hero_bg_image_file')<div class="invalid-feedback">{{ $message }}</div>@enderror
+    @elseif ($key === \App\Services\SiteSettingsService::KEY_ABOUT_STORY_IMAGE)
+        <label class="form-label">{{ $def['label'] }}</label>
+        @if ($value && \Illuminate\Support\Facades\Storage::disk($disk)->exists($value))
+            <div class="mb-2">
+                <img src="{{ \Illuminate\Support\Facades\Storage::disk($disk)->url($value) }}" alt="صورة قصة المتجر" class="img-thumbnail" style="max-height: 160px;">
+            </div>
+        @endif
+        <input type="file" class="form-control @error('about_story_image_file') is-invalid @enderror" name="about_story_image_file" accept="image/*">
+        @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
+        @error('about_story_image_file')<div class="invalid-feedback">{{ $message }}</div>@enderror
     @elseif ($key === \App\Services\SiteSettingsService::KEY_HERO_BG_MODE)
         <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
         <select class="form-select @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}">
@@ -96,6 +124,56 @@
         <textarea class="form-control font-monospace @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}" rows="8">{{ $statsDisplay }}</textarea>
         @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
         @error($key)<div class="invalid-feedback">{{ $message }}</div>@enderror
+    @elseif ($key === \App\Services\SiteSettingsService::KEY_ABOUT_VALUES)
+        @php
+            $valuesDisplay = is_array($value)
+                ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                : (old($key) ?? json_encode(\App\Services\SiteSettingsService::defaultAboutValues(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        @endphp
+        <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
+        <textarea class="form-control font-monospace @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}" rows="10">{{ $valuesDisplay }}</textarea>
+        @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
+        @error($key)<div class="invalid-feedback">{{ $message }}</div>@enderror
+    @elseif ($key === \App\Services\SiteSettingsService::KEY_ABOUT_STATS)
+        @php
+            $aboutStatsDisplay = is_array($value)
+                ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                : (old($key) ?? json_encode(\App\Services\SiteSettingsService::defaultAboutStats(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        @endphp
+        <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
+        <textarea class="form-control font-monospace @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}" rows="8">{{ $aboutStatsDisplay }}</textarea>
+        @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
+        @error($key)<div class="invalid-feedback">{{ $message }}</div>@enderror
+    @elseif ($key === \App\Services\SiteSettingsService::KEY_FAQ_GROUPS)
+        @php
+            $faqGroupsDisplay = is_array($value)
+                ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                : (old($key) ?? json_encode(\App\Services\SiteSettingsService::defaultFaqGroups(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        @endphp
+        <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
+        <textarea class="form-control font-monospace @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}" rows="18">{{ $faqGroupsDisplay }}</textarea>
+        @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
+        @error($key)<div class="invalid-feedback">{{ $message }}</div>@enderror
+    @elseif ($key === \App\Services\SiteSettingsService::KEY_TERMS_SECTIONS)
+        @php
+            $termsSectionsDisplay = is_array($value)
+                ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                : (old($key) ?? json_encode(\App\Services\SiteSettingsService::defaultTermsSections(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        @endphp
+        <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
+        <textarea class="form-control font-monospace @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}" rows="20">{{ $termsSectionsDisplay }}</textarea>
+        @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
+        @error($key)<div class="invalid-feedback">{{ $message }}</div>@enderror
+    @elseif ($key === \App\Services\SiteSettingsService::KEY_PRIVACY_SECTIONS)
+        @php
+            $privacySectionsDisplay = is_array($value)
+                ? json_encode($value, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+                : (old($key) ?? json_encode(\App\Services\SiteSettingsService::defaultPrivacySections(), JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        @endphp
+        <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
+        <textarea class="form-control font-monospace @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}" rows="20">{{ $privacySectionsDisplay }}</textarea>
+        @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
+        @error($key)<div class="invalid-feedback">{{ $message }}</div>@enderror
     @elseif (in_array($key, [
         \App\Services\SiteSettingsService::KEY_SITE_DESCRIPTION,
         \App\Services\SiteSettingsService::KEY_SITE_MAINTENANCE_MESSAGE,
@@ -103,6 +181,18 @@
         \App\Services\SiteSettingsService::KEY_SITE_META_DESCRIPTION,
         \App\Services\SiteSettingsService::KEY_SITE_FOOTER_TEXT,
         \App\Services\SiteSettingsService::KEY_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_ABOUT_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_ABOUT_STORY_TEXT_1,
+        \App\Services\SiteSettingsService::KEY_ABOUT_STORY_TEXT_2,
+        \App\Services\SiteSettingsService::KEY_ABOUT_VISION_TEXT,
+        \App\Services\SiteSettingsService::KEY_ABOUT_MISSION_TEXT,
+        \App\Services\SiteSettingsService::KEY_ABOUT_CTA_TEXT,
+        \App\Services\SiteSettingsService::KEY_FAQ_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_FAQ_CTA_TEXT,
+        \App\Services\SiteSettingsService::KEY_TERMS_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_TERMS_INTRO,
+        \App\Services\SiteSettingsService::KEY_PRIVACY_HERO_SUBTITLE,
+        \App\Services\SiteSettingsService::KEY_PRIVACY_INTRO,
     ], true))
         <label class="form-label" for="input-{{ $key }}">{{ $def['label'] }}</label>
         <textarea class="form-control @error($key) is-invalid @enderror" name="{{ $key }}" id="input-{{ $key }}" rows="3">{{ $value }}</textarea>

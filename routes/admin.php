@@ -69,6 +69,14 @@ Route::middleware(['auth', 'check.user.active'])->prefix('admin')->name('admin.'
     Route::get('homepage', [\App\Http\Controllers\Admin\HomepageSettingsController::class, 'index'])->name('homepage.index');
     Route::get('homepage/hero', [\App\Http\Controllers\Admin\HomepageHeroSettingsController::class, 'edit'])->name('homepage.hero.edit');
     Route::put('homepage/hero', [\App\Http\Controllers\Admin\HomepageHeroSettingsController::class, 'update'])->name('homepage.hero.update');
+    Route::get('homepage/about', [\App\Http\Controllers\Admin\AboutPageSettingsController::class, 'edit'])->name('homepage.about.edit');
+    Route::put('homepage/about', [\App\Http\Controllers\Admin\AboutPageSettingsController::class, 'update'])->name('homepage.about.update');
+    Route::get('homepage/faq', [\App\Http\Controllers\Admin\FaqPageSettingsController::class, 'edit'])->name('homepage.faq.edit');
+    Route::put('homepage/faq', [\App\Http\Controllers\Admin\FaqPageSettingsController::class, 'update'])->name('homepage.faq.update');
+    Route::get('homepage/terms', [\App\Http\Controllers\Admin\TermsPageSettingsController::class, 'edit'])->name('homepage.terms.edit');
+    Route::put('homepage/terms', [\App\Http\Controllers\Admin\TermsPageSettingsController::class, 'update'])->name('homepage.terms.update');
+    Route::get('homepage/privacy', [\App\Http\Controllers\Admin\PrivacyPageSettingsController::class, 'edit'])->name('homepage.privacy.edit');
+    Route::put('homepage/privacy', [\App\Http\Controllers\Admin\PrivacyPageSettingsController::class, 'update'])->name('homepage.privacy.update');
 
     // Activity / Audit log
     Route::get('activity-log', [\App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('activity-log.index');

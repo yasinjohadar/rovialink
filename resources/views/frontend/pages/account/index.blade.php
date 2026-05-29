@@ -35,6 +35,22 @@
     @include('frontend.pages.account.partials.address-modal')
 @endsection
 
+@push('styles')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/css/intlTelInput.css">
+@endpush
+
 @push('scripts')
+@php
+    $phoneCountryIsoList = \App\Support\CheckoutPhoneCountries::iso2List();
+@endphp
+<script>
+    window.ACCOUNT_ADDRESS_PHONE = {
+        onlyCountries: @json(array_map('strtolower', $phoneCountryIsoList)),
+        initialCountry: @json(strtolower(\App\Support\CheckoutPhoneCountries::defaultIso2())),
+        utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/utils.js',
+    };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/js/intlTelInput.min.js"></script>
+<script src="{{ asset('frontend/assets/js/account-address-phone.js') }}"></script>
 <script src="{{ asset('frontend/assets/js/account-dashboard.js') }}"></script>
 @endpush

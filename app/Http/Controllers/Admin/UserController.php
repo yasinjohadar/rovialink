@@ -6,6 +6,7 @@ use App\Models\OrderItem;
 use App\Models\User;
 use App\Services\ActivityLogger;
 use App\Services\CurrencyService;
+use App\Services\UserPhotoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -116,7 +117,7 @@ public function index(Request $request)
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, UserPhotoService $userPhotoService)
     {
         // التحقق من صحة البيانات
         $request->validate([
@@ -148,9 +149,11 @@ public function index(Request $request)
         // معالجة الصورة
         $photoPath = null;
         if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $photoName = time() . '_' . $photo->getClientOriginalName();
-            $photoPath = $photo->storeAs('users/photos', $photoName, 'public');
+            $photoPath = $userPhotoService->store($request->file('photo'));
+
+            if ($photoPath === null) {
+                return back()->withInput()->withErrors(['photo' => 'فشل رفع صورة المستخدم. يرجى المحاولة مرة أخرى.']);
+            }
         }
 
         // إنشاء المستخدم
@@ -251,7 +254,7 @@ public function index(Request $request)
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id, UserPhotoService $userPhotoService)
     {
         $user = User::findOrFail($id);
 
@@ -298,14 +301,12 @@ public function index(Request $request)
 
         // معالجة الصورة
         if ($request->hasFile('photo')) {
-            // حذف الصورة القديمة إذا كانت موجودة
-            if ($user->photo) {
-                \Storage::disk('public')->delete($user->photo);
+            $photoPath = $userPhotoService->store($request->file('photo'), $user);
+
+            if ($photoPath === null) {
+                return back()->withInput()->withErrors(['photo' => 'فشل رفع صورة المستخدم. يرجى المحاولة مرة أخرى.']);
             }
 
-            $photo = $request->file('photo');
-            $photoName = time() . '_' . $photo->getClientOriginalName();
-            $photoPath = $photo->storeAs('users/photos', $photoName, 'public');
             $updateData['photo'] = $photoPath;
         }
 

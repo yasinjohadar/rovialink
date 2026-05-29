@@ -124,4 +124,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(LoyaltyPointTransaction::class)->orderByDesc('created_at');
     }
+
+    public function photoUrl(): ?string
+    {
+        return user_photo_url($this->photo);
+    }
 }

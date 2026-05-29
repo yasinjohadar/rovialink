@@ -17,12 +17,12 @@ use App\Models\OrderStatusHistory;
 use App\Models\Product;
 use App\Models\Wishlist;
 use App\Services\Seo\SeoBuilder;
+use App\Services\UserPhotoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class AccountController extends Controller
@@ -129,16 +129,21 @@ class AccountController extends Controller
         return view('frontend.pages.account.order', compact('order', 'statusSteps', 'hasPendingReturn', 'seo'));
     }
 
-    public function updateProfile(UpdateAccountProfileRequest $request): RedirectResponse
+    public function updateProfile(UpdateAccountProfileRequest $request, UserPhotoService $userPhotoService): RedirectResponse
     {
         $user = $request->user();
         $data = $request->safe()->only(['name', 'email', 'phone']);
 
         if ($request->hasFile('photo')) {
-            if ($user->photo) {
-                Storage::disk('public')->delete($user->photo);
+            $path = $userPhotoService->store($request->file('photo'), $user);
+
+            if ($path === null) {
+                return redirect()->to(route('frontend.account') . '#profile')
+                    ->withErrors(['photo' => 'فشل رفع صورة الحساب. يرجى المحاولة مرة أخرى.'])
+                    ->withInput();
             }
-            $user->photo = $request->file('photo')->store('users/photos', 'public');
+
+            $user->photo = $path;
         }
 
         $user->fill($data);
@@ -168,12 +173,8 @@ class AccountController extends Controller
         $user = $request->user();
         $data = $request->validated();
         $data['user_id'] = $user->id;
-
-        if (! empty($data['is_default'])) {
-            CustomerAddress::where('user_id', $user->id)
-                ->where('type', $data['type'])
-                ->update(['is_default' => false]);
-        }
+        $data['type'] = $data['type'] ?? 'billing';
+        $data['is_default'] = ! $user->addresses()->exists();
 
         CustomerAddress::create($data);
 
@@ -186,13 +187,7 @@ class AccountController extends Controller
         abort_if($address->user_id !== $request->user()->id, 403);
 
         $data = $request->validated();
-
-        if (! empty($data['is_default'])) {
-            CustomerAddress::where('user_id', $address->user_id)
-                ->where('type', $data['type'] ?? $address->type)
-                ->where('id', '!=', $address->id)
-                ->update(['is_default' => false]);
-        }
+        $data['type'] = $data['type'] ?? $address->type ?? 'billing';
 
         $address->update($data);
 

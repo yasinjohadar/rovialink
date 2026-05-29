@@ -218,6 +218,16 @@ if (!function_exists('brand_image_url')) {
     }
 }
 
+if (!function_exists('user_photo_url')) {
+    /**
+     * Resolve URL for a user profile photo path.
+     */
+    function user_photo_url(?string $path): ?string
+    {
+        return media_url($path);
+    }
+}
+
 if (!function_exists('category_image_url')) {
     /**
      * Get the URL for a category image with fallback to default image

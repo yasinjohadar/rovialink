@@ -41,8 +41,8 @@
                 <div class="col-md-3">
                     <div class="card h-100">
                         <div class="card-body text-center">
-                            @if ($user->photo)
-                                <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->name }}"
+                            @if ($user->photoUrl())
+                                <img src="{{ $user->photoUrl() }}" alt="{{ $user->name }}"
                                     class="rounded-circle mb-3" width="96" height="96" style="object-fit: cover;">
                             @else
                                 <div class="avatar avatar-xl bg-primary-transparent text-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center"

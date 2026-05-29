@@ -18,6 +18,10 @@ class SitemapController extends Controller
         $urls[] = $this->entry(route('frontend.shop.index'), now(), 'daily', '0.9');
         $urls[] = $this->entry(route('frontend.categories.index'), now(), 'weekly', '0.8');
         $urls[] = $this->entry(route('frontend.blog.index'), now(), 'daily', '0.9');
+        $urls[] = $this->entry(route('frontend.about'), now(), 'weekly', '0.6');
+        $urls[] = $this->entry(route('frontend.faq'), now(), 'weekly', '0.6');
+        $urls[] = $this->entry(route('frontend.terms'), now(), 'monthly', '0.5');
+        $urls[] = $this->entry(route('frontend.privacy'), now(), 'monthly', '0.5');
 
         Category::active()->root()->get()->each(function ($category) use (&$urls) {
             $urls[] = $this->entry(

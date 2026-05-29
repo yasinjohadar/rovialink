@@ -16,8 +16,8 @@
         <div class="shop-filters__card account-sidebar__card">
             <header class="shop-filters__header account-sidebar__profile">
                 <div class="shop-filters__title account-sidebar__title">
-                    @if($user->photo)
-                        <img src="{{ asset('storage/' . $user->photo) }}"
+                    @if($user->photoUrl())
+                        <img src="{{ $user->photoUrl() }}"
                              alt="{{ $user->name }}"
                              class="account-sidebar__avatar account-sidebar__avatar--img"
                              width="48"

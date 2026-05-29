@@ -44,6 +44,43 @@ class SiteSettingsService
     public const KEY_HERO_BG_IMAGE = 'hero_bg_image';
     public const KEY_HERO_STATS = 'hero_stats';
 
+    public const KEY_ABOUT_HERO_TITLE = 'about_hero_title';
+    public const KEY_ABOUT_HERO_SUBTITLE = 'about_hero_subtitle';
+    public const KEY_ABOUT_STORY_TITLE = 'about_story_title';
+    public const KEY_ABOUT_STORY_TEXT_1 = 'about_story_text_1';
+    public const KEY_ABOUT_STORY_TEXT_2 = 'about_story_text_2';
+    public const KEY_ABOUT_STORY_IMAGE = 'about_story_image';
+    public const KEY_ABOUT_VISION_TITLE = 'about_vision_title';
+    public const KEY_ABOUT_VISION_TEXT = 'about_vision_text';
+    public const KEY_ABOUT_MISSION_TITLE = 'about_mission_title';
+    public const KEY_ABOUT_MISSION_TEXT = 'about_mission_text';
+    public const KEY_ABOUT_VALUES = 'about_values';
+    public const KEY_ABOUT_STATS = 'about_stats';
+    public const KEY_ABOUT_CTA_TITLE = 'about_cta_title';
+    public const KEY_ABOUT_CTA_TEXT = 'about_cta_text';
+    public const KEY_ABOUT_CTA_BTN_LABEL = 'about_cta_btn_label';
+    public const KEY_ABOUT_CTA_BTN_URL = 'about_cta_btn_url';
+
+    public const KEY_FAQ_HERO_TITLE = 'faq_hero_title';
+    public const KEY_FAQ_HERO_SUBTITLE = 'faq_hero_subtitle';
+    public const KEY_FAQ_GROUPS = 'faq_groups';
+    public const KEY_FAQ_CTA_TITLE = 'faq_cta_title';
+    public const KEY_FAQ_CTA_TEXT = 'faq_cta_text';
+    public const KEY_FAQ_CTA_BTN_LABEL = 'faq_cta_btn_label';
+    public const KEY_FAQ_CTA_BTN_URL = 'faq_cta_btn_url';
+
+    public const KEY_TERMS_HERO_TITLE = 'terms_hero_title';
+    public const KEY_TERMS_HERO_SUBTITLE = 'terms_hero_subtitle';
+    public const KEY_TERMS_LAST_UPDATED = 'terms_last_updated';
+    public const KEY_TERMS_INTRO = 'terms_intro';
+    public const KEY_TERMS_SECTIONS = 'terms_sections';
+
+    public const KEY_PRIVACY_HERO_TITLE = 'privacy_hero_title';
+    public const KEY_PRIVACY_HERO_SUBTITLE = 'privacy_hero_subtitle';
+    public const KEY_PRIVACY_LAST_UPDATED = 'privacy_last_updated';
+    public const KEY_PRIVACY_INTRO = 'privacy_intro';
+    public const KEY_PRIVACY_SECTIONS = 'privacy_sections';
+
     private const CACHE_KEY = 'site_settings';
     private const CACHE_TTL = 3600;
 
@@ -277,6 +314,237 @@ class SiteSettingsService
                 'section' => 'homepage',
                 'hint' => 'JSON: مصفوفة من {icon, target, label}',
             ],
+            self::KEY_ABOUT_HERO_TITLE => [
+                'type' => 'string',
+                'default' => 'من نحن',
+                'label' => 'عنوان صفحة من نحن',
+                'section' => 'about',
+                'hint' => 'يظهر في هيرو الصفحة وعنوان المتصفح.',
+            ],
+            self::KEY_ABOUT_HERO_SUBTITLE => [
+                'type' => 'string',
+                'default' => 'نبني تجربة تسوق رقمية موثوقة — منتجات أصلية، تسليم فوري، ودعم حقيقي لعملائنا.',
+                'label' => 'وصف الهيرو',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_STORY_TITLE => [
+                'type' => 'string',
+                'default' => 'كيف بدأنا؟',
+                'label' => 'عنوان قصة المتجر',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_STORY_TEXT_1 => [
+                'type' => 'string',
+                'default' => 'انطلق {{site_name}} من رؤية بسيطة: جعل المنتجات الرقمية متاحة للجميع بأسعار عادلة وتجربة شراء سلسة. لاحظنا أن العملاء يحتاجون متجراً يجمع الجودة، السرعة، والشفافية في مكان واحد.',
+                'label' => 'الفقرة الأولى',
+                'section' => 'about',
+                'hint' => 'يمكنك استخدام {{site_name}} لاسم المتجر.',
+            ],
+            self::KEY_ABOUT_STORY_TEXT_2 => [
+                'type' => 'string',
+                'default' => 'اليوم نخدم آلاف العملاء بمنتجات رقمية متنوعة — من الاشتراكات والبرمجيات إلى القوالب والأصول — مع التزامنا بالتسليم الفوري بعد الدفع ودعم فني على مدار الساعة.',
+                'label' => 'الفقرة الثانية',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_STORY_IMAGE => [
+                'type' => 'string',
+                'default' => '',
+                'label' => 'صورة قصة المتجر',
+                'section' => 'about',
+                'hint' => 'تظهر بجانب نص القصة.',
+            ],
+            self::KEY_ABOUT_VISION_TITLE => [
+                'type' => 'string',
+                'default' => 'رؤيتنا',
+                'label' => 'عنوان الرؤية',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_VISION_TEXT => [
+                'type' => 'string',
+                'default' => 'أن نكون الوجهة الأولى للمنتجات الرقمية في العالم العربي، حيث يجد العميل الجودة والثقة والتسليم الفوري في كل عملية شراء.',
+                'label' => 'نص الرؤية',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_MISSION_TITLE => [
+                'type' => 'string',
+                'default' => 'رسالتنا',
+                'label' => 'عنوان الرسالة',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_MISSION_TEXT => [
+                'type' => 'string',
+                'default' => 'تمكين الأفراد والشركات من الوصول إلى منتجات رقمية أصلية بأسعار تنافسية، مع تجربة دفع آمنة ودعم مستمر قبل وبعد الشراء.',
+                'label' => 'نص الرسالة',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_VALUES => [
+                'type' => 'json',
+                'default' => '',
+                'label' => 'قيمنا',
+                'section' => 'about',
+                'hint' => 'JSON: مصفوفة من {icon, title, text}',
+            ],
+            self::KEY_ABOUT_STATS => [
+                'type' => 'json',
+                'default' => '',
+                'label' => 'إحصائيات الصفحة',
+                'section' => 'about',
+                'hint' => 'JSON: مصفوفة من {icon, target, label}',
+            ],
+            self::KEY_ABOUT_CTA_TITLE => [
+                'type' => 'string',
+                'default' => 'جاهز لتجربة التسوق؟',
+                'label' => 'عنوان دعوة الإجراء',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_CTA_TEXT => [
+                'type' => 'string',
+                'default' => 'تصفح منتجاتنا الرقمية واستمتع بتسليم فوري ودفع آمن.',
+                'label' => 'نص دعوة الإجراء',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_CTA_BTN_LABEL => [
+                'type' => 'string',
+                'default' => 'تصفح المنتجات',
+                'label' => 'نص زر دعوة الإجراء',
+                'section' => 'about',
+                'hint' => '',
+            ],
+            self::KEY_ABOUT_CTA_BTN_URL => [
+                'type' => 'string',
+                'default' => '/shop',
+                'label' => 'رابط زر دعوة الإجراء',
+                'section' => 'about',
+                'hint' => 'مسار نسبي أو رابط كامل.',
+            ],
+            self::KEY_FAQ_HERO_TITLE => [
+                'type' => 'string',
+                'default' => 'الأسئلة الشائعة',
+                'label' => 'عنوان صفحة الأسئلة الشائعة',
+                'section' => 'faq',
+                'hint' => 'يظهر في هيرو الصفحة وعنوان المتصفح.',
+            ],
+            self::KEY_FAQ_HERO_SUBTITLE => [
+                'type' => 'string',
+                'default' => 'إجابات سريعة عن الطلبات، الدفع، التسليم الرقمي، والدعم — كل ما تحتاج معرفته في مكان واحد.',
+                'label' => 'وصف الهيرو',
+                'section' => 'faq',
+                'hint' => '',
+            ],
+            self::KEY_FAQ_GROUPS => [
+                'type' => 'json',
+                'default' => '',
+                'label' => 'مجموعات الأسئلة',
+                'section' => 'faq',
+                'hint' => 'JSON: مصفوفة من {title, icon, items:[{question, answer}]}',
+            ],
+            self::KEY_FAQ_CTA_TITLE => [
+                'type' => 'string',
+                'default' => 'لم تجد إجابتك؟',
+                'label' => 'عنوان دعوة الإجراء',
+                'section' => 'faq',
+                'hint' => '',
+            ],
+            self::KEY_FAQ_CTA_TEXT => [
+                'type' => 'string',
+                'default' => 'فريق الدعم جاهز لمساعدتك في أي استفسار حول طلباتك أو منتجاتنا.',
+                'label' => 'نص دعوة الإجراء',
+                'section' => 'faq',
+                'hint' => '',
+            ],
+            self::KEY_FAQ_CTA_BTN_LABEL => [
+                'type' => 'string',
+                'default' => 'تواصل معنا',
+                'label' => 'نص زر دعوة الإجراء',
+                'section' => 'faq',
+                'hint' => '',
+            ],
+            self::KEY_FAQ_CTA_BTN_URL => [
+                'type' => 'string',
+                'default' => '/contact',
+                'label' => 'رابط زر دعوة الإجراء',
+                'section' => 'faq',
+                'hint' => 'مسار نسبي أو رابط كامل.',
+            ],
+            self::KEY_TERMS_HERO_TITLE => [
+                'type' => 'string',
+                'default' => 'الشروط والأحكام',
+                'label' => 'عنوان صفحة الشروط',
+                'section' => 'terms',
+                'hint' => 'يظهر في هيرو الصفحة وعنوان المتصفح.',
+            ],
+            self::KEY_TERMS_HERO_SUBTITLE => [
+                'type' => 'string',
+                'default' => 'يرجى قراءة هذه الشروط بعناية قبل استخدام المتجر أو إتمام أي عملية شراء.',
+                'label' => 'وصف الهيرو',
+                'section' => 'terms',
+                'hint' => '',
+            ],
+            self::KEY_TERMS_LAST_UPDATED => [
+                'type' => 'string',
+                'default' => '',
+                'label' => 'تاريخ آخر تحديث',
+                'section' => 'terms',
+                'hint' => 'مثال: 20 مايو 2026 — يظهر للزوار أعلى المحتوى.',
+            ],
+            self::KEY_TERMS_INTRO => [
+                'type' => 'string',
+                'default' => 'باستخدامك لموقع {{site_name}} فإنك توافق على الالتزام بالشروط والأحكام التالية. نحتفظ بحق تحديث هذه الشروط في أي وقت، ويُعد استمرارك في استخدام الموقع موافقة على التعديلات.',
+                'label' => 'مقدمة الصفحة',
+                'section' => 'terms',
+                'hint' => 'يمكنك استخدام {{site_name}} لاسم المتجر.',
+            ],
+            self::KEY_TERMS_SECTIONS => [
+                'type' => 'json',
+                'default' => '',
+                'label' => 'أقسام الشروط',
+                'section' => 'terms',
+                'hint' => 'JSON: مصفوفة من {icon, title, content}',
+            ],
+            self::KEY_PRIVACY_HERO_TITLE => [
+                'type' => 'string',
+                'default' => 'سياسة الخصوصية',
+                'label' => 'عنوان صفحة الخصوصية',
+                'section' => 'privacy',
+                'hint' => 'يظهر في هيرو الصفحة وعنوان المتصفح.',
+            ],
+            self::KEY_PRIVACY_HERO_SUBTITLE => [
+                'type' => 'string',
+                'default' => 'نلتزم بحماية بياناتك وشرح كيفية جمعها واستخدامها بشفافية تامة.',
+                'label' => 'وصف الهيرو',
+                'section' => 'privacy',
+                'hint' => '',
+            ],
+            self::KEY_PRIVACY_LAST_UPDATED => [
+                'type' => 'string',
+                'default' => '',
+                'label' => 'تاريخ آخر تحديث',
+                'section' => 'privacy',
+                'hint' => 'مثال: 20 مايو 2026 — يظهر للزوار أعلى المحتوى.',
+            ],
+            self::KEY_PRIVACY_INTRO => [
+                'type' => 'string',
+                'default' => 'توضّح سياسة الخصوصية هذه كيف يتعامل {{site_name}} مع بياناتك الشخصية عند زيارة الموقع أو إنشاء حساب أو إتمام عملية شراء. باستخدامك للموقع فإنك توافق على الممارسات الموضّحة أدناه.',
+                'label' => 'مقدمة الصفحة',
+                'section' => 'privacy',
+                'hint' => 'يمكنك استخدام {{site_name}} لاسم المتجر.',
+            ],
+            self::KEY_PRIVACY_SECTIONS => [
+                'type' => 'json',
+                'default' => '',
+                'label' => 'أقسام سياسة الخصوصية',
+                'section' => 'privacy',
+                'hint' => 'JSON: مصفوفة من {icon, title, content}',
+            ],
         ];
     }
 
@@ -329,6 +597,254 @@ class SiteSettingsService
     }
 
     /**
+     * @return list<array{icon: string, title: string, text: string}>
+     */
+    public static function defaultAboutValues(): array
+    {
+        return [
+            ['icon' => 'fa-gem', 'title' => 'جودة مضمونة', 'text' => 'منتجات أصلية مختارة بعناية من موردين موثوقين.'],
+            ['icon' => 'fa-shield-halved', 'title' => 'دفع آمن', 'text' => 'بوابات دفع مشفرة وحماية كاملة لبياناتك.'],
+            ['icon' => 'fa-bolt', 'title' => 'تسليم فوري', 'text' => 'استلم منتجك الرقمي مباشرة بعد إتمام الدفع.'],
+            ['icon' => 'fa-headset', 'title' => 'دعم متواصل', 'text' => 'فريق دعم جاهز لمساعدتك قبل وبعد الشراء.'],
+        ];
+    }
+
+    /**
+     * @return list<array{icon: string, target: int, label: string}>
+     */
+    public static function defaultAboutStats(): array
+    {
+        return [
+            ['icon' => 'fa-box', 'target' => 500, 'label' => 'منتج رقمي'],
+            ['icon' => 'fa-users', 'target' => 12000, 'label' => 'عميل سعيد'],
+            ['icon' => 'fa-star', 'target' => 4800, 'label' => 'تقييم إيجابي'],
+            ['icon' => 'fa-clock', 'target' => 24, 'label' => 'دعم 24/7'],
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function aboutKeys(): array
+    {
+        return [
+            self::KEY_ABOUT_HERO_TITLE,
+            self::KEY_ABOUT_HERO_SUBTITLE,
+            self::KEY_ABOUT_STORY_TITLE,
+            self::KEY_ABOUT_STORY_TEXT_1,
+            self::KEY_ABOUT_STORY_TEXT_2,
+            self::KEY_ABOUT_STORY_IMAGE,
+            self::KEY_ABOUT_VISION_TITLE,
+            self::KEY_ABOUT_VISION_TEXT,
+            self::KEY_ABOUT_MISSION_TITLE,
+            self::KEY_ABOUT_MISSION_TEXT,
+            self::KEY_ABOUT_VALUES,
+            self::KEY_ABOUT_STATS,
+            self::KEY_ABOUT_CTA_TITLE,
+            self::KEY_ABOUT_CTA_TEXT,
+            self::KEY_ABOUT_CTA_BTN_LABEL,
+            self::KEY_ABOUT_CTA_BTN_URL,
+        ];
+    }
+
+    /**
+     * @return list<array{title: string, icon: string, items: list<array{question: string, answer: string}>}>
+     */
+    public static function defaultFaqGroups(): array
+    {
+        return [
+            [
+                'title' => 'الطلبات والدفع',
+                'icon' => 'fa-credit-card',
+                'items' => [
+                    [
+                        'question' => 'ما طرق الدفع المتاحة؟',
+                        'answer' => 'نوفر عدة طرق دفع آمنة تشمل البطاقات البنكية، المحافظ الإلكترونية، والتحويل البنكي حسب ما هو متاح في متجرك.',
+                    ],
+                    [
+                        'question' => 'هل معلومات الدفع آمنة؟',
+                        'answer' => 'نعم، جميع المعاملات تتم عبر بوابات دفع مشفرة ولا نخزّن بيانات بطاقتك على خوادمنا.',
+                    ],
+                ],
+            ],
+            [
+                'title' => 'التسليم والمنتجات الرقمية',
+                'icon' => 'fa-cloud-arrow-down',
+                'items' => [
+                    [
+                        'question' => 'متى أستلم منتجي الرقمي؟',
+                        'answer' => 'يتم التسليم فوراً بعد تأكيد الدفع عبر البريد الإلكتروني أو من لوحة حسابك في قسم الطلبات.',
+                    ],
+                    [
+                        'question' => 'أين أجد رابط التحميل؟',
+                        'answer' => 'ستجد رابط التحميل أو تفاصيل المنتج في رسالة التأكيد وفي صفحة تفاصيل الطلب داخل حسابك.',
+                    ],
+                ],
+            ],
+            [
+                'title' => 'الاسترجاع والضمان',
+                'icon' => 'fa-shield-halved',
+                'items' => [
+                    [
+                        'question' => 'هل يمكن استرجاع المنتجات الرقمية؟',
+                        'answer' => 'نراجع طلبات الاسترجاع حسب سياسة المتجر وحالة المنتج. تواصل مع الدعم مع رقم الطلب لمساعدتك.',
+                    ],
+                    [
+                        'question' => 'ماذا لو واجهت مشكلة في المنتج؟',
+                        'answer' => 'فريق الدعم الفني متاح لحل أي مشكلة في التفعيل أو التحميل أو الاستخدام خلال فترة الضمان المحددة.',
+                    ],
+                ],
+            ],
+            [
+                'title' => 'الحساب والدعم',
+                'icon' => 'fa-headset',
+                'items' => [
+                    [
+                        'question' => 'هل أحتاج حساباً للشراء؟',
+                        'answer' => 'يمكنك الشراء كزائر، لكن إنشاء حساب يسهّل متابعة الطلبات وإعادة تحميل منتجاتك في أي وقت.',
+                    ],
+                    [
+                        'question' => 'كيف أتواصل مع الدعم؟',
+                        'answer' => 'عبر صفحة تواصل معنا أو البريد الإلكتروني وواتساب الموجودين في الموقع — نرد في أسرع وقت ممكن.',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function faqKeys(): array
+    {
+        return [
+            self::KEY_FAQ_HERO_TITLE,
+            self::KEY_FAQ_HERO_SUBTITLE,
+            self::KEY_FAQ_GROUPS,
+            self::KEY_FAQ_CTA_TITLE,
+            self::KEY_FAQ_CTA_TEXT,
+            self::KEY_FAQ_CTA_BTN_LABEL,
+            self::KEY_FAQ_CTA_BTN_URL,
+        ];
+    }
+
+    /**
+     * @return list<array{icon: string, title: string, content: string}>
+     */
+    public static function defaultTermsSections(): array
+    {
+        return [
+            [
+                'icon' => 'fa-user-check',
+                'title' => 'قبول الشروط',
+                'content' => "يُشكّل وصولك إلى الموقع أو إنشاء حساب أو إتمام طلب موافقةً على هذه الشروط.\nإذا لم توافق على أي بند، يرجى التوقف عن استخدام الخدمة.",
+            ],
+            [
+                'icon' => 'fa-cart-shopping',
+                'title' => 'الطلبات والمنتجات الرقمية',
+                'content' => "جميع الأسعار المعروضة نهائية ما لم يُذكر خلاف ذلك.\nبعد تأكيد الدفع، يُسلَّم المنتج الرقمي وفق آلية التسليم المحددة في صفحة المنتج أو الطلب.\nنحتفظ بحق رفض أو إلغاء أي طلب عند الاشتباه في احتيال أو مخالفة للشروط.",
+            ],
+            [
+                'icon' => 'fa-credit-card',
+                'title' => 'الدفع والفوترة',
+                'content' => "يجب تقديم معلومات دفع صحيحة ومحدّثة.\nجميع المعاملات تتم عبر بوابات دفع آمنة، ولا نخزّن بيانات بطاقتك الكاملة على خوادمنا.\nقد تُطبَّق رسوم بنكية أو تحويل حسب مزود الدفع أو البنك.",
+            ],
+            [
+                'icon' => 'fa-rotate-left',
+                'title' => 'الاسترجاع والاسترداد',
+                'content' => "تخضع طلبات الاسترجاع لسياسة المتجر المعمول بها وقت الشراء.\nللمنتجات الرقمية، قد لا يُقبل الاسترجاع بعد التسليم أو التفعيل إلا في حالات العيوب المثبتة أو الخطأ من جانبنا.\nيتم مراجعة طلبات الاسترداد خلال مدة معقولة وإبلاغك بالقرار.",
+            ],
+            [
+                'icon' => 'fa-copyright',
+                'title' => 'الملكية الفكرية',
+                'content' => "جميع محتويات الموقع — شعار، تصميم، نصوص، وواجهات — محمية بموجب قوانين الملكية الفكرية.\nالمنتجات الرقمية المباعة تُستخدم وفق ترخيص الاستخدام المرفق بكل منتج ولا يجوز إعادة بيعها أو توزيعها دون إذن.",
+            ],
+            [
+                'icon' => 'fa-scale-balanced',
+                'title' => 'حدود المسؤولية',
+                'content' => "نبذل جهدنا لتوفير منتجات أصلية وخدمة موثوقة، لكننا لا نضمن خلو الخدمة من انقطاعات تقنية نادرة.\nلا نتحمل مسؤولية الأضرار غير المباشرة الناتجة عن استخدام المنتجات الرقمية في غير الغرض المخصص لها.",
+            ],
+            [
+                'icon' => 'fa-envelope',
+                'title' => 'التواصل',
+                'content' => "لأي استفسار حول هذه الشروط، يرجى التواصل معنا عبر صفحة «تواصل معنا» أو البريد الإلكتروني الرسمي للمتجر.",
+            ],
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function termsKeys(): array
+    {
+        return [
+            self::KEY_TERMS_HERO_TITLE,
+            self::KEY_TERMS_HERO_SUBTITLE,
+            self::KEY_TERMS_LAST_UPDATED,
+            self::KEY_TERMS_INTRO,
+            self::KEY_TERMS_SECTIONS,
+        ];
+    }
+
+    /**
+     * @return list<array{icon: string, title: string, content: string}>
+     */
+    public static function defaultPrivacySections(): array
+    {
+        return [
+            [
+                'icon' => 'fa-database',
+                'title' => 'البيانات التي نجمعها',
+                'content' => "قد نجمع: الاسم، البريد الإلكتروني، رقم الهاتف، عنوان الفوترة، وسجل الطلبات.\nنقوم أيضاً بجمع بيانات تقنية مثل عنوان IP ونوع المتصفح لتحسين الأمان وتجربة الاستخدام.",
+            ],
+            [
+                'icon' => 'fa-gears',
+                'title' => 'كيف نستخدم بياناتك',
+                'content' => "نستخدم بياناتك لمعالجة الطلبات، تسليم المنتجات الرقمية، تقديم الدعم الفني، وإرسال تحديثات مهمة عن حسابك أو طلباتك.\nقد نستخدم بيانات مجمّعة لتحسين أداء المتجر دون التعرّف على هويتك شخصياً.",
+            ],
+            [
+                'icon' => 'fa-cookie-bite',
+                'title' => 'ملفات تعريف الارتباط',
+                'content' => "نستخدم ملفات تعريف الارتباط (Cookies) لتذكّر تفضيلاتك، مثل اللغة والسلة، ولأغراض أمنية.\nيمكنك التحكم في ملفات تعريف الارتباط من إعدادات المتصفح، لكن تعطيل بعضها قد يؤثر على وظائف الموقع.",
+            ],
+            [
+                'icon' => 'fa-share-nodes',
+                'title' => 'مشاركة البيانات',
+                'content' => "لا نبيع بياناتك الشخصية لأطراف ثالثة.\nقد نشارك الحد الأدنى من البيانات مع مزودي الدفع وخدمات الاستضافة والبريد الإلكتروني فقط لتنفيذ الخدمة وفق اتفاقيات سرية.",
+            ],
+            [
+                'icon' => 'fa-lock',
+                'title' => 'حماية البيانات',
+                'content' => "نطبّق إجراءات تقنية وتنظيمية مناسبة لحماية بياناتك من الوصول غير المصرّح به أو التعديل أو الإفشاء.\nرغم ذلك، لا يمكن ضمان أمان مطلق لأي نقل عبر الإنترنت.",
+            ],
+            [
+                'icon' => 'fa-user-shield',
+                'title' => 'حقوقك',
+                'content' => "يحق لك طلب الوصول إلى بياناتك أو تصحيحها أو حذفها ضمن ما يسمح به القانون.\nللممارسة هذه الحقوق، تواصل معنا عبر صفحة «تواصل معنا» مع ذكر البريد المرتبط بحسابك.",
+            ],
+            [
+                'icon' => 'fa-envelope',
+                'title' => 'التواصل بخصوص الخصوصية',
+                'content' => "لأي استفسار حول سياسة الخصوصية أو طلب متعلق ببياناتك، يرجى التواصل معنا عبر قنوات الدعم الرسمية للمتجر.",
+            ],
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function privacyKeys(): array
+    {
+        return [
+            self::KEY_PRIVACY_HERO_TITLE,
+            self::KEY_PRIVACY_HERO_SUBTITLE,
+            self::KEY_PRIVACY_LAST_UPDATED,
+            self::KEY_PRIVACY_INTRO,
+            self::KEY_PRIVACY_SECTIONS,
+        ];
+    }
+
+    /**
      * @return array<string, array<string, mixed>>
      */
     public static function schemaForSection(string $section): array
@@ -351,6 +867,113 @@ class SiteSettingsService
             'hero_image_file' => $all['hero_image_file'],
             'hero_bg_image_file' => $all['hero_bg_image_file'],
         ];
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    public static function aboutValidationRules(): array
+    {
+        $all = self::validationRules();
+        $rules = array_intersect_key($all, array_flip(self::aboutKeys()));
+
+        return $rules + [
+            'about_story_image_file' => $all['about_story_image_file'],
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function saveAboutSettings(array $validated, ?\Illuminate\Http\UploadedFile $storyImage = null): void
+    {
+        if ($storyImage) {
+            $this->storeUpload(self::KEY_ABOUT_STORY_IMAGE, $storyImage);
+        }
+
+        if (isset($validated[self::KEY_ABOUT_VALUES])) {
+            $values = self::parseAboutValuesInput((string) $validated[self::KEY_ABOUT_VALUES]);
+            $validated[self::KEY_ABOUT_VALUES] = json_encode($values, JSON_UNESCAPED_UNICODE);
+        }
+        if (isset($validated[self::KEY_ABOUT_STATS])) {
+            $stats = self::parseHeroStatsInput((string) $validated[self::KEY_ABOUT_STATS]);
+            $validated[self::KEY_ABOUT_STATS] = json_encode($stats, JSON_UNESCAPED_UNICODE);
+        }
+
+        $payload = array_intersect_key($validated, array_flip(self::aboutKeys()));
+        $this->setMany($payload);
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    public static function faqValidationRules(): array
+    {
+        $all = self::validationRules();
+
+        return array_intersect_key($all, array_flip(self::faqKeys()));
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function saveFaqSettings(array $validated): void
+    {
+        if (isset($validated[self::KEY_FAQ_GROUPS])) {
+            $groups = self::parseFaqGroupsInput((string) $validated[self::KEY_FAQ_GROUPS]);
+            $validated[self::KEY_FAQ_GROUPS] = json_encode($groups, JSON_UNESCAPED_UNICODE);
+        }
+
+        $payload = array_intersect_key($validated, array_flip(self::faqKeys()));
+        $this->setMany($payload);
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    public static function termsValidationRules(): array
+    {
+        $all = self::validationRules();
+
+        return array_intersect_key($all, array_flip(self::termsKeys()));
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function saveTermsSettings(array $validated): void
+    {
+        if (isset($validated[self::KEY_TERMS_SECTIONS])) {
+            $sections = self::parseTermsSectionsInput((string) $validated[self::KEY_TERMS_SECTIONS]);
+            $validated[self::KEY_TERMS_SECTIONS] = json_encode($sections, JSON_UNESCAPED_UNICODE);
+        }
+
+        $payload = array_intersect_key($validated, array_flip(self::termsKeys()));
+        $this->setMany($payload);
+    }
+
+    /**
+     * @return array<string, array<int, string>>
+     */
+    public static function privacyValidationRules(): array
+    {
+        $all = self::validationRules();
+
+        return array_intersect_key($all, array_flip(self::privacyKeys()));
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     */
+    public function savePrivacySettings(array $validated): void
+    {
+        if (isset($validated[self::KEY_PRIVACY_SECTIONS])) {
+            $sections = self::parsePrivacySectionsInput((string) $validated[self::KEY_PRIVACY_SECTIONS]);
+            $validated[self::KEY_PRIVACY_SECTIONS] = json_encode($sections, JSON_UNESCAPED_UNICODE);
+        }
+
+        $payload = array_intersect_key($validated, array_flip(self::privacyKeys()));
+        $this->setMany($payload);
     }
 
     /**
@@ -384,6 +1007,10 @@ class SiteSettingsService
             'general' => 'عام',
             'branding' => 'الهوية والعلامة',
             'homepage' => 'الصفحة الرئيسية',
+            'about' => 'صفحة من نحن',
+            'faq' => 'الأسئلة الشائعة',
+            'terms' => 'الشروط والأحكام',
+            'privacy' => 'سياسة الخصوصية',
             'contact' => 'التواصل',
             'maintenance' => 'وضع الصيانة',
             'locale' => 'اللغة والمنطقة',
@@ -440,6 +1067,147 @@ class SiteSettingsService
         }
 
         return $out ?: self::defaultHeroStats();
+    }
+
+    /**
+     * @return list<array{icon: string, title: string, text: string}>
+     */
+    public static function parseAboutValuesInput(string $input): array
+    {
+        $trimmed = trim($input);
+        if ($trimmed === '') {
+            return self::defaultAboutValues();
+        }
+        $decoded = json_decode($trimmed, true);
+        if (! is_array($decoded)) {
+            return self::defaultAboutValues();
+        }
+        $out = [];
+        foreach ($decoded as $item) {
+            if (! is_array($item)) {
+                continue;
+            }
+            $out[] = [
+                'icon' => (string) ($item['icon'] ?? 'fa-star'),
+                'title' => (string) ($item['title'] ?? ''),
+                'text' => (string) ($item['text'] ?? ''),
+            ];
+        }
+
+        return $out ?: self::defaultAboutValues();
+    }
+
+    /**
+     * @return list<array{title: string, icon: string, items: list<array{question: string, answer: string}>}>
+     */
+    public static function parseFaqGroupsInput(string $input): array
+    {
+        $trimmed = trim($input);
+        if ($trimmed === '') {
+            return self::defaultFaqGroups();
+        }
+        $decoded = json_decode($trimmed, true);
+        if (! is_array($decoded)) {
+            return self::defaultFaqGroups();
+        }
+        $out = [];
+        foreach ($decoded as $group) {
+            if (! is_array($group)) {
+                continue;
+            }
+            $items = [];
+            foreach ($group['items'] ?? [] as $item) {
+                if (! is_array($item)) {
+                    continue;
+                }
+                $question = trim((string) ($item['question'] ?? ''));
+                $answer = trim((string) ($item['answer'] ?? ''));
+                if ($question === '' && $answer === '') {
+                    continue;
+                }
+                $items[] = [
+                    'question' => $question,
+                    'answer' => $answer,
+                ];
+            }
+            $title = trim((string) ($group['title'] ?? ''));
+            if ($title === '' && $items === []) {
+                continue;
+            }
+            $out[] = [
+                'title' => $title !== '' ? $title : 'أسئلة عامة',
+                'icon' => (string) ($group['icon'] ?? 'fa-circle-question'),
+                'items' => $items,
+            ];
+        }
+
+        return $out ?: self::defaultFaqGroups();
+    }
+
+    /**
+     * @return list<array{icon: string, title: string, content: string}>
+     */
+    public static function parseTermsSectionsInput(string $input): array
+    {
+        $trimmed = trim($input);
+        if ($trimmed === '') {
+            return self::defaultTermsSections();
+        }
+        $decoded = json_decode($trimmed, true);
+        if (! is_array($decoded)) {
+            return self::defaultTermsSections();
+        }
+        $out = [];
+        foreach ($decoded as $section) {
+            if (! is_array($section)) {
+                continue;
+            }
+            $title = trim((string) ($section['title'] ?? ''));
+            $content = trim((string) ($section['content'] ?? ''));
+            if ($title === '' && $content === '') {
+                continue;
+            }
+            $out[] = [
+                'icon' => (string) ($section['icon'] ?? 'fa-file-lines'),
+                'title' => $title !== '' ? $title : 'قسم',
+                'content' => $content,
+            ];
+        }
+
+        return $out ?: self::defaultTermsSections();
+    }
+
+    /**
+     * @return list<array{icon: string, title: string, content: string}>
+     */
+    public static function parsePrivacySectionsInput(string $input): array
+    {
+        $trimmed = trim($input);
+        if ($trimmed === '') {
+            return self::defaultPrivacySections();
+        }
+        $decoded = json_decode($trimmed, true);
+        if (! is_array($decoded)) {
+            return self::defaultPrivacySections();
+        }
+        $out = [];
+        foreach ($decoded as $section) {
+            if (! is_array($section)) {
+                continue;
+            }
+            $title = trim((string) ($section['title'] ?? ''));
+            $content = trim((string) ($section['content'] ?? ''));
+            if ($title === '' && $content === '') {
+                continue;
+            }
+            $out[] = [
+                'icon' => (string) ($section['icon'] ?? 'fa-file-lines'),
+                'title' => $title !== '' ? $title : 'قسم',
+                'content' => $content,
+            ];
+        }
+
+        return $out ?: self::defaultPrivacySections();
     }
 
     /**
@@ -585,6 +1353,40 @@ class SiteSettingsService
             self::KEY_HERO_STATS => ['nullable', 'string', 'max:10000'],
             'hero_image_file' => ['nullable', 'image', 'max:4096'],
             'hero_bg_image_file' => ['nullable', 'image', 'max:4096'],
+            self::KEY_ABOUT_HERO_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_ABOUT_HERO_SUBTITLE => ['nullable', 'string', 'max:2000'],
+            self::KEY_ABOUT_STORY_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_ABOUT_STORY_TEXT_1 => ['nullable', 'string', 'max:5000'],
+            self::KEY_ABOUT_STORY_TEXT_2 => ['nullable', 'string', 'max:5000'],
+            self::KEY_ABOUT_STORY_IMAGE => ['nullable', 'string', 'max:500'],
+            self::KEY_ABOUT_VISION_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_ABOUT_VISION_TEXT => ['nullable', 'string', 'max:5000'],
+            self::KEY_ABOUT_MISSION_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_ABOUT_MISSION_TEXT => ['nullable', 'string', 'max:5000'],
+            self::KEY_ABOUT_VALUES => ['nullable', 'string', 'max:10000'],
+            self::KEY_ABOUT_STATS => ['nullable', 'string', 'max:10000'],
+            self::KEY_ABOUT_CTA_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_ABOUT_CTA_TEXT => ['nullable', 'string', 'max:2000'],
+            self::KEY_ABOUT_CTA_BTN_LABEL => ['nullable', 'string', 'max:100'],
+            self::KEY_ABOUT_CTA_BTN_URL => ['nullable', 'string', 'max:500'],
+            'about_story_image_file' => ['nullable', 'image', 'max:4096'],
+            self::KEY_FAQ_HERO_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_FAQ_HERO_SUBTITLE => ['nullable', 'string', 'max:2000'],
+            self::KEY_FAQ_GROUPS => ['nullable', 'string', 'max:50000'],
+            self::KEY_FAQ_CTA_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_FAQ_CTA_TEXT => ['nullable', 'string', 'max:2000'],
+            self::KEY_FAQ_CTA_BTN_LABEL => ['nullable', 'string', 'max:100'],
+            self::KEY_FAQ_CTA_BTN_URL => ['nullable', 'string', 'max:500'],
+            self::KEY_TERMS_HERO_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_TERMS_HERO_SUBTITLE => ['nullable', 'string', 'max:2000'],
+            self::KEY_TERMS_LAST_UPDATED => ['nullable', 'string', 'max:100'],
+            self::KEY_TERMS_INTRO => ['nullable', 'string', 'max:5000'],
+            self::KEY_TERMS_SECTIONS => ['nullable', 'string', 'max:50000'],
+            self::KEY_PRIVACY_HERO_TITLE => ['nullable', 'string', 'max:255'],
+            self::KEY_PRIVACY_HERO_SUBTITLE => ['nullable', 'string', 'max:2000'],
+            self::KEY_PRIVACY_LAST_UPDATED => ['nullable', 'string', 'max:100'],
+            self::KEY_PRIVACY_INTRO => ['nullable', 'string', 'max:5000'],
+            self::KEY_PRIVACY_SECTIONS => ['nullable', 'string', 'max:50000'],
         ];
     }
 }

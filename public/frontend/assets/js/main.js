@@ -1322,6 +1322,21 @@ function initMainNav() {
   updateScrolled();
   window.addEventListener('scroll', updateScrolled, { passive: true });
 
+  const collapseEl = document.getElementById('mainNav');
+  if (collapseEl) {
+    let scrollYBeforeMenu = 0;
+
+    collapseEl.addEventListener('show.bs.collapse', () => {
+      scrollYBeforeMenu = window.scrollY;
+      document.documentElement.classList.add('mobile-nav-open');
+    });
+
+    collapseEl.addEventListener('hidden.bs.collapse', () => {
+      document.documentElement.classList.remove('mobile-nav-open');
+      window.scrollTo(0, scrollYBeforeMenu);
+    });
+  }
+
   const searchDesktop = document.getElementById('mainNavSearch');
   const searchMobile = document.getElementById('mainNavSearchMobile');
 

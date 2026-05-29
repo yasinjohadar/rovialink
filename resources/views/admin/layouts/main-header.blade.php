@@ -171,8 +171,8 @@
                     <div class="header-element headerProfile-dropdown">
                         <!-- Start::header-link|dropdown-toggle -->
                         <a href="javascript:void(0);" class="header-link dropdown-toggle" id="mainHeaderProfile" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                            @if(Auth::user()->photo)
-                                <img src="{{ asset('storage/' . Auth::user()->photo) }}" alt="صورة المستخدم" width="37" height="37" class="rounded-circle">
+                            @if(Auth::user()->photoUrl())
+                                <img src="{{ Auth::user()->photoUrl() }}" alt="صورة المستخدم" width="37" height="37" class="rounded-circle">
                             @else
                                 <svg width="37" height="37" viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" class="rounded-circle">
                                     <circle cx="18.5" cy="18.5" r="18.5" fill="#4f46e5"/>

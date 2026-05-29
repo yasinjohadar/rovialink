@@ -32,11 +32,11 @@
                 @if($hero['subtitle'])
                     <p class="lead mb-4 text-white opacity-75 pe-lg-5">{{ $hero['subtitle'] }}</p>
                 @endif
-                <div class="d-flex gap-3 justify-content-center justify-content-lg-start mt-4 flex-wrap">
-                    <a href="{{ $hero['btn_primary_url'] }}" class="btn btn-accent px-4 py-3 shadow-lg fs-5">
+                <div class="hero-actions d-flex gap-3 justify-content-center justify-content-lg-start mt-4 flex-wrap">
+                    <a href="{{ $hero['btn_primary_url'] }}" class="btn btn-accent px-4 py-3 shadow-lg fs-5 hero-actions__btn">
                         {{ $hero['btn_primary_label'] }} <i class="fas fa-arrow-left ms-2"></i>
                     </a>
-                    <a href="{{ $hero['btn_secondary_url'] }}" class="btn btn-glass px-4 py-3 fs-5">{{ $hero['btn_secondary_label'] }}</a>
+                    <a href="{{ $hero['btn_secondary_url'] }}" class="btn btn-glass px-4 py-3 fs-5 hero-actions__btn">{{ $hero['btn_secondary_label'] }}</a>
                 </div>
             </div>
             @if($hero['image_url'])

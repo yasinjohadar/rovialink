@@ -171,9 +171,9 @@
                                 <label class="form-label">صورة المستخدم</label>
                                 <div class="d-flex align-items-center gap-3">
                                     <div class="photo-upload">
-                                        @if($user->photo)
+                                        @if($user->photoUrl())
                                             <img id="photo-preview" 
-                                                 src="{{ asset('storage/' . $user->photo) }}" 
+                                                 src="{{ $user->photoUrl() }}" 
                                                  alt="صورة المستخدم" class="photo-preview">
                                         @else
                                             <svg id="photo-preview" width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" class="photo-preview rounded-circle">

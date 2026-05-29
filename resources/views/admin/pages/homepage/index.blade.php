@@ -36,6 +36,74 @@
                 </div>
 
                 <div class="col-md-6 col-xl-4">
+                    <div class="card custom-card h-100 border-info border-opacity-25">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <span class="avatar avatar-lg rounded bg-info-transparent text-info">
+                                    <i class="fe fe-users fs-20"></i>
+                                </span>
+                                <div>
+                                    <h6 class="mb-1">صفحة من نحن</h6>
+                                    <p class="text-muted small mb-0">القصة، الرؤية، الرسالة، القيم، الإحصائيات، ودعوة الإجراء.</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('admin.homepage.about.edit') }}" class="btn btn-info mt-auto">تعديل من نحن</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-4">
+                    <div class="card custom-card h-100 border-warning border-opacity-25">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <span class="avatar avatar-lg rounded bg-warning-transparent text-warning">
+                                    <i class="fe fe-help-circle fs-20"></i>
+                                </span>
+                                <div>
+                                    <h6 class="mb-1">الأسئلة الشائعة</h6>
+                                    <p class="text-muted small mb-0">مجموعات الأسئلة والأجوبة ودعوة التواصل مع الدعم.</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('admin.homepage.faq.edit') }}" class="btn btn-warning mt-auto">تعديل الأسئلة الشائعة</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-4">
+                    <div class="card custom-card h-100 border-danger border-opacity-25">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <span class="avatar avatar-lg rounded bg-danger-transparent text-danger">
+                                    <i class="fe fe-file-text fs-20"></i>
+                                </span>
+                                <div>
+                                    <h6 class="mb-1">الشروط والأحكام</h6>
+                                    <p class="text-muted small mb-0">مقدمة الصفحة وأقسام الشروط القانونية للمتجر.</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('admin.homepage.terms.edit') }}" class="btn btn-danger mt-auto">تعديل الشروط</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-4">
+                    <div class="card custom-card h-100 border-success border-opacity-25">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <span class="avatar avatar-lg rounded bg-success-transparent text-success">
+                                    <i class="fe fe-shield fs-20"></i>
+                                </span>
+                                <div>
+                                    <h6 class="mb-1">سياسة الخصوصية</h6>
+                                    <p class="text-muted small mb-0">مقدمة الصفحة وأقسام حماية البيانات والخصوصية.</p>
+                                </div>
+                            </div>
+                            <a href="{{ route('admin.homepage.privacy.edit') }}" class="btn btn-success mt-auto">تعديل الخصوصية</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xl-4">
                     <div class="card custom-card h-100">
                         <div class="card-body d-flex flex-column">
                             <div class="d-flex align-items-center gap-3 mb-3">
