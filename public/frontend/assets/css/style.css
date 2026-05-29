@@ -9769,23 +9769,11 @@ html[data-theme="dark"] .testimonial-card__stars .text-muted {
 .brands-marquee {
   --marquee-duration: 42s;
   position: relative;
-  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
+  margin-inline: calc(50% - 50vw);
   overflow: hidden;
   padding: 0.5rem 0 1.5rem;
-  mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 8%,
-    #000 92%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    #000 8%,
-    #000 92%,
-    transparent 100%
-  );
 }
 
 .brands-marquee__track {
@@ -9912,11 +9900,6 @@ html[data-theme="dark"] .brands-marquee__item:hover .brands-marquee__name {
     max-width: 960px;
     margin: 0 auto;
     padding: 0 1rem;
-  }
-
-  .brands-marquee {
-    mask-image: none;
-    -webkit-mask-image: none;
   }
 
   .brands-marquee__item[aria-hidden='true'] {
