@@ -1,6 +1,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
+@php
+    $siteFaviconUrl = site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_FAVICON);
+@endphp
+@if($siteFaviconUrl)
+<link rel="icon" href="{{ $siteFaviconUrl }}" sizes="any">
+<link rel="shortcut icon" href="{{ $siteFaviconUrl }}">
+@endif
 @isset($seo)
 <title>{{ $seo->title }}</title>
 @include('frontend.layouts.seo', ['seo' => $seo])

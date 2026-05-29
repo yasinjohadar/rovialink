@@ -47,24 +47,26 @@
         </div>
     @elseif ($key === \App\Services\SiteSettingsService::KEY_SITE_LOGO)
         <label class="form-label">{{ $def['label'] }}</label>
-        @if ($value && \Illuminate\Support\Facades\Storage::disk($disk)->exists($value))
+        @php $previewUrl = $value ? site_setting_url($key) : null; @endphp
+        @if ($previewUrl)
             <div class="mb-2">
-                <img src="{{ \Illuminate\Support\Facades\Storage::disk($disk)->url($value) }}" alt="الشعار" class="img-thumbnail" style="max-height: 60px;">
+                <img src="{{ $previewUrl }}" alt="الشعار" class="img-thumbnail" style="max-height: 60px;">
             </div>
         @endif
-        <input type="file" class="form-control @error('site_logo_file') is-invalid @enderror" name="site_logo_file" accept="image/*">
+        <input type="file" class="form-control @error('site_logo_file') is-invalid @enderror" name="site_logo_file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp,image/svg+xml">
         @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
-        @error('site_logo_file')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        @error('site_logo_file')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
     @elseif ($key === \App\Services\SiteSettingsService::KEY_SITE_FAVICON)
         <label class="form-label">{{ $def['label'] }}</label>
-        @if ($value && \Illuminate\Support\Facades\Storage::disk($disk)->exists($value))
+        @php $previewUrl = $value ? site_setting_url($key) : null; @endphp
+        @if ($previewUrl)
             <div class="mb-2">
-                <img src="{{ \Illuminate\Support\Facades\Storage::disk($disk)->url($value) }}" alt="Favicon" class="img-thumbnail" style="max-height: 32px;">
+                <img src="{{ $previewUrl }}" alt="Favicon" class="img-thumbnail" style="max-height: 32px;">
             </div>
         @endif
-        <input type="file" class="form-control @error('site_favicon_file') is-invalid @enderror" name="site_favicon_file" accept="image/*">
+        <input type="file" class="form-control @error('site_favicon_file') is-invalid @enderror" name="site_favicon_file" accept="image/png,image/jpeg,image/jpg,image/gif,image/webp,image/svg+xml,image/x-icon,.ico">
         @if (!empty($def['hint']))<small class="text-muted">{{ $def['hint'] }}</small>@endif
-        @error('site_favicon_file')<div class="invalid-feedback">{{ $message }}</div>@enderror
+        @error('site_favicon_file')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
     @elseif ($key === \App\Services\SiteSettingsService::KEY_HERO_IMAGE)
         <label class="form-label">{{ $def['label'] }}</label>
         @if ($value && \Illuminate\Support\Facades\Storage::disk($disk)->exists($value))

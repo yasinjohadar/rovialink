@@ -1288,7 +1288,8 @@ class SiteSettingsService
             return null;
         }
 
-        $this->setMany([$key => $path]);
+        SystemSetting::set($key, $path, $schema[$key]['type'], self::GROUP);
+        $this->clearCache();
 
         return $path;
     }
@@ -1336,8 +1337,8 @@ class SiteSettingsService
             self::KEY_SITE_FACEBOOK_URL => ['nullable', 'url', 'max:500'],
             self::KEY_SITE_TWITTER_URL => ['nullable', 'url', 'max:500'],
             self::KEY_SITE_INSTAGRAM_URL => ['nullable', 'url', 'max:500'],
-            'site_logo_file' => ['nullable', 'image', 'max:2048'],
-            'site_favicon_file' => ['nullable', 'image', 'max:512'],
+            'site_logo_file' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,webp,svg', 'max:2048'],
+            'site_favicon_file' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,webp,svg,ico', 'max:1024'],
             self::KEY_HERO_BADGE => ['nullable', 'string', 'max:255'],
             self::KEY_HERO_TITLE_PREFIX => ['nullable', 'string', 'max:255'],
             self::KEY_HERO_TYPING_WORDS => ['nullable', 'string', 'max:5000'],

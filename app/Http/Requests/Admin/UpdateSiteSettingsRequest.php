@@ -31,9 +31,11 @@ class UpdateSiteSettingsRequest extends FormRequest
             'site_twitter_url.url' => 'رابط تويتر غير صالح.',
             'site_instagram_url.url' => 'رابط انستغرام غير صالح.',
             'site_logo_file.image' => 'يجب أن يكون الشعار صورة.',
+            'site_logo_file.mimes' => 'نوع شعار الموقع غير مدعوم. استخدم JPG أو PNG أو GIF أو WEBP أو SVG.',
             'site_logo_file.max' => 'حجم صورة الشعار يجب ألا يتجاوز 2 ميجابايت.',
             'site_favicon_file.image' => 'يجب أن تكون أيقونة الموقع صورة.',
-            'site_favicon_file.max' => 'حجم أيقونة الموقع يجب ألا يتجاوز 512 كيلوبايت.',
+            'site_favicon_file.mimes' => 'نوع أيقونة الموقع غير مدعوم. استخدم ICO أو PNG أو JPG أو SVG.',
+            'site_favicon_file.max' => 'حجم أيقونة الموقع يجب ألا يتجاوز 1 ميجابايت.',
             'site_accent_color.regex' => 'لون التمييز يجب أن يكون بصيغة hex مثل #387e99.',
         ];
     }

@@ -1,5 +1,13 @@
 <!-- Favicon -->
+@php
+    $adminFaviconUrl = site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_FAVICON);
+@endphp
+@if($adminFaviconUrl)
+<link rel="icon" href="{{ $adminFaviconUrl }}" sizes="any">
+<link rel="shortcut icon" href="{{ $adminFaviconUrl }}">
+@else
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%234f46e5' rx='10'/><text x='50' y='70' font-family='Arial' font-size='50' font-weight='bold' fill='white' text-anchor='middle'>LD</text></svg>" type="image/svg+xml">
+@endif
 
 <!-- Preload Critical CSS -->
 <link rel="preload" href="{{ asset('assets/libs/bootstrap/css/bootstrap.min.css') }}" as="style">

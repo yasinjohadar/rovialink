@@ -47,7 +47,15 @@
             <div class="row g-5">
                 <div class="col-lg-4 col-md-6">
                     <a href="{{ route('frontend.home') }}" class="footer-brand d-inline-flex align-items-center text-decoration-none mb-3">
-                        <span class="footer-brand__icon"><i class="fas fa-store"></i></span>
+                        @if(site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_LOGO))
+                            <img src="{{ site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_LOGO) }}"
+                                 alt="{{ site_brand_name() }}"
+                                 class="footer-brand__logo"
+                                 width="44"
+                                 height="44">
+                        @else
+                            <span class="footer-brand__icon"><i class="fas fa-store"></i></span>
+                        @endif
                         <span class="footer-brand__text">
                             <span class="footer-brand__name">{{ site_brand_name() }}</span>
                             <span class="footer-brand__tagline en-text">Smart Shopping</span>

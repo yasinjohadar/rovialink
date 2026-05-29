@@ -37,21 +37,37 @@ class GeneralSiteSettingsController extends Controller
     {
         $validated = $request->validated();
 
-        $logoFile = $request->file('site_logo_file');
-        $faviconFile = $request->file('site_favicon_file');
-
-        if ($logoFile) {
-            $this->siteSettings->storeUpload(SiteSettingsService::KEY_SITE_LOGO, $logoFile);
-        }
-        if ($faviconFile) {
-            $this->siteSettings->storeUpload(SiteSettingsService::KEY_SITE_FAVICON, $faviconFile);
-        }
-
         unset($validated['site_logo_file'], $validated['site_favicon_file']);
+        unset(
+            $validated[SiteSettingsService::KEY_SITE_LOGO],
+            $validated[SiteSettingsService::KEY_SITE_FAVICON]
+        );
+
+        $uploadErrors = [];
+
+        if ($request->hasFile('site_logo_file')) {
+            if ($this->siteSettings->storeUpload(SiteSettingsService::KEY_SITE_LOGO, $request->file('site_logo_file')) === null) {
+                $uploadErrors['site_logo_file'] = 'فشل رفع شعار الموقع. يرجى المحاولة مرة أخرى.';
+            }
+        }
+
+        if ($request->hasFile('site_favicon_file')) {
+            if ($this->siteSettings->storeUpload(SiteSettingsService::KEY_SITE_FAVICON, $request->file('site_favicon_file')) === null) {
+                $uploadErrors['site_favicon_file'] = 'فشل رفع أيقونة الموقع. يرجى المحاولة مرة أخرى.';
+            }
+        }
+
+        if ($uploadErrors !== []) {
+            return redirect()
+                ->route('admin.site-settings.index')
+                ->withErrors($uploadErrors)
+                ->withInput();
+        }
 
         foreach (SiteSettingsService::heroKeys() as $heroKey) {
             unset($validated[$heroKey]);
         }
+
         $this->siteSettings->setMany($validated);
 
         app(ActivityLogger::class)->siteSettingsUpdated(array_keys($validated));
