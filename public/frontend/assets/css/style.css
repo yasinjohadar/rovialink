@@ -119,6 +119,13 @@ html[data-theme="dark"] .main-nav.is-scrolled {
   opacity: 0.92;
 }
 
+.main-nav__brand-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .main-nav__brand-icon {
   width: 40px;
   height: 40px;
@@ -529,33 +536,34 @@ html[data-theme="dark"] .main-nav__dropdown .dropdown-item {
   }
 
   .main-nav__topbar {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
+    justify-content: space-between;
     width: 100%;
     min-height: var(--main-nav-h);
     flex: 0 0 auto;
-    gap: 0.5rem;
+    gap: 1rem;
     margin: 0;
   }
 
   .main-nav__topbar-actions {
-    grid-column: 3;
-    justify-self: end;
     display: flex;
     align-items: center;
     gap: 0.35rem;
+    flex-shrink: 0;
+    margin-inline-start: auto;
   }
 
-  .main-nav__topbar .navbar-brand {
-    grid-column: 2;
-    justify-self: center;
+  .main-nav__topbar .navbar-brand,
+  .main-nav__topbar .main-nav__brand {
+    position: static;
+    transform: none;
     margin: 0;
-    max-width: min(100%, 220px);
-  }
-
-  .main-nav__topbar-spacer {
-    grid-column: 1;
+    max-width: min(calc(100% - 6.5rem), 240px);
+    flex-shrink: 1;
+    min-width: 0;
   }
 
   .main-nav__collapse {
@@ -10712,7 +10720,8 @@ html[data-theme="dark"] .account-profile-form__actions {
 
 /* Account addresses panel & modal */
 .account-addresses-panel {
-  padding: 1.35rem 1.5rem 1.5rem;
+  padding: 1.75rem 2rem 2rem;
+  margin: 0.5rem;
 }
 
 .account-addresses-panel__header {
@@ -10721,7 +10730,13 @@ html[data-theme="dark"] .account-profile-form__actions {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 1.35rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.1);
+}
+
+html[data-theme="dark"] .account-addresses-panel__header {
+  border-bottom-color: rgba(255, 255, 255, 0.06);
 }
 
 .account-addresses-panel__subtitle {
@@ -10732,7 +10747,8 @@ html[data-theme="dark"] .account-profile-form__actions {
 .account-addresses-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
+  gap: 1.25rem;
+  padding: 0.5rem 0.25rem 0.25rem;
 }
 
 .account-address-card {
@@ -10843,6 +10859,13 @@ html[data-theme="dark"] .account-address-card__action {
   color: var(--text-secondary);
 }
 
+.account-address-card__meta--city {
+  margin-top: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 .account-address-card__meta {
   margin: 0.45rem 0 0;
   font-size: 0.84rem;
@@ -10860,7 +10883,8 @@ html[data-theme="dark"] .account-address-card__action {
 
 .account-addresses-empty {
   text-align: center;
-  padding: 2.5rem 1.25rem;
+  padding: 2.5rem 1.75rem;
+  margin: 0.25rem 0.15rem;
   border-radius: 12px;
   border: 1px dashed rgba(var(--accent-rgb), 0.22);
   background: rgba(var(--accent-rgb), 0.03);
@@ -10891,13 +10915,26 @@ html[data-theme="dark"] .account-address-card__action {
   color: var(--text-secondary);
 }
 
+.account-address-modal.quick-view-modal .modal-body.account-address-modal__body {
+  padding: 1rem 1.75rem 1.5rem;
+  overflow-y: auto;
+}
+
+.account-address-modal.quick-view-modal .modal-header.account-address-modal__header {
+  padding: 1.35rem 1.75rem 0.85rem;
+}
+
+.account-address-modal.quick-view-modal .modal-footer.account-address-modal__footer {
+  padding: 1.15rem 1.75rem 1.5rem;
+}
+
 .account-address-modal .modal-content {
   border-radius: 14px;
   overflow: hidden;
 }
 
 .account-address-modal__header {
-  padding: 1.25rem 1.5rem 0.75rem;
+  padding: 1.35rem 1.75rem 0.85rem;
   border-bottom: 0;
 }
 
@@ -10914,11 +10951,15 @@ html[data-theme="dark"] .account-address-card__action {
 }
 
 .account-address-modal__body {
-  padding: 1rem 1.5rem 1.25rem;
+  padding: 0.5rem 1.75rem 1.5rem;
+}
+
+.account-address-form {
+  padding: 0.25rem 0.15rem;
 }
 
 .account-address-modal__footer {
-  padding: 1rem 1.5rem 1.35rem;
+  padding: 1.15rem 1.75rem 1.5rem;
   border-top: 1px solid rgba(var(--accent-rgb), 0.1);
   background: rgba(var(--accent-rgb), 0.03);
   gap: 0.65rem;

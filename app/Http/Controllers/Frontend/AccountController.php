@@ -175,6 +175,8 @@ class AccountController extends Controller
         $data['user_id'] = $user->id;
         $data['type'] = $data['type'] ?? 'billing';
         $data['is_default'] = ! $user->addresses()->exists();
+        $data['address_line_1'] = 'تسليم رقمي';
+        $data['address_line_2'] = null;
 
         CustomerAddress::create($data);
 
@@ -188,6 +190,8 @@ class AccountController extends Controller
 
         $data = $request->validated();
         $data['type'] = $data['type'] ?? $address->type ?? 'billing';
+        $data['address_line_1'] = 'تسليم رقمي';
+        $data['address_line_2'] = null;
 
         $address->update($data);
 

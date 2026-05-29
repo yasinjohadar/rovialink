@@ -57,37 +57,6 @@
         </div>
 
         <div class="col-12">
-            <label class="account-field__label" for="addressLine1{{ $formKey }}">العنوان</label>
-            <div class="account-field">
-                <span class="account-field__icon" aria-hidden="true"><i class="fas fa-map-marker-alt"></i></span>
-                <input type="text"
-                       id="addressLine1{{ $formKey }}"
-                       name="address_line_1"
-                       class="account-field__input @error('address_line_1') is-invalid @enderror"
-                       value="{{ old('address_line_1', $address?->address_line_1) }}"
-                       placeholder="الشارع، الحي، رقم المبنى"
-                       required
-                       autocomplete="address-line1">
-            </div>
-            @error('address_line_1')<div class="account-profile-form__error">{{ $message }}</div>@enderror
-        </div>
-
-        <div class="col-12">
-            <label class="account-field__label" for="addressLine2{{ $formKey }}">تفاصيل إضافية <span class="text-secondary fw-normal">(اختياري)</span></label>
-            <div class="account-field">
-                <span class="account-field__icon" aria-hidden="true"><i class="fas fa-info-circle"></i></span>
-                <input type="text"
-                       id="addressLine2{{ $formKey }}"
-                       name="address_line_2"
-                       class="account-field__input @error('address_line_2') is-invalid @enderror"
-                       value="{{ old('address_line_2', $address?->address_line_2) }}"
-                       placeholder="شقة، طابق، معلم قريب"
-                       autocomplete="address-line2">
-            </div>
-            @error('address_line_2')<div class="account-profile-form__error">{{ $message }}</div>@enderror
-        </div>
-
-        <div class="col-12">
             <label class="account-field__label" for="addressCity{{ $formKey }}">المدينة</label>
             <div class="account-field">
                 <span class="account-field__icon" aria-hidden="true"><i class="fas fa-city"></i></span>
@@ -97,6 +66,7 @@
                        class="account-field__input @error('city') is-invalid @enderror"
                        value="{{ old('city', $address?->city) }}"
                        placeholder="الرياض"
+                       required
                        autocomplete="address-level2">
             </div>
             @error('city')<div class="account-profile-form__error">{{ $message }}</div>@enderror

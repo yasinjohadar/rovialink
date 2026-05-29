@@ -3,7 +3,7 @@
 use App\Models\CustomerAddress;
 use App\Models\User;
 
-test('user can store billing address with simplified fields', function () {
+test('user can store digital billing address with name phone and city only', function () {
     $user = User::factory()->create(['is_active' => true]);
 
     $this->actingAs($user)
@@ -11,8 +11,6 @@ test('user can store billing address with simplified fields', function () {
             'name' => 'مدير النظام',
             'phone' => '+966501234567',
             'country' => 'SA',
-            'address_line_1' => 'شارع الملك فهد',
-            'address_line_2' => 'الطابق 3',
             'city' => 'الرياض',
         ])
         ->assertRedirect(route('frontend.account') . '#addresses');
@@ -24,6 +22,8 @@ test('user can store billing address with simplified fields', function () {
         ->and($address->phone)->toBe('+966501234567')
         ->and($address->country)->toBe('SA')
         ->and($address->city)->toBe('الرياض')
+        ->and($address->address_line_1)->toBe('تسليم رقمي')
+        ->and($address->address_line_2)->toBeNull()
         ->and($address->is_default)->toBeTrue();
 });
 
@@ -33,23 +33,36 @@ test('second address is not auto default', function () {
     CustomerAddress::create([
         'user_id' => $user->id,
         'type' => 'billing',
-        'address_line_1' => 'عنوان قديم',
+        'address_line_1' => 'تسليم رقمي',
+        'city' => 'الرياض',
         'is_default' => true,
     ]);
 
     $this->actingAs($user)
         ->post(route('frontend.account.addresses.store'), [
-            'address_line_1' => 'عنوان جديد',
             'city' => 'جدة',
         ])
         ->assertRedirect(route('frontend.account') . '#addresses');
 
     $newAddress = CustomerAddress::where('user_id', $user->id)
-        ->where('address_line_1', 'عنوان جديد')
+        ->where('city', 'جدة')
         ->first();
 
     expect($newAddress)->not->toBeNull()
+        ->and($newAddress->address_line_1)->toBe('تسليم رقمي')
         ->and($newAddress->is_default)->toBeFalse();
+});
+
+test('address store requires city', function () {
+    $user = User::factory()->create(['is_active' => true]);
+
+    $this->actingAs($user)
+        ->post(route('frontend.account.addresses.store'), [
+            'name' => 'اختبار',
+        ])
+        ->assertSessionHasErrors('city');
+
+    expect(CustomerAddress::where('user_id', $user->id)->count())->toBe(0);
 });
 
 test('address store rejects invalid phone format', function () {
@@ -57,7 +70,7 @@ test('address store rejects invalid phone format', function () {
 
     $this->actingAs($user)
         ->post(route('frontend.account.addresses.store'), [
-            'address_line_1' => 'شارع تجريبي',
+            'city' => 'الرياض',
             'phone' => '0501234567',
         ])
         ->assertSessionHasErrors('phone');

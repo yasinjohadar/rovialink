@@ -28,6 +28,58 @@ if (!function_exists('site_brand_name')) {
     }
 }
 
+if (!function_exists('site_contact_email')) {
+    function site_contact_email(): string
+    {
+        return trim((string) site_setting(
+            SiteSettingsService::KEY_SITE_CONTACT_EMAIL,
+            'support@ediostore.com'
+        ));
+    }
+}
+
+if (!function_exists('site_contact_phone')) {
+    function site_contact_phone(): string
+    {
+        return trim((string) site_setting(
+            SiteSettingsService::KEY_SITE_CONTACT_PHONE,
+            '+971 50 123 4567'
+        ));
+    }
+}
+
+if (!function_exists('site_contact_phone_href')) {
+    function site_contact_phone_href(?string $phone = null): string
+    {
+        $phone = $phone ?? site_contact_phone();
+        $normalized = preg_replace('/[^\d+]/', '', $phone) ?? '';
+
+        return $normalized !== '' ? 'tel:' . $normalized : '#';
+    }
+}
+
+if (!function_exists('site_address')) {
+    function site_address(): string
+    {
+        return trim((string) site_setting(
+            SiteSettingsService::KEY_SITE_ADDRESS,
+            'دبي، الإمارات العربية المتحدة'
+        ));
+    }
+}
+
+if (!function_exists('site_footer_text')) {
+    function site_footer_text(): string
+    {
+        $text = trim((string) site_setting(
+            SiteSettingsService::KEY_SITE_FOOTER_TEXT,
+            'متجرك الإلكتروني الأول للتسوق الذكي. نقدم لك أفضل المنتجات بأسعار تنافسية مع ضمان الجودة والتوصيل السريع في جميع أنحاء الإمارات.'
+        ));
+
+        return about_resolve_placeholders($text);
+    }
+}
+
 if (!function_exists('site_setting_url')) {
     /**
      * Get the full URL for a site setting that stores a file path (e.g. site_logo, site_favicon).

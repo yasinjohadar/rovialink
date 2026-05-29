@@ -18,9 +18,7 @@ class UpdateAccountAddressRequest extends FormRequest
             'name' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:50', 'regex:/^\+[1-9]\d{6,14}$/'],
             'country' => ['nullable', 'string', 'max:2'],
-            'city' => ['nullable', 'string', 'max:255'],
-            'address_line_1' => ['sometimes', 'required', 'string', 'max:255'],
-            'address_line_2' => ['nullable', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
         ];
     }
 }

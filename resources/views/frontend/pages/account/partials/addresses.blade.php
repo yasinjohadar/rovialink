@@ -5,7 +5,7 @@
                 <h5 class="account-panel__title mb-1">
                     <i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i> عناوين الفوترة
                 </h5>
-                <p class="account-addresses-panel__subtitle mb-0">إدارة عناوين الفوترة المرتبطة بحسابك</p>
+                <p class="account-addresses-panel__subtitle mb-0">بيانات الفوترة لمتجر رقمي — الاسم، الهاتف، والمدينة فقط</p>
             </div>
             <button class="btn btn-accent rounded-pill px-3" type="button" data-bs-toggle="modal" data-bs-target="#addAddressModal">
                 <i class="fas fa-plus me-1" aria-hidden="true"></i> إضافة عنوان
@@ -42,12 +42,8 @@
                     </div>
                 </div>
                 <div class="account-address-card__body">
-                    <p class="account-address-card__line">{{ $address->address_line_1 }}</p>
-                    @if($address->address_line_2)
-                    <p class="account-address-card__line account-address-card__line--muted">{{ $address->address_line_2 }}</p>
-                    @endif
                     @if($address->city)
-                    <p class="account-address-card__meta">
+                    <p class="account-address-card__meta account-address-card__meta--city">
                         <i class="fas fa-city" aria-hidden="true"></i>
                         {{ $address->city }}
                     </p>

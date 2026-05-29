@@ -54,7 +54,7 @@
                         </span>
                     </a>
                     <p class="footer-about">
-                        متجرك الإلكتروني الأول للتسوق الذكي. نقدم لك أفضل المنتجات بأسعار تنافسية مع ضمان الجودة والتوصيل السريع في جميع أنحاء الإمارات.
+                        {{ site_footer_text() }}
                     </p>
                     <div class="footer-stats row g-2">
                         <div class="col-4">
@@ -108,33 +108,39 @@
                 <div class="col-lg-4 col-md-6">
                     <h6 class="footer-heading">تواصل معنا</h6>
                     <ul class="footer-contact-list">
+                        @if(site_contact_email() !== '')
                         <li>
-                            <a href="mailto:support@ediostore.com" class="footer-contact-item">
+                            <a href="mailto:{{ site_contact_email() }}" class="footer-contact-item">
                                 <span class="footer-contact-item__icon"><i class="fas fa-envelope"></i></span>
                                 <span>
                                     <small>البريد الإلكتروني</small>
-                                    <strong>support@ediostore.com</strong>
+                                    <strong>{{ site_contact_email() }}</strong>
                                 </span>
                             </a>
                         </li>
+                        @endif
+                        @if(site_contact_phone() !== '')
                         <li>
-                            <a href="tel:+971501234567" class="footer-contact-item">
+                            <a href="{{ site_contact_phone_href() }}" class="footer-contact-item">
                                 <span class="footer-contact-item__icon"><i class="fas fa-phone"></i></span>
                                 <span>
                                     <small>الهاتف</small>
-                                    <strong class="en-text" dir="ltr">+971 50 123 4567</strong>
+                                    <strong class="en-text" dir="ltr">{{ site_contact_phone() }}</strong>
                                 </span>
                             </a>
                         </li>
+                        @endif
+                        @if(site_address() !== '')
                         <li>
                             <div class="footer-contact-item footer-contact-item--static">
                                 <span class="footer-contact-item__icon"><i class="fas fa-location-dot"></i></span>
                                 <span>
                                     <small>العنوان</small>
-                                    <strong>دبي، الإمارات العربية المتحدة</strong>
+                                    <strong>{{ site_address() }}</strong>
                                 </span>
                             </div>
                         </li>
+                        @endif
                     </ul>
                     <div class="footer-social">
                         <a href="#" class="footer-social__link" aria-label="تويتر" data-social="twitter"><i class="fab fa-x-twitter"></i></a>

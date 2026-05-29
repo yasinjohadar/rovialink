@@ -4,13 +4,19 @@
     $headerSearchQuery = request()->routeIs('frontend.shop.*') ? request('search', '') : '';
     $siteName = site_brand_name();
     $siteLogoUrl = site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_LOGO);
+    $headerContactEmail = site_contact_email();
+    $headerContactPhone = site_contact_phone();
 @endphp
 
 <div class="top-bar d-none d-md-block">
     <div class="container d-flex justify-content-between align-items-center">
         <div class="d-flex gap-4 align-items-center">
-            <span class="top-bar-item"><i class="fas fa-envelope me-2"></i>support@ediostore.com</span>
-            <span class="top-bar-item"><i class="fas fa-phone me-2"></i>+971 50 123 4567</span>
+            @if($headerContactEmail !== '')
+            <span class="top-bar-item"><i class="fas fa-envelope me-2"></i>{{ $headerContactEmail }}</span>
+            @endif
+            @if($headerContactPhone !== '')
+            <span class="top-bar-item en-text" dir="ltr"><i class="fas fa-phone me-2"></i>{{ $headerContactPhone }}</span>
+            @endif
         </div>
         <div class="d-flex gap-2 align-items-center">
             <a href="#" class="top-bar-social" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
@@ -25,6 +31,17 @@
 <nav class="navbar navbar-expand-lg main-nav glass-nav" id="siteMainNav" aria-label="التنقل الرئيسي">
     <div class="container main-nav__container">
         <div class="main-nav__topbar">
+            <a class="navbar-brand main-nav__brand" href="{{ url('/') }}">
+                @if($siteLogoUrl)
+                    <img src="{{ $siteLogoUrl }}" alt="{{ $siteName }}" class="main-nav__brand-logo" width="40" height="40">
+                @else
+                    <span class="main-nav__brand-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
+                @endif
+                <span class="main-nav__brand-text">
+                    <span class="main-nav__brand-name">{{ $siteName }}</span>
+                </span>
+            </a>
+
             <div class="main-nav__topbar-actions d-lg-none">
                 <a href="{{ route('frontend.cart.index') }}" class="main-nav__icon-btn main-nav__cart-mobile {{ request()->routeIs('frontend.cart.*', 'frontend.checkout.*') ? 'is-active' : '' }}" aria-label="سلة التسوق">
                     <i class="fas fa-shopping-cart"></i>
@@ -37,19 +54,6 @@
                     <span class="main-nav__toggler-bar"></span>
                 </button>
             </div>
-
-            <a class="navbar-brand main-nav__brand" href="{{ url('/') }}">
-                @if($siteLogoUrl)
-                    <img src="{{ $siteLogoUrl }}" alt="{{ $siteName }}" class="main-nav__brand-logo" width="40" height="40">
-                @else
-                    <span class="main-nav__brand-icon" aria-hidden="true"><i class="fas fa-store"></i></span>
-                @endif
-                <span class="main-nav__brand-text">
-                    <span class="main-nav__brand-name">{{ $siteName }}</span>
-                </span>
-            </a>
-
-            <div class="main-nav__topbar-spacer d-lg-none" aria-hidden="true"></div>
         </div>
 
         <div class="collapse navbar-collapse main-nav__collapse" id="mainNav" data-bs-scroll="false">
