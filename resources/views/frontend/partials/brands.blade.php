@@ -3,6 +3,24 @@
 @endphp
 
 @if($homepageBrands->isNotEmpty())
+@push('styles')
+<style>
+    /* Full-bleed marquee — inlined so it applies even if style.css on the server is stale/cached */
+    .brands-marquee-section {
+        overflow: hidden;
+    }
+
+    .brands-marquee {
+        position: relative;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin-inline: calc(50% - 50vw) !important;
+        overflow: hidden;
+        mask-image: none !important;
+        -webkit-mask-image: none !important;
+    }
+</style>
+@endpush
 <section class="py-5 section-fade-up brands-marquee-section">
     <div class="container py-4">
         <div class="text-center mb-5">

@@ -25,7 +25,8 @@
     $mainJsPath = public_path('frontend/assets/js/main.js');
     $assetVersion = max(
         file_exists($styleCssPath) ? filemtime($styleCssPath) : 0,
-        file_exists($mainJsPath) ? filemtime($mainJsPath) : 0
+        file_exists($mainJsPath) ? filemtime($mainJsPath) : 0,
+        1747756800
     ) ?: time();
 @endphp
 <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}?v={{ $assetVersion }}">
