@@ -183,13 +183,19 @@ class ProductController extends Controller
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug($data['name']);
         }
-        unset($data['attribute_ids'], $data['digital_files']);
+        unset($data['attribute_ids'], $data['digital_files'], $data['card_image'], $data['remove_card_image'], $data['primary_image']);
         $product = Product::create($data);
 
         $product->attributes()->sync($request->input('attribute_ids', []));
         $this->syncDigitalFiles($product, $request);
 
         $galleryOrder = 0;
+
+        if ($request->hasFile('card_image')) {
+            if (! $this->setCardImage($product, $request->file('card_image'))) {
+                return redirect()->back()->withInput()->with('error', 'فشل رفع صورة البطاقة.');
+            }
+        }
 
         if ($request->hasFile('primary_image')) {
             if (! $this->setPrimaryImage($product, $request->file('primary_image'))) {
@@ -247,7 +253,7 @@ class ProductController extends Controller
         if (empty($data['slug'])) {
             $data['slug'] = Str::slug($data['name']);
         }
-        unset($data['attribute_ids'], $data['variants'], $data['digital_files']);
+        unset($data['attribute_ids'], $data['variants'], $data['digital_files'], $data['card_image'], $data['remove_card_image'], $data['primary_image']);
 
         foreach (['meta_title', 'meta_description', 'meta_keywords'] as $seoField) {
             if ($request->has($seoField)) {
@@ -290,6 +296,16 @@ class ProductController extends Controller
             $defaultVariant->update(['is_default' => true]);
         }
 
+        if ($request->boolean('remove_card_image')) {
+            $this->removeCardImage($product);
+        }
+
+        if ($request->hasFile('card_image')) {
+            if (! $this->setCardImage($product, $request->file('card_image'))) {
+                return redirect()->back()->withInput()->with('error', 'فشل رفع صورة البطاقة.');
+            }
+        }
+
         if ($request->hasFile('primary_image')) {
             if (! $this->setPrimaryImage($product, $request->file('primary_image'))) {
                 return redirect()->back()->withInput()->with('error', 'فشل رفع الصورة الرئيسية.');
@@ -329,6 +345,10 @@ class ProductController extends Controller
 
     protected function deleteProduct(Product $product): void
     {
+        if ($product->card_image) {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $product->card_image);
+        }
+
         foreach ($product->images as $img) {
             $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $img->path);
         }
@@ -395,6 +415,38 @@ class ProductController extends Controller
         ]);
 
         return true;
+    }
+
+    protected function setCardImage(Product $product, UploadedFile $file): bool
+    {
+        $path = $this->storageHelper->storeUploadedFileWithFailover(
+            $this->storageHelper->mediaDisk(),
+            'products/'.$product->id.'/cards',
+            $file,
+            'image'
+        );
+
+        if (! $path) {
+            return false;
+        }
+
+        if ($product->card_image) {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $product->card_image);
+        }
+
+        $product->update(['card_image' => $path]);
+
+        return true;
+    }
+
+    protected function removeCardImage(Product $product): void
+    {
+        if (! $product->card_image) {
+            return;
+        }
+
+        $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $product->card_image);
+        $product->update(['card_image' => null]);
     }
 
     private function syncDigitalFiles(Product $product, Request $request): void

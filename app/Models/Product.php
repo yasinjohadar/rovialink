@@ -38,6 +38,7 @@ class Product extends Model
         'meta_title',
         'meta_description',
         'meta_keywords',
+        'card_image',
     ];
 
     protected $casts = [
@@ -210,6 +211,15 @@ class Product extends Model
         }
         $seed = $this->id ?? rand(1, 100);
         return "https://picsum.photos/seed/product{$seed}/400/450";
+    }
+
+    public function getCardImageUrlAttribute()
+    {
+        if ($this->card_image) {
+            return product_image_url($this->card_image, $this->id);
+        }
+
+        return $this->primary_image_url;
     }
 
     public function getDefaultImageUrlAttribute()

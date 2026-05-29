@@ -13,7 +13,7 @@
                         @empty
                         <div class="swiper-slide">
                             <figure class="product-image">
-                                <img src="{{ $product->primary_image_url }}" data-zoom-image="{{ $product->primary_image_url }}" alt="{{ $product->name }}" width="800" height="900">
+                                <img src="{{ $product->card_image_url }}" data-zoom-image="{{ $product->primary_image_url }}" alt="{{ $product->name }}" width="800" height="900">
                             </figure>
                         </div>
                         @endforelse

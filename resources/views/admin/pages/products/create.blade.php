@@ -270,14 +270,19 @@
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
-                                    <label class="form-label">الصورة الرئيسية</label>
+                                    <label class="form-label">صورة البطاقة (عرض القوائم)</label>
+                                    <input type="file" name="card_image" class="form-control" accept="image/*">
+                                    <small class="text-muted d-block mt-1">صورة مخصصة تظهر في بطاقات المنتج والسلايدرات. إن تُركت فارغة تُستخدم الصورة الرئيسية.</small>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">الصورة الرئيسية (صفحة المنتج)</label>
                                     <input type="file" name="primary_image" class="form-control" accept="image/*">
-                                    <small class="text-muted d-block mt-1">ستظهر هذه الصورة كصورة أساسية للمنتج في القوائم وصفحة المنتج.</small>
+                                    <small class="text-muted d-block mt-1">تظهر في صفحة تفاصيل المنتج والمعرض.</small>
                                 </div>
                                 <div class="mb-0">
                                     <label class="form-label">معرض الصور</label>
                                     <input type="file" name="images[]" class="form-control" accept="image/*" multiple>
-                                    <small class="text-muted d-block mt-1">يمكنك رفع عدة صور إضافية لعرضها في معرض الصور.</small>
+                                    <small class="text-muted d-block mt-1">يمكنك رفع عدة صور إضافية لعرضها في معرض صفحة المنتج.</small>
                                 </div>
                             </div>
                         </div>

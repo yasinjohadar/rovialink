@@ -131,7 +131,28 @@
                                 </select>
                             </div>
                             <div class="col-12">
-                                <label class="form-label d-block">الصورة الرئيسية الحالية</label>
+                                <label class="form-label d-block">صورة البطاقة الحالية (عرض القوائم)</label>
+                                <div id="card-image-block" class="mb-3">
+                                    @if($product->card_image)
+                                        <div class="mb-2 position-relative d-inline-block" id="card-image-preview">
+                                            <img src="{{ $product->card_image_url }}" alt="" style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px;">
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="hidden" name="remove_card_image" value="0">
+                                            <input class="form-check-input" type="checkbox" name="remove_card_image" value="1" id="remove_card_image">
+                                            <label class="form-check-label" for="remove_card_image">حذف صورة البطاقة (العودة للصورة الرئيسية في القوائم)</label>
+                                        </div>
+                                    @else
+                                        <p class="text-muted small mb-2">لم يتم تعيين صورة بطاقة — تُستخدم الصورة الرئيسية في القوائم.</p>
+                                    @endif
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">رفع صورة بطاقة جديدة (اختياري)</label>
+                                    <input type="file" name="card_image" class="form-control" accept="image/*">
+                                    <small class="text-muted d-block mt-1">صورة مخصصة للبطاقات والسلايدرات (مثل التصميم الترويجي).</small>
+                                </div>
+
+                                <label class="form-label d-block">الصورة الرئيسية (صفحة المنتج)</label>
                                 @php
                                     $primaryImage = $product->primary_image;
                                 @endphp
@@ -151,7 +172,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">تعيين صورة رئيسية جديدة (اختياري)</label>
                                     <input type="file" name="primary_image" class="form-control" accept="image/*">
-                                    <small class="text-muted d-block mt-1">في حال اختيار صورة هنا سيتم استخدامها كصورة رئيسية جديدة.</small>
+                                    <small class="text-muted d-block mt-1">تظهر في صفحة تفاصيل المنتج — في حال اختيار صورة هنا سيتم استبدال الصورة الرئيسية الحالية.</small>
                                 </div>
                                 <label class="form-label">معرض الصور الحالي</label>
                                 <div class="d-flex gap-2 flex-wrap mb-2" id="product-gallery-images">

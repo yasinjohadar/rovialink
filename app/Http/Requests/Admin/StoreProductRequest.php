@@ -45,6 +45,8 @@ class StoreProductRequest extends FormRequest
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'meta_keywords' => ['nullable', 'string', 'max:255'],
+            'primary_image' => ['nullable', 'image', 'max:5120'],
+            'card_image' => ['nullable', 'image', 'max:5120'],
             'images.*' => ['nullable', 'image', 'max:5120'],
             'attribute_ids' => ['nullable', 'array'],
             'attribute_ids.*' => ['exists:product_attributes,id'],

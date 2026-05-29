@@ -23,7 +23,7 @@
                     </td>
                     <td>{{ $products->firstItem() + $loop->index }}</td>
                     <td>
-                        <img src="{{ $product->primary_image_url }}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                        <img src="{{ $product->card_image_url }}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
                     </td>
                     <td>
                         <a href="{{ route('admin.products.show', $product) }}" class="text-decoration-none">{{ $product->name }}</a>

@@ -8,7 +8,7 @@
         @forelse($products as $product)
             <div class="col-md-4 col-lg-3">
                 <div class="card h-100">
-                    <img src="{{ $product->primary_image_url }}" class="card-img-top" alt="{{ $product->name }}" style="height: 180px; object-fit: cover;">
+                    <img src="{{ $product->card_image_url }}" class="card-img-top" alt="{{ $product->name }}" style="height: 180px; object-fit: cover;">
                     <div class="card-body">
                         <h6 class="card-title">{{ $product->name }}</h6>
                         <p class="mb-2">{{ format_money($product->effective_price) }}</p>

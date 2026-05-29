@@ -19,7 +19,7 @@
                 <span class="product-card__stock product-card__stock--out">غير متاح</span>
             @endunless
             <a href="{{ $productUrl }}" class="product-card__media-link" tabindex="-1" aria-hidden="true">
-                <img src="{{ $product->primary_image_url }}"
+                <img src="{{ $product->card_image_url }}"
                      alt="{{ $product->name }}"
                      class="product-card__image"
                      loading="lazy">

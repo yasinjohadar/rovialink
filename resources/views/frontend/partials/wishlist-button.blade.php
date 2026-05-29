@@ -10,7 +10,7 @@
         'title' => $product->name,
         'slug' => $product->slug,
         'newPrice' => (float) $product->effective_price,
-        'img' => $product->primary_image_url,
+        'img' => $product->card_image_url,
     ];
     $isWishlisted = in_array((int) $product->id, $cachedWishlistProductIds, true);
 @endphp
