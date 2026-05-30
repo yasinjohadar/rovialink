@@ -293,7 +293,7 @@
                                 <div class="mt-2">
                                     <button type="button" 
                                             class="btn btn-sm btn-danger"
-                                            onclick="deleteFeaturedImage({{ $post->id }})">
+                                            onclick="deleteFeaturedImage()">
                                         <i class="bi bi-trash me-1"></i> حذف الصورة
                                     </button>
                                     <a href="{{ $imageUrl }}" 
@@ -575,12 +575,14 @@ document.getElementById('updatePostForm')?.addEventListener('submit', function(e
 });
 
 // Delete featured image using AJAX
-function deleteFeaturedImage(postId) {
+const deleteFeaturedImageUrl = @json(route('admin.blog.posts.delete-featured-image', $post));
+
+function deleteFeaturedImage() {
     if (!confirm('هل أنت متأكد من حذف الصورة؟')) {
         return;
     }
     
-    fetch(`{{ url('/admin/blog/posts') }}/${postId}/delete-image`, {
+    fetch(deleteFeaturedImageUrl, {
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -589,11 +591,14 @@ function deleteFeaturedImage(postId) {
             'X-Requested-With': 'XMLHttpRequest'
         }
     })
-    .then(response => {
-        if (response.ok) {
-            return response.json().catch(() => null);
+    .then(async response => {
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+            throw new Error((data && data.message) ? data.message : 'Network response was not ok');
         }
-        throw new Error('Network response was not ok');
+
+        return data;
     })
     .then(data => {
         // Remove the image container
@@ -618,7 +623,7 @@ function deleteFeaturedImage(postId) {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('حدث خطأ أثناء حذف الصورة');
+        alert(error.message || 'حدث خطأ أثناء حذف الصورة');
     });
 }
 </script>

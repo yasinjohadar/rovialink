@@ -495,31 +495,36 @@ class BlogPostController extends Controller
      */
     public function deleteFeaturedImage(Request $request, BlogPost $post)
     {
-        if ($post->featured_image && $this->storageHelper->fileExists('public', $post->featured_image)) {
-            $this->storageHelper->deleteFile('public', $post->featured_image);
-            $post->featured_image = null;
-            $post->featured_image_alt = null;
-            $post->save();
-
-            // Check if request expects JSON (AJAX)
+        if (! $post->featured_image) {
             if ($request->expectsJson() || $request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
                 return response()->json([
-                    'success' => true,
-                    'message' => 'تم حذف الصورة البارزة'
-                ]);
+                    'success' => false,
+                    'message' => 'لا توجد صورة لحذفها',
+                ], 404);
             }
 
-            return back()->with('success', 'تم حذف الصورة البارزة');
+            return back()->with('error', 'لا توجد صورة لحذفها');
         }
 
-        // Check if request expects JSON (AJAX)
+        $path = $post->featured_image;
+
+        if ($this->storageHelper->fileExists('public', $path)) {
+            $this->storageHelper->deleteFile('public', $path);
+        } else {
+            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $path);
+        }
+
+        $post->featured_image = null;
+        $post->featured_image_alt = null;
+        $post->save();
+
         if ($request->expectsJson() || $request->wantsJson() || $request->ajax() || $request->header('X-Requested-With') === 'XMLHttpRequest') {
             return response()->json([
-                'success' => false,
-                'message' => 'لا توجد صورة لحذفها'
-            ], 404);
+                'success' => true,
+                'message' => 'تم حذف الصورة البارزة',
+            ]);
         }
 
-        return back()->with('error', 'لا توجد صورة لحذفها');
+        return back()->with('success', 'تم حذف الصورة البارزة');
     }
 }
