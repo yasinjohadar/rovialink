@@ -14,12 +14,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Services\Storage\StorageHelperService;
+use App\Services\Blog\BlogPostMediaService;
 
 class AIBlogPostController extends Controller
 {
     public function __construct(
         private AIBlogPostService $blogPostService,
-        private AIModelService $modelService
+        private AIModelService $modelService,
+        private BlogPostMediaService $blogMedia
     ) {}
 
     /**
@@ -219,10 +222,8 @@ class AIBlogPostController extends Controller
                 unset($validated['category_id']);
             }
 
-            // Handle featured image upload
-            if ($request->hasFile('featured_image')) {
-                $validated['featured_image'] = $request->file('featured_image')->store('blog/images', 'public');
-            }
+            $featuredImageFile = $request->file('featured_image');
+            unset($validated['featured_image']);
 
             // Set published_at if status is published and not set
             if ($validated['status'] === 'published') {
@@ -259,6 +260,13 @@ class AIBlogPostController extends Controller
 
             // Create post
             $post = BlogPost::create($validated);
+
+            if ($featuredImageFile) {
+                $path = $this->blogMedia->storeFeaturedImage($post, $featuredImageFile);
+                if ($path) {
+                    $post->update(['featured_image' => $path]);
+                }
+            }
 
             // Attach tags
             if (isset($validated['tags']) && is_array($validated['tags'])) {

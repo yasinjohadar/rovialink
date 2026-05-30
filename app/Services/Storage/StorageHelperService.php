@@ -414,7 +414,9 @@ class StorageHelperService
         }
 
         $deleted = false;
-        $storages = $this->resolveStoragesForDisk($disk);
+        $storages = $disk === $this->mediaDisk()
+            ? $this->resolveStoragesForMedia($disk)
+            : $this->resolveStoragesForDisk($disk);
 
         foreach ($storages as $storageConfig) {
             try {
@@ -494,6 +496,86 @@ class StorageHelperService
         }
 
         return null;
+    }
+
+    /**
+     * Build a URL that serves media through Laravel (avoids /storage/ 403 on some hosts).
+     */
+    public function mediaServeUrl(string $path): string
+    {
+        $path = ltrim($path, '/');
+
+        return url('media/'.$path);
+    }
+
+    /**
+     * Whether a resolved URL points at the public/storage symlink (often blocked on shared hosting).
+     */
+    public function isPublicStorageUrl(?string $url): bool
+    {
+        if ($url === null || $url === '') {
+            return false;
+        }
+
+        $path = parse_url($url, PHP_URL_PATH) ?? '';
+
+        return str_contains($path, '/storage/');
+    }
+
+    /**
+     * Stream a media file from public disk or configured cloud storages.
+     */
+    public function mediaResponse(string $path): \Symfony\Component\HttpFoundation\Response
+    {
+        $path = ltrim($path, '/');
+
+        try {
+            $public = Storage::disk('public');
+            if ($public->exists($path)) {
+                return $public->response($path, null, [
+                    'Cache-Control' => 'public, max-age=604800',
+                ]);
+            }
+        } catch (\Throwable $e) {
+            Log::debug('StorageHelperService: mediaResponse public disk failed', [
+                'path' => $path,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        foreach ($this->resolveStoragesForMedia($this->mediaDisk()) as $storageConfig) {
+            try {
+                $filesystem = AppStorageFactory::create($storageConfig);
+                if (! $filesystem->exists($path)) {
+                    continue;
+                }
+
+                $mime = 'application/octet-stream';
+                try {
+                    $detected = $filesystem->mimeType($path);
+                    if (is_string($detected) && $detected !== '') {
+                        $mime = $detected;
+                    }
+                } catch (\Throwable $e) {
+                    // keep default mime
+                }
+
+                return response()->stream(function () use ($filesystem, $path) {
+                    echo $filesystem->get($path);
+                }, 200, [
+                    'Content-Type' => $mime,
+                    'Cache-Control' => 'public, max-age=604800',
+                ]);
+            } catch (\Throwable $e) {
+                Log::debug('StorageHelperService: mediaResponse cloud read failed', [
+                    'storage' => $storageConfig->name,
+                    'path' => $path,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
+        abort(404);
     }
 
     /**

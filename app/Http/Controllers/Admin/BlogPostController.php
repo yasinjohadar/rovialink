@@ -11,17 +11,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use App\Services\Storage\StorageHelperService;
+use App\Services\Blog\BlogPostMediaService;
 
 class BlogPostController extends Controller
 {
-    protected StorageHelperService $storageHelper;
-
-    public function __construct(StorageHelperService $storageHelper)
-    {
-        $this->storageHelper = $storageHelper;
-    }
+    public function __construct(
+        protected BlogPostMediaService $blogMedia
+    ) {}
     /**
      * Display a listing of blog posts.
      */
@@ -145,10 +141,9 @@ class BlogPostController extends Controller
                 unset($validated['category_id']);
             }
 
-            // Handle featured image upload
-            if ($request->hasFile('featured_image')) {
-                $validated['featured_image'] = $this->storageHelper->storeUploadedFile('public', 'blog/images', $request->file('featured_image'), 'image');
-            }
+            // Featured image is uploaded after the post exists (same pattern as products).
+            $featuredImageFile = $request->file('featured_image');
+            unset($validated['featured_image']);
 
             // Set published_at if status is published and not set
             if ($validated['status'] === 'published') {
@@ -175,6 +170,16 @@ class BlogPostController extends Controller
 
             // Create post
             $post = BlogPost::create($validated);
+
+            if ($featuredImageFile) {
+                $path = $this->blogMedia->storeFeaturedImage($post, $featuredImageFile);
+                if (! $path) {
+                    DB::rollBack();
+
+                    return back()->withInput()->with('error', 'فشل رفع الصورة البارزة.');
+                }
+                $post->update(['featured_image' => $path]);
+            }
 
             // Attach tags
             if (!empty($tags)) {
@@ -331,13 +336,15 @@ class BlogPostController extends Controller
             
             $validated['slug'] = $slug;
 
-            // Handle featured image upload
+            // Handle featured image upload (cloud-first, same as product images)
             if ($request->hasFile('featured_image')) {
-                // Delete old image
-                if ($post->featured_image && $this->storageHelper->fileExists('public', $post->featured_image)) {
-                    $this->storageHelper->deleteFile('public', $post->featured_image);
+                $path = $this->blogMedia->replaceFeaturedImage($post, $request->file('featured_image'));
+                if (! $path) {
+                    DB::rollBack();
+
+                    return back()->withInput()->with('error', 'فشل رفع الصورة البارزة.');
                 }
-                $validated['featured_image'] = $this->storageHelper->storeUploadedFile('public', 'blog/images', $request->file('featured_image'), 'image');
+                $validated['featured_image'] = $path;
             }
 
             // Set published_at if status changed to published
@@ -421,8 +428,8 @@ class BlogPostController extends Controller
             $tagIds = $post->tags->pluck('id')->toArray();
 
             // Delete featured image
-            if ($post->featured_image && $this->storageHelper->fileExists('public', $post->featured_image)) {
-                $this->storageHelper->deleteFile('public', $post->featured_image);
+            if ($post->featured_image) {
+                $this->blogMedia->deleteFeaturedImage($post->featured_image);
             }
 
             // Delete post (will auto-detach tags due to cascade)
@@ -506,13 +513,7 @@ class BlogPostController extends Controller
             return back()->with('error', 'لا توجد صورة لحذفها');
         }
 
-        $path = $post->featured_image;
-
-        if ($this->storageHelper->fileExists('public', $path)) {
-            $this->storageHelper->deleteFile('public', $path);
-        } else {
-            $this->storageHelper->deleteMedia($this->storageHelper->mediaDisk(), $path);
-        }
+        $this->blogMedia->deleteFeaturedImage($post->featured_image);
 
         $post->featured_image = null;
         $post->featured_image_alt = null;

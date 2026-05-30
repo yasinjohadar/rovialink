@@ -27,7 +27,7 @@ if (!function_exists('blog_image_url')) {
      * @param string|null $imagePath The image path from database
      * @return string The full URL to the image
      */
-    function blog_image_url($imagePath)
+    function blog_image_url($imagePath, $seed = null)
     {
         if (empty($imagePath)) {
             return asset('frontend/assets/images/placeholder.jpg');
@@ -37,32 +37,12 @@ if (!function_exists('blog_image_url')) {
             return $imagePath;
         }
 
-        // Clean the path
-        $imagePath = ltrim($imagePath, '/');
-        $filename = basename($imagePath);
-        
-        // Method 1: Try StorageHelperService (dynamic storage) - FIRST
-        try {
-            $storageHelper = app(\App\Services\Storage\StorageHelperService::class);
-            $url = $storageHelper->getFileUrl('public', $imagePath);
-            if (!empty($url) && filter_var($url, FILTER_VALIDATE_URL)) {
-                return $url;
-            }
-        } catch (\Exception $e) {
-            // Continue to next method
+        $url = media_url(ltrim($imagePath, '/'));
+        if (! empty($url)) {
+            return $url;
         }
-        
-        // Method 2: Try route (local storage fallback) - SECOND
-        try {
-            if (strpos($imagePath, 'blog/images/') !== false) {
-                return route('blog.image', ['filename' => $filename]);
-            }
-        } catch (\Exception $e) {
-            // Continue to next method
-        }
-        
-        // Method 3: Fallback to asset (requires storage link) - LAST
-        return asset('storage/' . $imagePath);
+
+        return asset('frontend/assets/images/placeholder.jpg');
     }
 }
 
@@ -149,6 +129,13 @@ if (!function_exists('course_cover_url')) {
     }
 }
 
+if (!function_exists('media_serve_url')) {
+    function media_serve_url(string $path): string
+    {
+        return app(\App\Services\Storage\StorageHelperService::class)->mediaServeUrl($path);
+    }
+}
+
 if (!function_exists('media_url')) {
     /**
      * Resolve URL for catalog media (products, categories, hero, site settings files).
@@ -161,15 +148,29 @@ if (!function_exists('media_url')) {
             return null;
         }
 
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
         try {
             $storageHelper = app(\App\Services\Storage\StorageHelperService::class);
             $disk = $storageHelper->mediaDisk();
+            $cleanPath = ltrim($path, '/');
+            $url = $storageHelper->resolveMediaUrl($disk, $cleanPath);
 
-            return $storageHelper->resolveMediaUrl($disk, $path);
+            if (! empty($url) && ! $storageHelper->isPublicStorageUrl($url)) {
+                return $url;
+            }
+
+            if ($storageHelper->mediaExists($disk, $cleanPath)) {
+                return $storageHelper->mediaServeUrl($cleanPath);
+            }
+
+            return ! empty($url) ? $storageHelper->mediaServeUrl($cleanPath) : null;
         } catch (\Throwable $e) {
             $clean = ltrim($path, '/');
 
-            return $clean !== '' ? asset('storage/' . $clean) : null;
+            return $clean !== '' ? media_serve_url($clean) : null;
         }
     }
 }

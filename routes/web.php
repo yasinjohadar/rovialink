@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\PublicMediaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+
+Route::get('media/{path}', PublicMediaController::class)
+    ->where('path', '.*')
+    ->name('media.serve');
 
 Route::get('/dashboard', function () {
     return redirect(\App\Support\AuthRedirect::home());
