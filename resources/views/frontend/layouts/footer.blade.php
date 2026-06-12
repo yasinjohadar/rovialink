@@ -1,87 +1,89 @@
-<footer class="site-footer" dir="rtl">
+<footer class="site-footer site-footer--unified site-footer--rich" dir="rtl">
     <div class="site-footer__bg" aria-hidden="true">
         <div class="site-footer__orb site-footer__orb--1"></div>
         <div class="site-footer__orb site-footer__orb--2"></div>
+        <div class="site-footer__orb site-footer__orb--3"></div>
         <div class="site-footer__grid-pattern"></div>
+        <span class="site-footer__square site-footer__square--1"></span>
+        <span class="site-footer__square site-footer__square--2"></span>
+        <span class="site-footer__square site-footer__square--3"></span>
     </div>
 
-    {{-- شريط العروض / النشرة --}}
-    <div class="site-footer__cta">
-        <div class="container">
-            <div class="footer-cta-card">
-                <div class="footer-cta-card__panel" aria-hidden="true"></div>
-                <div class="row align-items-center g-4 g-lg-5">
-                    <div class="col-lg-5 col-xl-5">
-                        <span class="footer-cta-badge"><i class="fas fa-bolt"></i> عروض حصرية</span>
-                        <h3 class="footer-cta-title mb-2">انضم لنشرة {{ site_brand_name() }}</h3>
-                        <p class="footer-cta-text mb-0">احصل على خصومات أسبوعية وإشعارات المنتجات الجديدة قبل الجميع.</p>
-                    </div>
-                    <div class="col-lg-7 col-xl-7">
-                        <form class="footer-newsletter" action="{{ route('frontend.contact') }}" method="get">
-                            <label class="visually-hidden" for="footer-newsletter-email">البريد الإلكتروني</label>
-                            <div class="footer-newsletter__inner">
-                                <span class="footer-newsletter__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
-                                <input type="email"
-                                       id="footer-newsletter-email"
-                                       name="email"
-                                       class="footer-newsletter__input"
-                                       placeholder="أدخل بريدك الإلكتروني"
-                                       required
-                                       autocomplete="email">
-                                <button type="submit" class="footer-newsletter__btn">
-                                    <span>اشترك الآن</span>
-                                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </form>
-                        <p class="footer-newsletter-hint mb-0 mt-3"><i class="fas fa-lock" aria-hidden="true"></i> لن نشارك بريدك مع أي طرف ثالث</p>
-                    </div>
+    <div class="container site-footer__wrap">
+        <div class="site-footer__panel">
+            <div class="site-footer__subscribe">
+                <div class="site-footer__subscribe-copy">
+                    <span class="site-footer__subscribe-badge"><i class="fas fa-envelope-open-text" aria-hidden="true"></i> النشرة البريدية</span>
+                    <p class="mb-0">اشترك لتصلك العروض والمنتجات الجديدة أولاً</p>
                 </div>
+                <form class="site-footer__subscribe-form" action="{{ route('frontend.contact') }}" method="get">
+                    <label class="visually-hidden" for="footer-subscribe-email">البريد الإلكتروني</label>
+                    <input type="email"
+                           id="footer-subscribe-email"
+                           name="email"
+                           class="site-footer__subscribe-input"
+                           placeholder="name@example.com"
+                           dir="ltr"
+                           required
+                           autocomplete="email">
+                    <button type="submit" class="site-footer__subscribe-btn">
+                        <span>اشترك</span>
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    </button>
+                </form>
             </div>
-        </div>
-    </div>
 
-    {{-- المحتوى الرئيسي --}}
-    <div class="site-footer__main">
-        <div class="container">
-            <div class="row g-5">
+            <div class="row site-footer__grid g-4 g-xl-5">
                 <div class="col-lg-4 col-md-6">
                     <a href="{{ route('frontend.home') }}" class="footer-brand d-inline-flex align-items-center text-decoration-none mb-3">
                         @if(site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_LOGO))
                             <img src="{{ site_setting_url(\App\Services\SiteSettingsService::KEY_SITE_LOGO) }}"
                                  alt="{{ site_brand_name() }}"
                                  class="footer-brand__logo"
-                                 width="44"
-                                 height="44">
+                                 width="52"
+                                 height="52">
                         @else
                             <span class="footer-brand__icon"><i class="fas fa-store"></i></span>
                         @endif
                         <span class="footer-brand__text">
                             <span class="footer-brand__name">{{ site_brand_name() }}</span>
-                            <span class="footer-brand__tagline en-text">Smart Shopping</span>
+                            <span class="footer-brand__tagline">متجر منتجات رقمية موثوق</span>
                         </span>
                     </a>
-                    <p class="footer-about">
-                        {{ site_footer_text() }}
-                    </p>
-                    <div class="footer-stats row g-2">
-                        <div class="col-4">
-                            <div class="footer-stat">
-                                <strong>+500</strong>
-                                <span>منتج</span>
-                            </div>
+                    <p class="footer-about">{{ site_footer_text() }}</p>
+
+                    <div class="footer-stat-chips">
+                        <div class="footer-stat-chip">
+                            <span class="footer-stat-chip__icon" aria-hidden="true"><i class="fas fa-cube"></i></span>
+                            <span class="footer-stat-chip__body">
+                                <strong class="en-text">+500</strong>
+                                <small>منتج رقمي</small>
+                            </span>
                         </div>
-                        <div class="col-4">
-                            <div class="footer-stat">
-                                <strong>24/7</strong>
-                                <span>دعم</span>
-                            </div>
+                        <div class="footer-stat-chip">
+                            <span class="footer-stat-chip__icon" aria-hidden="true"><i class="fas fa-headset"></i></span>
+                            <span class="footer-stat-chip__body">
+                                <strong class="en-text">24/7</strong>
+                                <small>دعم فني</small>
+                            </span>
                         </div>
-                        <div class="col-4">
-                            <div class="footer-stat">
-                                <strong>4.9</strong>
-                                <span>تقييم</span>
-                            </div>
+                        <div class="footer-stat-chip">
+                            <span class="footer-stat-chip__icon" aria-hidden="true"><i class="fas fa-star"></i></span>
+                            <span class="footer-stat-chip__body">
+                                <strong class="en-text">4.9</strong>
+                                <small>تقييم العملاء</small>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="footer-social">
+                        <span class="footer-social__label">تابعنا</span>
+                        <div class="footer-social__links">
+                            <a href="#" class="footer-social__link" aria-label="تويتر" data-social="twitter"><i class="fab fa-x-twitter"></i></a>
+                            <a href="#" class="footer-social__link" aria-label="فيسبوك" data-social="facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="footer-social__link" aria-label="إنستغرام" data-social="instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="footer-social__link" aria-label="لينكدإن" data-social="linkedin"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="footer-social__link" aria-label="يوتيوب" data-social="youtube"><i class="fab fa-youtube"></i></a>
                         </div>
                     </div>
                 </div>
@@ -115,12 +117,16 @@
 
                 <div class="col-lg-4 col-md-6">
                     <h6 class="footer-heading">تواصل معنا</h6>
-                    <ul class="footer-contact-list">
+                    @php
+                        $hasContact = site_contact_email() !== '' || site_contact_phone() !== '' || site_address() !== '';
+                    @endphp
+                    @if($hasContact)
+                    <ul class="footer-contact-cards">
                         @if(site_contact_email() !== '')
                         <li>
-                            <a href="mailto:{{ site_contact_email() }}" class="footer-contact-item">
-                                <span class="footer-contact-item__icon"><i class="fas fa-envelope"></i></span>
-                                <span>
+                            <a href="mailto:{{ site_contact_email() }}" class="footer-contact-card">
+                                <span class="footer-contact-card__icon"><i class="fas fa-envelope"></i></span>
+                                <span class="footer-contact-card__body">
                                     <small>البريد الإلكتروني</small>
                                     <strong>{{ site_contact_email() }}</strong>
                                 </span>
@@ -129,9 +135,9 @@
                         @endif
                         @if(site_contact_phone() !== '')
                         <li>
-                            <a href="{{ site_contact_phone_href() }}" class="footer-contact-item">
-                                <span class="footer-contact-item__icon"><i class="fas fa-phone"></i></span>
-                                <span>
+                            <a href="{{ site_contact_phone_href() }}" class="footer-contact-card">
+                                <span class="footer-contact-card__icon"><i class="fas fa-phone"></i></span>
+                                <span class="footer-contact-card__body">
                                     <small>الهاتف</small>
                                     <strong class="en-text" dir="ltr">{{ site_contact_phone() }}</strong>
                                 </span>
@@ -140,9 +146,9 @@
                         @endif
                         @if(site_address() !== '')
                         <li>
-                            <div class="footer-contact-item footer-contact-item--static">
-                                <span class="footer-contact-item__icon"><i class="fas fa-location-dot"></i></span>
-                                <span>
+                            <div class="footer-contact-card footer-contact-card--static">
+                                <span class="footer-contact-card__icon"><i class="fas fa-location-dot"></i></span>
+                                <span class="footer-contact-card__body">
                                     <small>العنوان</small>
                                     <strong>{{ site_address() }}</strong>
                                 </span>
@@ -150,68 +156,52 @@
                         </li>
                         @endif
                     </ul>
-                    <div class="footer-social">
-                        <a href="#" class="footer-social__link" aria-label="تويتر" data-social="twitter"><i class="fab fa-x-twitter"></i></a>
-                        <a href="#" class="footer-social__link" aria-label="فيسبوك" data-social="facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="footer-social__link" aria-label="إنستغرام" data-social="instagram"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="footer-social__link" aria-label="لينكدإن" data-social="linkedin"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="footer-social__link" aria-label="يوتيوب" data-social="youtube"><i class="fab fa-youtube"></i></a>
+                    @else
+                    <div class="footer-contact-fallback">
+                        <p class="footer-contact-fallback__text mb-3">فريقنا جاهز لمساعدتك في أي استفسار حول المنتجات الرقمية والطلبات.</p>
+                        <a href="{{ route('frontend.contact') }}" class="footer-contact-fallback__btn">
+                            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            <span>أرسل رسالة</span>
+                        </a>
                     </div>
+                    @endif
                 </div>
             </div>
-        </div>
-    </div>
 
-    {{-- مميزات الثقة --}}
-    <div class="site-footer__features">
-        <div class="container">
-            <div class="row g-3">
-                <div class="col-6 col-lg-3">
-                    <div class="footer-feature">
-                        <span class="footer-feature__icon"><i class="fas fa-truck-fast"></i></span>
-                        <div>
-                            <strong>توصيل سريع</strong>
-                            <span>خلال 24–48 ساعة</span>
-                        </div>
-                    </div>
+            <div class="site-footer__trust-grid">
+                <div class="footer-trust-pill">
+                    <span class="footer-trust-pill__icon"><i class="fas fa-bolt" aria-hidden="true"></i></span>
+                    <span class="footer-trust-pill__text">
+                        <strong>تسليم فوري</strong>
+                        <small>فور إتمام الدفع</small>
+                    </span>
                 </div>
-                <div class="col-6 col-lg-3">
-                    <div class="footer-feature">
-                        <span class="footer-feature__icon"><i class="fas fa-shield-halved"></i></span>
-                        <div>
-                            <strong>دفع آمن</strong>
-                            <span>تشفير SSL كامل</span>
-                        </div>
-                    </div>
+                <div class="footer-trust-pill">
+                    <span class="footer-trust-pill__icon"><i class="fas fa-shield-halved" aria-hidden="true"></i></span>
+                    <span class="footer-trust-pill__text">
+                        <strong>دفع آمن</strong>
+                        <small>تشفير SSL كامل</small>
+                    </span>
                 </div>
-                <div class="col-6 col-lg-3">
-                    <div class="footer-feature">
-                        <span class="footer-feature__icon"><i class="fas fa-headset"></i></span>
-                        <div>
-                            <strong>دعم متواصل</strong>
-                            <span>فريق جاهز لمساعدتك</span>
-                        </div>
-                    </div>
+                <div class="footer-trust-pill">
+                    <span class="footer-trust-pill__icon"><i class="fas fa-headset" aria-hidden="true"></i></span>
+                    <span class="footer-trust-pill__text">
+                        <strong>دعم 24/7</strong>
+                        <small>فريق جاهز لمساعدتك</small>
+                    </span>
                 </div>
-                <div class="col-6 col-lg-3">
-                    <div class="footer-feature">
-                        <span class="footer-feature__icon"><i class="fas fa-rotate-left"></i></span>
-                        <div>
-                            <strong>إرجاع سهل</strong>
-                            <span>خلال 14 يوماً</span>
-                        </div>
-                    </div>
+                <div class="footer-trust-pill">
+                    <span class="footer-trust-pill__icon"><i class="fas fa-award" aria-hidden="true"></i></span>
+                    <span class="footer-trust-pill__text">
+                        <strong>ضمان الجودة</strong>
+                        <small>منتجات أصلية 100%</small>
+                    </span>
                 </div>
             </div>
-        </div>
-    </div>
 
-    {{-- الشريط السفلي --}}
-    <div class="site-footer__bottom">
-        <div class="container">
-            <div class="footer-bottom-inner">
+            <div class="site-footer__bar">
                 <p class="footer-copyright mb-0">
-                    &copy; {{ date('Y') }} <strong>{{ site_brand_name() }}</strong>. جميع الحقوق محفوظة.
+                    &copy; {{ date('Y') }} <strong>{{ site_brand_name() }}</strong> — جميع الحقوق محفوظة
                 </p>
                 <div class="footer-payments" aria-label="طرق الدفع">
                     <span class="footer-payment" title="Visa"><i class="fab fa-cc-visa"></i></span>
