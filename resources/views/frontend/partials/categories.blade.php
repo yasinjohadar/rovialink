@@ -7,13 +7,13 @@
             </div>
             <a href="{{ route('frontend.shop.index') }}" class="btn btn-outline-light rounded-pill px-4 d-none d-md-block">عرض الكل</a>
         </div>
-        <div class="row g-4 categories-home-row">
+        <div class="row g-3 g-md-4 categories-home-row">
             @forelse($categories->take(6) as $category)
-            <div class="col-6 col-md-4 col-lg-3">
-                <a href="{{ route('frontend.category.show', $category->slug) }}" class="category-card-link d-block h-100 text-decoration-none">
-                    <div class="glass-card category-card category-card--home category-card--visual h-100">
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ route('frontend.category.show', $category->slug) }}" class="category-card-link d-block text-decoration-none">
+                    <div class="glass-card category-card category-card--home category-card--visual">
                         <span class="elegant-card__shine" aria-hidden="true"></span>
-                        <div class="category-card__media">
+                        <div class="category-card__media category-card__media--square">
                             <img src="{{ $category->image_url }}"
                                  alt="{{ $category->name }}"
                                  loading="lazy"
