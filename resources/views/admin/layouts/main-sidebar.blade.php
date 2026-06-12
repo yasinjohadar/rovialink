@@ -52,6 +52,7 @@
                             $integrationsActive = request()->routeIs('admin.whatsapp*');
 
                             $usersActive = request()->routeIs('admin.roles.*', 'admin.users.*');
+                            $siteSettingsActive = request()->routeIs('admin.site-settings.*');
                             $generalActive = request()->routeIs('admin.system-status.*', 'admin.activity-log.*');
                             $mailActive = request()->routeIs('admin.settings.email.*', 'admin.email-templates.*');
                             $storageActive = request()->routeIs(
@@ -61,7 +62,7 @@
                                 'admin.backups.*', 'admin.backup-schedules.*', 'admin.backup-storage.*'
                             );
                             $aiActive = request()->routeIs('admin.ai.*');
-                            $systemActive = $usersActive || $generalActive || $mailActive || $storageActive || $backupActive || $aiActive;
+                            $systemActive = $siteSettingsActive || $usersActive || $generalActive || $mailActive || $storageActive || $backupActive || $aiActive;
                         @endphp
 
                         {{-- لوحة التحكم --}}
@@ -269,6 +270,10 @@
                                 <i class="fe fe-chevron-right side-menu__angle"></i>
                             </a>
                             <ul class="slide-menu child1">
+                                <li class="slide {{ $siteSettingsActive ? 'active' : '' }}">
+                                    <a href="{{ route('admin.site-settings.index') }}" class="side-menu__item">إعدادات الموقع</a>
+                                </li>
+
                                 <li class="slide has-sub {{ $usersActive ? 'open active' : '' }}">
                                     <a href="javascript:void(0);" class="side-menu__item">
                                         <span class="side-menu__label">المستخدمون والصلاحيات</span>

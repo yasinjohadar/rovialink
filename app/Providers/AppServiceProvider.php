@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\View;
 use App\Events\WhatsAppMessageReceived;
 use App\Listeners\AutoReplyWhatsAppListener;
+use App\Services\Auth\SocialAuthService;
 use App\Services\CurrencyService;
 use App\Services\ThemeColorService;
 
@@ -47,5 +48,9 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('themeColors', app(ThemeColorService::class)->toCssVariables());
             }
         );
+
+        View::composer(['auth.login', 'auth.register'], function ($view) {
+            $view->with('socialAuthProviders', app(SocialAuthService::class)->enabledProviders());
+        });
     }
 }

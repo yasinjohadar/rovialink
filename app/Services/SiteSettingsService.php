@@ -4,7 +4,9 @@ namespace App\Services;
 
 use App\Models\SystemSetting;
 use App\Services\Storage\StorageHelperService;
+use Exception;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Crypt;
 
 class SiteSettingsService
 {
@@ -29,6 +31,19 @@ class SiteSettingsService
     public const KEY_SITE_TWITTER_URL = 'site_twitter_url';
     public const KEY_SITE_INSTAGRAM_URL = 'site_instagram_url';
     public const KEY_SITE_WHATSAPP_NUMBER = 'site_whatsapp_number';
+
+    public const KEY_AUTH_GOOGLE_ENABLED = 'auth_google_enabled';
+    public const KEY_AUTH_FACEBOOK_ENABLED = 'auth_facebook_enabled';
+    public const KEY_AUTH_GOOGLE_CLIENT_ID = 'auth_google_client_id';
+    public const KEY_AUTH_GOOGLE_CLIENT_SECRET = 'auth_google_client_secret';
+    public const KEY_AUTH_FACEBOOK_CLIENT_ID = 'auth_facebook_client_id';
+    public const KEY_AUTH_FACEBOOK_CLIENT_SECRET = 'auth_facebook_client_secret';
+
+    /** @var list<string> */
+    private const ENCRYPTED_KEYS = [
+        self::KEY_AUTH_GOOGLE_CLIENT_SECRET,
+        self::KEY_AUTH_FACEBOOK_CLIENT_SECRET,
+    ];
 
     public const KEY_HERO_BADGE = 'hero_badge';
     public const KEY_HERO_TITLE_PREFIX = 'hero_title_prefix';
@@ -222,6 +237,48 @@ class SiteSettingsService
                 'label' => 'رابط انستغرام',
                 'section' => 'social',
                 'hint' => '',
+            ],
+            self::KEY_AUTH_GOOGLE_ENABLED => [
+                'type' => 'boolean',
+                'default' => false,
+                'label' => 'تفعيل تسجيل الدخول عبر Google',
+                'section' => 'social_auth',
+                'hint' => 'يظهر زر Google في صفحات الدخول والتسجيل عند اكتمال المفاتيح.',
+            ],
+            self::KEY_AUTH_FACEBOOK_ENABLED => [
+                'type' => 'boolean',
+                'default' => false,
+                'label' => 'تفعيل تسجيل الدخول عبر Facebook',
+                'section' => 'social_auth',
+                'hint' => 'يظهر زر Facebook في صفحات الدخول والتسجيل عند اكتمال المفاتيح.',
+            ],
+            self::KEY_AUTH_GOOGLE_CLIENT_ID => [
+                'type' => 'string',
+                'default' => '',
+                'label' => 'Google Client ID',
+                'section' => 'social_auth',
+                'hint' => 'من Google Cloud Console → Credentials → OAuth 2.0 Client IDs.',
+            ],
+            self::KEY_AUTH_GOOGLE_CLIENT_SECRET => [
+                'type' => 'encrypted',
+                'default' => '',
+                'label' => 'Google Client Secret',
+                'section' => 'social_auth',
+                'hint' => 'يُخزَّن مشفّراً. اترك الحقل فارغاً للإبقاء على القيمة الحالية.',
+            ],
+            self::KEY_AUTH_FACEBOOK_CLIENT_ID => [
+                'type' => 'string',
+                'default' => '',
+                'label' => 'Facebook App ID',
+                'section' => 'social_auth',
+                'hint' => 'من Meta for Developers → App → Settings → Basic.',
+            ],
+            self::KEY_AUTH_FACEBOOK_CLIENT_SECRET => [
+                'type' => 'encrypted',
+                'default' => '',
+                'label' => 'Facebook App Secret',
+                'section' => 'social_auth',
+                'hint' => 'يُخزَّن مشفّراً. اترك الحقل فارغاً للإبقاء على القيمة الحالية.',
             ],
             self::KEY_HERO_BADGE => [
                 'type' => 'string',
@@ -1016,7 +1073,34 @@ class SiteSettingsService
             'locale' => 'اللغة والمنطقة',
             'seo' => 'SEO والتذييل',
             'social' => 'وسائل التواصل',
+            'social_auth' => 'تسجيل الدخول الاجتماعي',
         ];
+    }
+
+    public function isEncryptedConfigured(string $key): bool
+    {
+        if (! in_array($key, self::ENCRYPTED_KEYS, true)) {
+            return false;
+        }
+
+        $value = SystemSetting::getValue($key, '');
+
+        return is_string($value) && $value !== '';
+    }
+
+    public function getDecrypted(string $key, string $default = ''): string
+    {
+        $def = self::schema()[$key] ?? null;
+        if (! $def || ($def['type'] ?? '') !== 'encrypted') {
+            return $default;
+        }
+
+        $raw = SystemSetting::getValue($key, '');
+        if ($raw === null || $raw === '') {
+            return $default;
+        }
+
+        return $this->decryptValue((string) $raw);
     }
 
     /**
@@ -1244,13 +1328,19 @@ class SiteSettingsService
     {
         $schema = self::schema();
         foreach ($data as $key => $value) {
-            if (!array_key_exists($key, $schema)) {
+            if (! array_key_exists($key, $schema)) {
                 continue;
             }
             $def = $schema[$key];
             $type = $def['type'];
             if ($type === 'boolean') {
                 $value = filter_var($value, FILTER_VALIDATE_BOOLEAN) ? '1' : '0';
+            } elseif ($type === 'encrypted') {
+                if ($value === null || $value === '') {
+                    continue;
+                }
+                $value = Crypt::encryptString((string) $value);
+                $type = 'string';
             } elseif (in_array($type, ['json', 'array'], true)) {
                 $value = is_array($value)
                     ? json_encode($value, JSON_UNESCAPED_UNICODE)
@@ -1305,11 +1395,21 @@ class SiteSettingsService
             'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
             'integer' => (int) $value,
             'float' => (float) $value,
+            'encrypted' => '',
             'array', 'json' => is_string($value) && $value !== ''
                 ? json_decode($value, true)
                 : (is_array($value) ? $value : null),
             default => (string) $value,
         };
+    }
+
+    private function decryptValue(string $value): string
+    {
+        try {
+            return Crypt::decryptString($value);
+        } catch (Exception) {
+            return $value;
+        }
     }
 
     /**
@@ -1337,6 +1437,12 @@ class SiteSettingsService
             self::KEY_SITE_FACEBOOK_URL => ['nullable', 'url', 'max:500'],
             self::KEY_SITE_TWITTER_URL => ['nullable', 'url', 'max:500'],
             self::KEY_SITE_INSTAGRAM_URL => ['nullable', 'url', 'max:500'],
+            self::KEY_AUTH_GOOGLE_ENABLED => ['nullable', 'boolean'],
+            self::KEY_AUTH_FACEBOOK_ENABLED => ['nullable', 'boolean'],
+            self::KEY_AUTH_GOOGLE_CLIENT_ID => ['nullable', 'string', 'max:500'],
+            self::KEY_AUTH_GOOGLE_CLIENT_SECRET => ['nullable', 'string', 'max:500'],
+            self::KEY_AUTH_FACEBOOK_CLIENT_ID => ['nullable', 'string', 'max:500'],
+            self::KEY_AUTH_FACEBOOK_CLIENT_SECRET => ['nullable', 'string', 'max:500'],
             'site_logo_file' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,webp,svg', 'max:2048'],
             'site_favicon_file' => ['nullable', 'file', 'mimes:jpg,jpeg,png,gif,webp,svg,ico', 'max:1024'],
             self::KEY_HERO_BADGE => ['nullable', 'string', 'max:255'],

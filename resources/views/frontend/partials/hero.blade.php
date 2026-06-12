@@ -22,6 +22,12 @@
 
     <div class="hero-section__glass" aria-hidden="true"></div>
 
+    <div class="hero-bg-squares" aria-hidden="true">
+        @for ($i = 1; $i <= 18; $i++)
+            <span class="hero-bg-square hero-bg-square--{{ $i }}"></span>
+        @endfor
+    </div>
+
     <div class="container hero-section__content position-relative z-1">
         <div class="row hero-section__row align-items-stretch g-4 g-lg-3">
             <div class="col-12 col-lg-6 hero-section__copy text-center text-lg-start order-last order-lg-first">
@@ -65,16 +71,19 @@
 </section>
 
 @if(!empty($hero['stats']))
-<section class="hero-stats-section">
-    <div class="container py-4 py-lg-5">
-        <div class="row g-4 section-fade-up hero-stats-row">
-            @foreach($hero['stats'] as $stat)
+<section class="hero-stats-section position-relative overflow-hidden">
+    <div class="container py-4 py-lg-5 position-relative">
+        <div class="row g-4 g-lg-3 section-fade-up hero-stats-row">
+            @foreach($hero['stats'] as $index => $stat)
                 <div class="col-6 col-md-3">
-                    <div class="glass-card hero-stat-card h-100">
+                    <div class="glass-card hero-stat-card hero-stat-card--{{ ($index % 4) + 1 }} h-100">
+                        <span class="hero-stat-card__orb" aria-hidden="true"></span>
                         <span class="elegant-card__shine" aria-hidden="true"></span>
                         <div class="hero-stat-card__body">
-                            <div class="elegant-card__icon-wrap hero-stat-card__icon">
-                                <i class="fas {{ $stat['icon'] ?? 'fa-star' }}"></i>
+                            <div class="hero-stat-card__icon-ring">
+                                <div class="elegant-card__icon-wrap hero-stat-card__icon">
+                                    @include('frontend.partials.elegant-icon', ['icon' => $stat['icon'] ?? 'fa-star'])
+                                </div>
                             </div>
                             <h2 class="hero-stat-card__value counter en-text fw-bold" data-target="{{ (int) ($stat['target'] ?? 0) }}">0</h2>
                             <p class="hero-stat-card__label">{{ $stat['label'] ?? '' }}</p>

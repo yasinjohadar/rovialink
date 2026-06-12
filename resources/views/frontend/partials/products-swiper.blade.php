@@ -1,5 +1,11 @@
-<section class="py-5 bg-gradient-opacity section-fade-up">
-    <div class="container py-4">
+<section class="home-latest-products-section py-5 bg-gradient-opacity section-fade-up position-relative overflow-hidden">
+    <div class="home-latest-products__squares" aria-hidden="true">
+        @for ($i = 1; $i <= 12; $i++)
+            <span class="home-latest-products__square home-latest-products__square--{{ $i }}"></span>
+        @endfor
+    </div>
+
+    <div class="container py-4 position-relative">
         <div class="d-flex justify-content-between align-items-end mb-5">
             <div>
                 <h6 class="text-accent fw-bold text-uppercase tracking-wide">وصل حديثاً</h6>

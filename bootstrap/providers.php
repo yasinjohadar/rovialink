@@ -5,4 +5,5 @@ return [
     App\Providers\MailConfigServiceProvider::class,
     App\Providers\StorageServiceProvider::class,
     App\Providers\StorageHelperServiceProvider::class,
+    Laravel\Socialite\SocialiteServiceProvider::class,
 ];

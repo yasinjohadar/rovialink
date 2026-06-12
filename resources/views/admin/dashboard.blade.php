@@ -5,163 +5,137 @@
 @stop
 
 @section('css')
-<link href="{{ asset('assets/css/admin-dashboard.css') }}?v=3" rel="stylesheet">
+    @include('frontend.layouts.theme-variables')
+    <link rel="stylesheet" href="{{ asset('assets/css/admin-orders-index.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('assets/css/admin-dashboard.css') }}?v=4">
 @stop
 
 @section('content')
-        <div class="main-content app-content">
-            <div class="container-fluid">
-                <div class="page-header">
+    <div class="main-content app-content">
+        <div class="container-fluid dashboard-index-page my-4">
+            <div class="orders-index-hero">
+                <div class="orders-index-hero__top">
                     <div>
-                        <h3 class="page-title">مرحباً بك في لوحة التحكم</h3>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">لوحة التحكم</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">الرئيسية</li>
-                        </ol>
+                        <h1 class="orders-index-hero__title">مرحباً بك في لوحة التحكم</h1>
+                        <p class="orders-index-hero__subtitle">نظرة سريعة على أداء المتجر والطلبات والعملاء</p>
+                    </div>
+                    <div class="orders-index-hero__actions">
+                        <a href="{{ route('admin.orders.index') }}" class="btn btn-sm">
+                            <i class="bi bi-bag-check me-1"></i> الطلبات
+                        </a>
+                        <a href="{{ route('admin.products.create') }}" class="btn btn-sm">
+                            <i class="bi bi-plus-lg me-1"></i> منتج جديد
+                        </a>
+                    </div>
+                </div>
+                <div class="orders-index-stats">
+                    <div class="orders-index-stat">
+                        <div class="orders-index-stat__label">إجمالي الطلبات</div>
+                        <div class="orders-index-stat__value">{{ number_format($stats['orders_total']) }}</div>
+                    </div>
+                    <div class="orders-index-stat">
+                        <div class="orders-index-stat__label">مبيعات الشهر</div>
+                        <div class="orders-index-stat__value">{{ format_money($stats['sales_month']) }}</div>
+                    </div>
+                    <div class="orders-index-stat">
+                        <div class="orders-index-stat__label">طلبات معلّقة</div>
+                        <div class="orders-index-stat__value">{{ number_format($stats['orders_pending']) }}</div>
+                    </div>
+                    <div class="orders-index-stat">
+                        <div class="orders-index-stat__label">العملاء</div>
+                        <div class="orders-index-stat__value">{{ number_format($stats['customers_total']) }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="orders-index-panel dash-widgets-panel mb-4">
+                <div class="orders-index-panel__head">
+                    <h2 class="orders-index-panel__title">
+                        <i class="bi bi-grid-1x2"></i>
+                        مؤشرات الأداء
+                    </h2>
+                </div>
+                <div class="p-3 p-md-4">
+                    <div class="row g-3 dash-widgets-row">
+                        @foreach($widgets as $widget)
+                            @include('admin.partials.dashboard-stat-widget', ['widget' => $widget])
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-xl-6">
+                    <div class="orders-index-panel h-100">
+                        <div class="orders-index-panel__head d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h2 class="orders-index-panel__title mb-0">
+                                <i class="bi bi-clock-history"></i>
+                                أحدث الطلبات
+                            </h2>
+                            <a href="{{ route('admin.orders.index') }}" class="orders-index-view-btn">
+                                <i class="bi bi-arrow-left-short"></i>
+                                عرض الكل
+                            </a>
+                        </div>
+                        <div class="orders-index-table-wrap">
+                            @include('admin.pages.dashboard.partials.recent-orders-table')
+                        </div>
                     </div>
                 </div>
 
-                <div class="row g-3 mb-4 dash-widgets-row">
-                    @foreach($widgets as $widget)
-                        @include('admin.partials.dashboard-stat-widget', ['widget' => $widget])
-                    @endforeach
+                <div class="col-xl-6">
+                    <div class="orders-index-panel h-100">
+                        <div class="orders-index-panel__head d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <h2 class="orders-index-panel__title mb-0">
+                                <i class="bi bi-star"></i>
+                                آراء العملاء الأخيرة
+                            </h2>
+                            <a href="{{ route('admin.reviews.index') }}" class="orders-index-view-btn">
+                                <i class="bi bi-arrow-left-short"></i>
+                                عرض الكل
+                            </a>
+                        </div>
+                        <div class="orders-index-table-wrap">
+                            @include('admin.pages.dashboard.partials.recent-reviews-table')
+                        </div>
+                    </div>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-xl-6">
-                        <div class="card custom-card dash-table-card">
-                            <div class="card-header justify-content-between align-items-center">
-                                <div class="card-title mb-0">أحدث الطلبات</div>
-                                <a href="{{ route('admin.orders.index') }}" class="btn btn-sm btn-outline-primary">عرض الكل</a>
-                            </div>
-                            <div class="card-body dash-table-card__body">
-                                @if($recentOrders->isNotEmpty())
-                                    <div class="table-responsive">
-                                        <table class="table table-hover mb-0">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>الرقم</th>
-                                                    <th>العميل</th>
-                                                    <th>المبلغ</th>
-                                                    <th>الحالة</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($recentOrders as $order)
-                                                    <tr>
-                                                        <td>
-                                                            <a href="{{ route('admin.orders.show', $order) }}" class="fw-semibold text-primary">
-                                                                {{ $order->order_number }}
-                                                            </a>
-                                                        </td>
-                                                        <td>{{ $order->user?->name ?? 'زائر' }}</td>
-                                                        <td>{{ format_money($order->total) }}</td>
-                                                        <td>
-                                                            @if($order->status)
-                                                                <span class="badge text-white" style="background-color: {{ $order->status->color ?? '#6c757d' }}">
-                                                                    {{ $order->status->name }}
-                                                                </span>
-                                                            @else
-                                                                <span class="badge bg-secondary-transparent">—</span>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                <div class="col-12">
+                    <div class="orders-index-panel">
+                        <div class="orders-index-panel__head">
+                            <h2 class="orders-index-panel__title">
+                                <i class="bi bi-lightning-charge"></i>
+                                إجراءات سريعة
+                            </h2>
+                        </div>
+                        <div class="p-3 p-md-4">
+                            <div class="row g-3 dash-quick-actions-row">
+                                @php
+                                    $quickLinks = [
+                                        ['route' => 'admin.products.create', 'icon' => 'bi-plus-circle', 'title' => 'إضافة منتج', 'desc' => 'منتج جديد في المتجر'],
+                                        ['route' => 'admin.orders.index', 'icon' => 'bi-bag-check', 'title' => 'إدارة الطلبات', 'desc' => 'متابعة وتحديث الحالات'],
+                                        ['route' => 'admin.customers.index', 'icon' => 'bi-people', 'title' => 'العملاء', 'desc' => 'حسابات ومشتريات العملاء'],
+                                        ['route' => 'admin.coupons.index', 'icon' => 'bi-tag', 'title' => 'الكوبونات', 'desc' => 'خصومات وعروض'],
+                                        ['route' => 'admin.categories.index', 'icon' => 'bi-folder2', 'title' => 'التصنيفات', 'desc' => 'تنظيم كتالوج المنتجات'],
+                                    ];
+                                @endphp
+                                @foreach($quickLinks as $link)
+                                    <div class="col-6 col-md-4 col-lg">
+                                        <a href="{{ route($link['route']) }}" class="dash-quick-link">
+                                            <span class="dash-quick-link__icon" aria-hidden="true">
+                                                <i class="bi {{ $link['icon'] }}"></i>
+                                            </span>
+                                            <span class="dash-quick-link__title">{{ $link['title'] }}</span>
+                                            <span class="dash-quick-link__desc">{{ $link['desc'] }}</span>
+                                        </a>
                                     </div>
-                                @else
-                                    <div class="text-center text-muted py-5">لا توجد طلبات بعد</div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-6">
-                        <div class="card custom-card dash-table-card">
-                            <div class="card-header justify-content-between align-items-center">
-                                <div class="card-title mb-0">آراء العملاء الأخيرة</div>
-                                <a href="{{ route('admin.reviews.index') }}" class="btn btn-sm btn-outline-primary">عرض الكل</a>
-                            </div>
-                            <div class="card-body dash-table-card__body">
-                                @if($recentReviews->isNotEmpty())
-                                    <div class="table-responsive">
-                                        <table class="table table-hover mb-0">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>المستخدم</th>
-                                                    <th>التقييم</th>
-                                                    <th>التعليق</th>
-                                                    <th>الحالة</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($recentReviews as $review)
-                                                    <tr>
-                                                        <td>{{ $review->user?->name ?? 'مجهول' }}</td>
-                                                        <td>
-                                                            @for($i = 1; $i <= 5; $i++)
-                                                                <i class="fas fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-muted opacity-25' }}" style="font-size:0.7rem"></i>
-                                                            @endfor
-                                                        </td>
-                                                        <td class="text-muted small">{{ \Illuminate\Support\Str::limit($review->comment, 40) }}</td>
-                                                        <td>
-                                                            @switch($review->status)
-                                                                @case('approved')
-                                                                    <span class="badge bg-success-transparent">مقبول</span>
-                                                                    @break
-                                                                @case('rejected')
-                                                                    <span class="badge bg-danger-transparent">مرفوض</span>
-                                                                    @break
-                                                                @default
-                                                                    <span class="badge bg-warning-transparent">انتظار</span>
-                                                            @endswitch
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @else
-                                    <div class="text-center text-muted py-5">لا توجد آراء حالياً</div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-xl-12">
-                        <div class="card custom-card">
-                            <div class="card-header">
-                                <div class="card-title mb-0">إجراءات سريعة</div>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-2">
-                                    @php
-                                        $quickLinks = [
-                                            ['route' => 'admin.products.create', 'icon' => 'fe-plus-circle', 'title' => 'إضافة منتج', 'desc' => 'منتج جديد في المتجر'],
-                                            ['route' => 'admin.orders.index', 'icon' => 'fe-shopping-bag', 'title' => 'إدارة الطلبات', 'desc' => 'متابعة وتحديث الحالات'],
-                                            ['route' => 'admin.customers.index', 'icon' => 'fe-users', 'title' => 'العملاء', 'desc' => 'حسابات ومشتريات العملاء'],
-                                            ['route' => 'admin.coupons.index', 'icon' => 'fe-tag', 'title' => 'الكوبونات', 'desc' => 'خصومات وعروض'],
-                                            ['route' => 'admin.categories.index', 'icon' => 'fe-folder', 'title' => 'التصنيفات', 'desc' => 'تنظيم كتالوج المنتجات'],
-                                        ];
-                                    @endphp
-                                    @foreach($quickLinks as $link)
-                                        <div class="col-6 col-md-4 col-lg-2">
-                                            <a href="{{ route($link['route']) }}" class="dash-quick-link border rounded-3 p-3 h-100 d-flex flex-column align-items-center text-center">
-                                                <span class="dash-quick-link__icon" aria-hidden="true">
-                                                    <i class="fe {{ $link['icon'] }}"></i>
-                                                </span>
-                                                <h6 class="mb-1 fs-13 fw-semibold">{{ $link['title'] }}</h6>
-                                                <p class="text-muted mb-0 small">{{ $link['desc'] }}</p>
-                                            </a>
-                                        </div>
-                                    @endforeach
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
+    </div>
 @stop

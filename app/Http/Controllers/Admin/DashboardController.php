@@ -17,6 +17,7 @@ class DashboardController extends Controller
         $stats = $this->dashboardStats->getStats();
 
         return view('admin.dashboard', [
+            'stats' => $stats,
             'widgets' => $this->dashboardStats->getWidgets($stats),
             'recentOrders' => $this->dashboardStats->recentOrders(),
             'recentReviews' => $this->dashboardStats->recentReviews(),

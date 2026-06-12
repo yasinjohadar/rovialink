@@ -18,9 +18,11 @@
 
                     @include('frontend.partials.auth.social-login')
 
-                    <div class="auth-divider">
-                        <span>أو سجل دخول باستخدام البريد الإلكتروني</span>
-                    </div>
+                    @if (!empty($socialAuthProviders))
+                        <div class="auth-divider">
+                            <span>أو سجل دخول باستخدام البريد الإلكتروني</span>
+                        </div>
+                    @endif
 
                     @include('frontend.partials.auth.login-form')
 

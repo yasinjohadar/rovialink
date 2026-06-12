@@ -21,9 +21,11 @@
                         'facebookLabel' => 'التسجيل مع Facebook',
                     ])
 
-                    <div class="auth-divider">
-                        <span>أو سجل باستخدام البريد الإلكتروني</span>
-                    </div>
+                    @if (!empty($socialAuthProviders))
+                        <div class="auth-divider">
+                            <span>أو سجل باستخدام البريد الإلكتروني</span>
+                        </div>
+                    @endif
 
                     @include('frontend.partials.auth.register-form')
 

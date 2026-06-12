@@ -46,7 +46,7 @@
                 </div>
             </div>
             <span class="dash-widget__arrow">
-                <i class="fe fe-arrow-left"></i>
+                <i class="bi bi-arrow-left"></i>
             </span>
         </div>
     </a>

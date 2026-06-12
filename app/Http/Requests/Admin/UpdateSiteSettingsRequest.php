@@ -37,6 +37,8 @@ class UpdateSiteSettingsRequest extends FormRequest
             'site_favicon_file.mimes' => 'نوع أيقونة الموقع غير مدعوم. استخدم ICO أو PNG أو JPG أو SVG.',
             'site_favicon_file.max' => 'حجم أيقونة الموقع يجب ألا يتجاوز 1 ميجابايت.',
             'site_accent_color.regex' => 'لون التمييز يجب أن يكون بصيغة hex مثل #387e99.',
+            'auth_google_client_id.max' => 'Google Client ID طويل جداً.',
+            'auth_facebook_client_id.max' => 'Facebook App ID طويل جداً.',
         ];
     }
 }
