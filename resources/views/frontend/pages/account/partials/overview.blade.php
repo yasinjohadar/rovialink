@@ -1,45 +1,77 @@
 ﻿<div class="dashboard-section active" id="section-overview">
-    <div class="row g-3 mb-4 section-fade-up">
+    <div class="row g-4 mb-4 section-fade-up hero-stats-row">
         <div class="col-6 col-md-3">
-            <div class="glass-card account-stat">
-                <div class="account-stat__icon"><i class="fas fa-box" aria-hidden="true"></i></div>
-                <h3 class="account-stat__value en-text">{{ $stats['orders_total'] }}</h3>
-                <p class="account-stat__label">إجمالي الطلبات</p>
-            </div>
+            <a href="#orders" class="account-stat-link" data-section-link="orders" aria-label="عرض جميع الطلبات">
+                <div class="glass-card hero-stat-card h-100">
+                    <span class="elegant-card__shine" aria-hidden="true"></span>
+                    <div class="hero-stat-card__body">
+                        <div class="elegant-card__icon-wrap hero-stat-card__icon">
+                            <i class="fas fa-box" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="hero-stat-card__value account-counter en-text fw-bold" data-target="{{ (int) $stats['orders_total'] }}">0</h2>
+                        <p class="hero-stat-card__label">إجمالي الطلبات</p>
+                    </div>
+                </div>
+            </a>
         </div>
         <div class="col-6 col-md-3">
-            <div class="glass-card account-stat">
-                <div class="account-stat__icon account-stat__icon--success"><i class="fas fa-spinner" aria-hidden="true"></i></div>
-                <h3 class="account-stat__value en-text">{{ $stats['orders_active'] }}</h3>
-                <p class="account-stat__label">طلبات قيد المعالجة</p>
-            </div>
+            <a href="#orders" class="account-stat-link" data-section-link="orders" aria-label="عرض الطلبات قيد المعالجة">
+                <div class="glass-card hero-stat-card h-100">
+                    <span class="elegant-card__shine" aria-hidden="true"></span>
+                    <div class="hero-stat-card__body">
+                        <div class="elegant-card__icon-wrap hero-stat-card__icon account-stat-icon--success">
+                            <i class="fas fa-spinner" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="hero-stat-card__value account-counter en-text fw-bold" data-target="{{ (int) $stats['orders_active'] }}">0</h2>
+                        <p class="hero-stat-card__label">طلبات قيد المعالجة</p>
+                    </div>
+                </div>
+            </a>
         </div>
         <div class="col-6 col-md-3">
-            <div class="glass-card account-stat">
-                <div class="account-stat__icon account-stat__icon--warning"><i class="fas fa-heart" aria-hidden="true"></i></div>
-                <h3 class="account-stat__value en-text">{{ $stats['wishlist_count'] }}</h3>
-                <p class="account-stat__label">المفضلة</p>
-            </div>
+            <a href="#wishlist" class="account-stat-link" data-section-link="wishlist" aria-label="عرض المفضلة">
+                <div class="glass-card hero-stat-card h-100">
+                    <span class="elegant-card__shine" aria-hidden="true"></span>
+                    <div class="hero-stat-card__body">
+                        <div class="elegant-card__icon-wrap hero-stat-card__icon account-stat-icon--warning">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="hero-stat-card__value account-counter en-text fw-bold" data-target="{{ (int) $stats['wishlist_count'] }}">0</h2>
+                        <p class="hero-stat-card__label">المفضلة</p>
+                    </div>
+                </div>
+            </a>
         </div>
         <div class="col-6 col-md-3">
-            <div class="glass-card account-stat">
-                <div class="account-stat__icon account-stat__icon--info"><i class="fas fa-coins" aria-hidden="true"></i></div>
-                <h3 class="account-stat__value en-text">{{ $stats['loyalty_points'] }}</h3>
-                <p class="account-stat__label">نقاط المكافآت</p>
-            </div>
+            <a href="#profile" class="account-stat-link" data-section-link="profile" aria-label="عرض نقاط المكافآت">
+                <div class="glass-card hero-stat-card h-100">
+                    <span class="elegant-card__shine" aria-hidden="true"></span>
+                    <div class="hero-stat-card__body">
+                        <div class="elegant-card__icon-wrap hero-stat-card__icon account-stat-icon--info">
+                            <i class="fas fa-coins" aria-hidden="true"></i>
+                        </div>
+                        <h2 class="hero-stat-card__value account-counter en-text fw-bold" data-target="{{ (int) $stats['loyalty_points'] }}">0</h2>
+                        <p class="hero-stat-card__label">نقاط المكافآت</p>
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
 
-    <div class="glass-card p-4 mb-4 section-fade-up">
+    <div class="glass-card account-panel--elevated p-4 mb-4 section-fade-up">
         <div class="account-panel__head">
             <h5 class="account-panel__title"><i class="fas fa-clock me-2" aria-hidden="true"></i> آخر الطلبات</h5>
             <a href="#orders" class="btn btn-sm btn-outline-light rounded-pill px-3" data-section-link="orders">عرض الكل</a>
         </div>
         @if($recentOrders->isEmpty())
-            <p class="text-secondary mb-0">لا توجد طلبات بعد. <a href="{{ route('frontend.shop.index') }}" class="text-accent">تصفح المنتجات</a></p>
+            <div class="account-empty-state text-center py-4">
+                <i class="fas fa-box-open account-empty-state__icon" aria-hidden="true"></i>
+                <p class="text-secondary mb-3">لا توجد طلبات بعد.</p>
+                <a href="{{ route('frontend.shop.index') }}" class="btn btn-accent rounded-pill px-4">تصفح المنتجات</a>
+            </div>
         @else
         <div class="table-responsive">
-            <table class="table table-borderless mb-0">
+            <table class="table table-borderless mb-0 account-orders-table">
                 <thead>
                     <tr>
                         <th class="pb-3">رقم الطلب</th>
@@ -51,7 +83,7 @@
                 </thead>
                 <tbody>
                     @foreach($recentOrders as $order)
-                    <tr>
+                    <tr class="account-orders-row">
                         <td class="py-3 en-text fw-bold">#{{ $order->order_number }}</td>
                         <td class="py-3 en-text">{{ $order->created_at->format('Y-m-d') }}</td>
                         <td class="py-3">@include('frontend.pages.account.partials.order-status-badge', ['order' => $order])</td>
@@ -75,12 +107,12 @@
         $progressPercent = min(100, ($completedSteps / $totalSteps) * 100);
         $itemNames = $activeOrder->items->pluck('product_name')->take(2)->implode(' + ');
     @endphp
-    <div class="glass-card p-4 mb-4 section-fade-up">
+    <div class="glass-card account-panel--elevated account-active-order p-4 mb-4 section-fade-up">
         <h5 class="account-panel__title mb-4"><i class="fas fa-route me-2" aria-hidden="true"></i> حالة طلبك الحالية</h5>
         <div class="row align-items-center">
             <div class="col-md-7">
                 <div class="d-flex align-items-center gap-3 mb-3 p-3 account-order-highlight">
-                    <div class="account-stat__icon mb-0" style="width:48px;height:48px;">
+                    <div class="elegant-card__icon-wrap mb-0 account-active-order__icon">
                         <i class="fas fa-download" aria-hidden="true"></i>
                     </div>
                     <div>
@@ -103,7 +135,7 @@
                 </div>
             </div>
             <div class="col-md-5 text-center mt-4 mt-md-0">
-                <div class="glass-panel p-3">
+                <div class="glass-panel account-active-order__status p-3">
                     <p class="text-secondary small mb-1">التسليم الرقمي</p>
                     <h4 class="fw-bold text-accent m-0 small">{{ $activeOrder->status?->name ?? 'قيد المعالجة' }}</h4>
                     <p class="text-success small mt-2 mb-0"><i class="fas fa-bolt me-1"></i> متاح فور إتمام الدفع</p>
@@ -114,26 +146,44 @@
     </div>
     @endif
 
-    <div class="row g-3 section-fade-up">
+    <div class="row g-4 section-fade-up features-elegant-row">
         <div class="col-md-4">
-            <a href="#orders" class="glass-card account-quick-link" data-section-link="orders">
-                <i class="fas fa-redo account-quick-link__icon" aria-hidden="true"></i>
-                <h6 class="account-quick-link__title">طلباتي</h6>
-                <p class="text-secondary small m-0">أعد طلب منتجات سابقة بسهولة</p>
+            <a href="#orders" class="account-quick-action-link" data-section-link="orders">
+                <div class="glass-card feature-elegant-card account-quick-action h-100">
+                    <span class="elegant-card__shine" aria-hidden="true"></span>
+                    <div class="feature-elegant-card__body text-center">
+                        <div class="elegant-card__icon-wrap"><i class="fas fa-redo" aria-hidden="true"></i></div>
+                        <h5 class="feature-elegant-card__title">طلباتي</h5>
+                        <p class="feature-elegant-card__text">أعد طلب منتجات سابقة بسهولة</p>
+                        <span class="category-card__hint">انتقل <i class="fas fa-arrow-left ms-1 small"></i></span>
+                    </div>
+                </div>
             </a>
         </div>
         <div class="col-md-4">
-            <a href="{{ route('frontend.shop.index') }}" class="glass-card account-quick-link">
-                <i class="fas fa-store account-quick-link__icon account-quick-link__icon--warning" aria-hidden="true"></i>
-                <h6 class="account-quick-link__title">تسوق الآن</h6>
-                <p class="text-secondary small m-0">اكتشف منتجاتنا الرقمية</p>
+            <a href="{{ route('frontend.shop.index') }}" class="account-quick-action-link">
+                <div class="glass-card feature-elegant-card account-quick-action h-100">
+                    <span class="elegant-card__shine" aria-hidden="true"></span>
+                    <div class="feature-elegant-card__body text-center">
+                        <div class="elegant-card__icon-wrap account-stat-icon--warning"><i class="fas fa-store" aria-hidden="true"></i></div>
+                        <h5 class="feature-elegant-card__title">تسوق الآن</h5>
+                        <p class="feature-elegant-card__text">اكتشف منتجاتنا الرقمية</p>
+                        <span class="category-card__hint">انتقل <i class="fas fa-arrow-left ms-1 small"></i></span>
+                    </div>
+                </div>
             </a>
         </div>
         <div class="col-md-4">
-            <a href="#profile" class="glass-card account-quick-link" data-section-link="profile">
-                <i class="fas fa-gift account-quick-link__icon account-quick-link__icon--success" aria-hidden="true"></i>
-                <h6 class="account-quick-link__title">نقاط المكافآت</h6>
-                <p class="text-secondary small m-0">لديك {{ $stats['loyalty_points'] }} نقطة — {{ $loyaltyTier }}</p>
+            <a href="#profile" class="account-quick-action-link" data-section-link="profile">
+                <div class="glass-card feature-elegant-card account-quick-action h-100">
+                    <span class="elegant-card__shine" aria-hidden="true"></span>
+                    <div class="feature-elegant-card__body text-center">
+                        <div class="elegant-card__icon-wrap account-stat-icon--success"><i class="fas fa-gift" aria-hidden="true"></i></div>
+                        <h5 class="feature-elegant-card__title">نقاط المكافآت</h5>
+                        <p class="feature-elegant-card__text">لديك {{ $stats['loyalty_points'] }} نقطة — {{ $loyaltyTier }}</p>
+                        <span class="category-card__hint">انتقل <i class="fas fa-arrow-left ms-1 small"></i></span>
+                    </div>
+                </div>
             </a>
         </div>
     </div>

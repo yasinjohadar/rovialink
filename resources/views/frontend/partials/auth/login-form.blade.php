@@ -49,14 +49,6 @@
         @endif
     </div>
 
-    @if (config('app.debug'))
-        <div class="form-group mb-3">
-            <button type="button" class="btn btn-outline-secondary btn-sm w-100" id="btnAdminFill" title="تعبئة بيانات الأدمن للتطوير">
-                <i class="fas fa-user-shield me-1"></i> استخدام بيانات الأدمن
-            </button>
-        </div>
-    @endif
-
     <button type="submit" class="btn btn-auth">
         <span class="btn-text">تسجيل الدخول</span>
         <span class="btn-icon"><i class="fas fa-arrow-left"></i></span>

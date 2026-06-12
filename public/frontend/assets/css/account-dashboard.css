@@ -1,0 +1,225 @@
+/* Frontend — Account dashboard (fluid layout + enhanced widgets) */
+
+.account-dashboard-page {
+  max-width: 100%;
+}
+
+.account-dashboard-page .glass-card,
+.account-dashboard-page .glass-panel,
+.account-dashboard-page .shop-filters__card {
+  border-radius: 12px;
+}
+
+.account-dashboard-page .account-sidebar__avatar,
+.account-dashboard-page .account-sidebar__avatar--img {
+  border-radius: 10px;
+}
+
+/* Stat card links */
+.account-stat-link,
+.account-quick-action-link {
+  display: block;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.account-stat-link:focus-visible,
+.account-quick-action-link:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+.account-dashboard-page .hero-stat-card,
+.account-dashboard-page .feature-elegant-card {
+  cursor: pointer;
+}
+
+/* Restore elegant hover (overrides account-dashboard__main flat hover) */
+.account-dashboard__main .hero-stat-card:hover,
+.account-dashboard__main .feature-elegant-card:hover,
+.account-dashboard__main a.account-stat-link:hover .hero-stat-card,
+.account-dashboard__main a.account-quick-action-link:hover .feature-elegant-card {
+  transform: translateY(-8px);
+  border-color: rgba(var(--accent-rgb), 0.4);
+  box-shadow:
+    0 20px 48px rgba(15, 23, 42, 0.14),
+    0 0 0 1px rgba(var(--accent-rgb), 0.12),
+    0 12px 36px rgba(var(--accent-rgb), 0.1);
+}
+
+.account-dashboard__main .hero-stat-card:hover::after,
+.account-dashboard__main .feature-elegant-card:hover::after,
+.account-dashboard__main a.account-stat-link:hover .hero-stat-card::after,
+.account-dashboard__main a.account-quick-action-link:hover .feature-elegant-card::after {
+  opacity: 1;
+}
+
+.account-dashboard__main .hero-stat-card:hover .elegant-card__shine,
+.account-dashboard__main .feature-elegant-card:hover .elegant-card__shine,
+.account-dashboard__main a.account-stat-link:hover .elegant-card__shine,
+.account-dashboard__main a.account-quick-action-link:hover .elegant-card__shine {
+  left: 130%;
+}
+
+.account-stat-icon--success {
+  background: rgba(25, 135, 84, 0.14);
+  color: #198754;
+}
+
+.account-stat-icon--warning {
+  background: rgba(255, 193, 7, 0.16);
+  color: #d4a106;
+}
+
+.account-stat-icon--info {
+  background: rgba(13, 202, 240, 0.14);
+  color: #0aa2c0;
+}
+
+html[data-theme="dark"] .account-stat-icon--success {
+  background: rgba(25, 135, 84, 0.22);
+  color: #4ade80;
+}
+
+html[data-theme="dark"] .account-stat-icon--warning {
+  background: rgba(255, 193, 7, 0.2);
+  color: #fbbf24;
+}
+
+html[data-theme="dark"] .account-stat-icon--info {
+  background: rgba(13, 202, 240, 0.2);
+  color: #22d3ee;
+}
+
+/* Elevated panels */
+.account-panel--elevated {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(var(--accent-rgb), 0.18);
+  box-shadow:
+    0 16px 48px rgba(var(--accent-rgb), 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+html[data-theme="dark"] .account-panel--elevated {
+  background: rgba(18, 18, 18, 0.92);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.account-panel--elevated:hover {
+  border-color: rgba(var(--accent-rgb), 0.28);
+  box-shadow:
+    0 20px 52px rgba(var(--accent-rgb), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+/* Orders table */
+.account-orders-table tbody tr.account-orders-row {
+  transition: background 0.25s ease;
+}
+
+.account-orders-table tbody tr.account-orders-row:hover {
+  background: rgba(var(--accent-rgb), 0.06);
+}
+
+html[data-theme="dark"] .account-orders-table tbody tr.account-orders-row:hover {
+  background: rgba(var(--accent-rgb), 0.1);
+}
+
+/* Empty state */
+.account-empty-state__icon {
+  font-size: 2.75rem;
+  color: var(--accent-color);
+  opacity: 0.45;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+/* Quick action cards */
+.account-quick-action {
+  min-height: 210px;
+  display: flex;
+  flex-direction: column;
+}
+
+.account-quick-action .feature-elegant-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 1.15rem;
+}
+
+.account-quick-action-link:hover .category-card__hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.account-quick-action .category-card__hint {
+  margin-top: 0.75rem;
+}
+
+/* Active order tracker */
+.account-active-order {
+  overflow: hidden;
+}
+
+.account-active-order__icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.account-active-order__status {
+  border-radius: 12px;
+  border: 1px solid rgba(var(--accent-rgb), 0.16);
+  box-shadow: 0 10px 28px rgba(var(--accent-rgb), 0.08);
+}
+
+/* Order detail page consistency */
+.account-order-page .account-order-card {
+  border-radius: 12px;
+}
+
+/* Stagger animations for account overview widgets */
+.section-fade-up.visible .account-dashboard__main .hero-stats-row > [class*='col']:nth-child(1) .hero-stat-card {
+  animation: elegantCardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.05s backwards;
+}
+
+.section-fade-up.visible .account-dashboard__main .hero-stats-row > [class*='col']:nth-child(2) .hero-stat-card {
+  animation: elegantCardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.12s backwards;
+}
+
+.section-fade-up.visible .account-dashboard__main .hero-stats-row > [class*='col']:nth-child(3) .hero-stat-card {
+  animation: elegantCardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.19s backwards;
+}
+
+.section-fade-up.visible .account-dashboard__main .hero-stats-row > [class*='col']:nth-child(4) .hero-stat-card {
+  animation: elegantCardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.26s backwards;
+}
+
+.section-fade-up.visible .account-dashboard__main .features-elegant-row > [class*='col']:nth-child(1) .feature-elegant-card {
+  animation: elegantCardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.08s backwards;
+}
+
+.section-fade-up.visible .account-dashboard__main .features-elegant-row > [class*='col']:nth-child(2) .feature-elegant-card {
+  animation: elegantCardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.15s backwards;
+}
+
+.section-fade-up.visible .account-dashboard__main .features-elegant-row > [class*='col']:nth-child(3) .feature-elegant-card {
+  animation: elegantCardIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.22s backwards;
+}
+
+@media (max-width: 767.98px) {
+  .account-quick-action {
+    min-height: 180px;
+  }
+}

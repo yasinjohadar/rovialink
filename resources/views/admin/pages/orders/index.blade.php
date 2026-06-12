@@ -4,55 +4,105 @@
     الطلبات
 @stop
 
-@section('content')
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="إغلاق"></button>
-        </div>
-    @endif
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="إغلاق"></button>
-        </div>
-    @endif
+@section('styles')
+    @include('frontend.layouts.theme-variables')
+    <link rel="stylesheet" href="{{ asset('assets/css/admin-orders-index.css') }}?v=1">
+@endsection
 
+@section('content')
     <div class="main-content app-content">
-        <div class="container-fluid">
-            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
-                <h5 class="page-title fs-21 mb-1">الطلبات</h5>
-                <button type="button" class="btn btn-outline-primary btn-sm collapsed"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#order-statuses-collapse"
-                    aria-expanded="false"
-                    aria-controls="order-statuses-collapse">
-                    <i class="bi bi-tags me-1"></i> إدارة الحالات
-                </button>
+        <div class="container-fluid orders-index-page my-4">
+            @if (session('success'))
+                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                    <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="إغلاق"></button>
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                    <i class="bi bi-exclamation-circle me-2"></i>{{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="إغلاق"></button>
+                </div>
+            @endif
+
+            <div class="orders-index-hero">
+                <div class="orders-index-hero__top">
+                    <div>
+                        <h1 class="orders-index-hero__title">الطلبات</h1>
+                        <p class="orders-index-hero__subtitle">إدارة ومتابعة جميع طلبات المتجر من مكان واحد</p>
+                    </div>
+                    <div class="orders-index-hero__actions">
+                        <button type="button" class="btn btn-sm collapsed"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#order-statuses-collapse"
+                            aria-expanded="false"
+                            aria-controls="order-statuses-collapse">
+                            <i class="bi bi-tags me-1"></i> إدارة الحالات
+                        </button>
+                    </div>
+                </div>
+                <div class="orders-index-stats">
+                    <div class="orders-index-stat">
+                        <div class="orders-index-stat__label">نتائج البحث</div>
+                        <div class="orders-index-stat__value">{{ number_format($orders->total()) }}</div>
+                    </div>
+                    <div class="orders-index-stat">
+                        <div class="orders-index-stat__label">حالات الطلب</div>
+                        <div class="orders-index-stat__value">{{ $statuses->count() }}</div>
+                    </div>
+                    <div class="orders-index-stat">
+                        <div class="orders-index-stat__label">هذه الصفحة</div>
+                        <div class="orders-index-stat__value">{{ $orders->count() }}</div>
+                    </div>
+                </div>
             </div>
 
             @include('admin.pages.orders.partials.statuses-manager')
 
-            <div class="card">
-                <div class="card-header">
-                    <form id="orders-filter-form" action="{{ route('admin.orders.index') }}" method="GET" class="d-flex align-items-center gap-2 flex-wrap">
-                        <input type="text" name="order_number" id="orders-order-number" class="form-control" style="width: 180px;" placeholder="رقم الطلب" value="{{ request('order_number') }}" autocomplete="off">
-                        <select name="status" id="orders-status" class="form-select" style="width: 150px;">
-                            <option value="">كل الحالات</option>
-                            @foreach($statuses as $s)
-                                <option value="{{ $s->slug }}" {{ request('status') == $s->slug ? 'selected' : '' }}>{{ $s->name }}</option>
-                            @endforeach
-                        </select>
-                        <input type="date" name="from" id="orders-from" class="form-control" style="width: 150px;" value="{{ request('from') }}" title="من تاريخ">
-                        <input type="date" name="to" id="orders-to" class="form-control" style="width: 150px;" value="{{ request('to') }}" title="إلى تاريخ">
-                        <button type="submit" class="btn btn-secondary" id="orders-search-btn">
-                            <span class="orders-search-label">بحث</span>
-                            <span class="spinner-border spinner-border-sm d-none orders-search-spinner" role="status" aria-hidden="true"></span>
-                        </button>
-                        <button type="button" class="btn btn-danger" id="orders-clear-btn">مسح</button>
+            <div class="orders-index-panel">
+                <div class="orders-index-panel__head">
+                    <h2 class="orders-index-panel__title">
+                        <i class="bi bi-funnel"></i>
+                        تصفية الطلبات
+                    </h2>
+                </div>
+                <div class="p-3 p-md-4 border-bottom">
+                    <form id="orders-filter-form" action="{{ route('admin.orders.index') }}" method="GET" class="orders-index-filters">
+                        <div class="orders-index-filters__field">
+                            <label class="form-label small fw-semibold mb-1">رقم الطلب</label>
+                            <input type="text" name="order_number" id="orders-order-number" class="form-control"
+                                placeholder="ORD-..." value="{{ request('order_number') }}" autocomplete="off">
+                        </div>
+                        <div class="orders-index-filters__field">
+                            <label class="form-label small fw-semibold mb-1">الحالة</label>
+                            <select name="status" id="orders-status" class="form-select">
+                                <option value="">كل الحالات</option>
+                                @foreach($statuses as $s)
+                                    <option value="{{ $s->slug }}" {{ request('status') == $s->slug ? 'selected' : '' }}>{{ $s->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="orders-index-filters__field">
+                            <label class="form-label small fw-semibold mb-1">من تاريخ</label>
+                            <input type="date" name="from" id="orders-from" class="form-control" value="{{ request('from') }}">
+                        </div>
+                        <div class="orders-index-filters__field">
+                            <label class="form-label small fw-semibold mb-1">إلى تاريخ</label>
+                            <input type="date" name="to" id="orders-to" class="form-control" value="{{ request('to') }}">
+                        </div>
+                        <div class="orders-index-filters__actions">
+                            <button type="submit" class="btn btn-search" id="orders-search-btn">
+                                <span class="orders-search-label"><i class="bi bi-search me-1"></i> بحث</span>
+                                <span class="spinner-border spinner-border-sm d-none orders-search-spinner" role="status" aria-hidden="true"></span>
+                            </button>
+                            <button type="button" class="btn btn-clear" id="orders-clear-btn">
+                                <i class="bi bi-x-lg me-1"></i> مسح
+                            </button>
+                        </div>
                     </form>
                 </div>
-                <div class="card-body position-relative" id="orders-table-container">
+
+                <div class="orders-index-table-wrap position-relative" id="orders-table-container">
                     @include('admin.pages.orders.partials.table')
                 </div>
             </div>
@@ -61,11 +111,6 @@
 @stop
 
 @section('script')
-<style>
-.order-status-picker.is-editing .js-order-status-badge { display: none !important; }
-.order-status-picker.is-editing .js-order-status-select { display: block !important; }
-.order-status-picker .js-order-status-badge { font-size: 0.85em; font-weight: 500; }
-</style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     let debounceTimer = null;

@@ -104,8 +104,22 @@ class Category extends Model
         if ($this->image) {
             return category_image_url($this->image, $this->id);
         }
+
+        if ($this->cover_image) {
+            return category_image_url($this->cover_image, $this->id);
+        }
+
         $seed = $this->id ?? rand(1, 50);
-        return "https://picsum.photos/seed/cat{$seed}/300/300";
+
+        return "https://picsum.photos/seed/cat{$seed}/480/360";
+    }
+
+    /**
+     * Whether the category has an uploaded image or cover (not placeholder).
+     */
+    public function hasUploadedImage(): bool
+    {
+        return ! empty($this->image) || ! empty($this->cover_image);
     }
 
     /**

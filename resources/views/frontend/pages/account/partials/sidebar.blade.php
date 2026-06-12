@@ -11,7 +11,7 @@
         ['section' => 'notifications', 'icon' => 'fa-bell', 'label' => 'الإشعارات', 'badge' => $newNotifications > 0 ? $newNotifications : null, 'badgeClass' => 'bg-warning text-dark'],
     ];
 @endphp
-<aside class="col-lg-3">
+<aside class="col-lg-3 col-xl-2">
     <nav class="account-sidebar shop-filters section-fade-up sticky-top" aria-label="قائمة الحساب">
         <div class="shop-filters__card account-sidebar__card">
             <header class="shop-filters__header account-sidebar__profile">

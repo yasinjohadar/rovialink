@@ -4,13 +4,9 @@
         <a href="{{ route('frontend.category.show', $category->slug) }}" class="text-decoration-none d-block h-100">
             <div class="glass-card p-4 h-100 text-center position-relative category-card-interactive">
                 <span class="elegant-card__shine" aria-hidden="true"></span>
-                @if($category->image)
-                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}" class="rounded-3 mb-3 position-relative z-1 category-card-interactive__img" style="height: 80px; width: 80px; object-fit: cover;">
-                @else
-                    <div class="elegant-card__icon-wrap category-icon mx-auto mb-3 position-relative z-1">
-                        <i class="fas fa-folder-open category-icon__glyph"></i>
-                    </div>
-                @endif
+                <div class="category-card-interactive__media mx-auto mb-3 position-relative z-1">
+                    <img src="{{ $category->image_url }}" alt="{{ $category->name }}" class="category-card-interactive__img">
+                </div>
                 <h4 class="fw-bold text-white position-relative z-1">{{ $category->name }}</h4>
                 @if($category->description)
                     <p class="text-secondary small position-relative z-1 mb-4">{{ Str::limit($category->description, 100) }}</p>

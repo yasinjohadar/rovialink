@@ -35,12 +35,4 @@
 
 @push('scripts')
     @include('frontend.partials.auth.scripts-common')
-    @if (config('app.debug'))
-        <script>
-            document.getElementById('btnAdminFill')?.addEventListener('click', function () {
-                document.getElementById('email').value = 'admin@admin.com';
-                document.getElementById('password').value = '123456789';
-            });
-        </script>
-    @endif
 @endpush

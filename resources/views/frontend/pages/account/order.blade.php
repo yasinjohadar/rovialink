@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="page-hero">
-    <div class="page-hero-content container">
+    <div class="page-hero-content container-fluid px-3 px-lg-4 px-xl-5">
         <div class="page-hero-icon"><i class="fas fa-receipt"></i></div>
         <h1 class="page-hero-title">طلب #{{ $order->order_number }}</h1>
         <p class="page-hero-subtitle">{{ $order->created_at->translatedFormat('d F Y — H:i') }}</p>
@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<div class="container py-4 account-order-page">
+<div class="container-fluid account-dashboard-page account-order-page px-3 px-lg-4 px-xl-5 py-4">
     @if(session('success'))
     <div class="alert alert-success mb-4">{{ session('success') }}</div>
     @endif
@@ -175,3 +175,7 @@
     </div>
 </div>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="{{ asset('frontend/assets/css/account-dashboard.css') }}?v=1">
+@endpush

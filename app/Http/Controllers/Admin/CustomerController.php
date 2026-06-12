@@ -27,6 +27,21 @@ class CustomerController extends Controller
 
     public function index(Request $request)
     {
+        $customers = $this->filteredCustomersQuery($request)
+            ->paginate(15)
+            ->withQueryString();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'html' => view('admin.pages.customers.partials.table', compact('customers'))->render(),
+            ]);
+        }
+
+        return view('admin.pages.customers.index', compact('customers'));
+    }
+
+    private function filteredCustomersQuery(Request $request)
+    {
         $query = User::query()
             ->withCount(['orders as orders_count' => function ($q) {
                 $q->whereNull('deleted_at');
@@ -37,9 +52,9 @@ class CustomerController extends Controller
 
         if ($search = $request->input('search')) {
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%')
-                    ->orWhere('phone', 'like', '%' . $search . '%');
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('phone', 'like', '%'.$search.'%');
             });
         }
 
@@ -63,11 +78,7 @@ class CustomerController extends Controller
             $query->whereDate('created_at', '<=', $to);
         }
 
-        $query->orderByDesc('total_spent')->orderByDesc('created_at');
-
-        $customers = $query->paginate(15)->withQueryString();
-
-        return view('admin.pages.customers.index', compact('customers'));
+        return $query->orderByDesc('total_spent')->orderByDesc('created_at');
     }
 
     public function show(User $customer)

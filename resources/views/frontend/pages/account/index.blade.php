@@ -3,7 +3,7 @@
 @section('content')
     @include('frontend.partials.account-hero', ['user' => $user])
 
-    <div class="container py-4">
+    <div class="container-fluid account-dashboard-page px-3 px-lg-4 px-xl-5 py-4">
         @if(session('success'))
         <div class="alert alert-success mb-4">{{ session('success') }}</div>
         @endif
@@ -20,7 +20,7 @@
         <div class="row g-4 account-dashboard">
             @include('frontend.pages.account.partials.sidebar')
 
-            <div class="col-lg-9 account-dashboard__main">
+            <div class="col-lg-9 col-xl-10 account-dashboard__main">
                 @include('frontend.pages.account.partials.overview')
                 @include('frontend.pages.account.partials.orders')
                 @include('frontend.pages.account.partials.wishlist')
@@ -36,6 +36,7 @@
 @endsection
 
 @push('styles')
+<link rel="stylesheet" href="{{ asset('frontend/assets/css/account-dashboard.css') }}?v=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.7.0/build/css/intlTelInput.css">
 @endpush
 

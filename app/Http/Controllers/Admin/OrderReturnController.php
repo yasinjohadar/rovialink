@@ -33,7 +33,12 @@ class OrderReturnController extends Controller
 
         $returns = $query->paginate(20);
 
-        return view('admin.pages.order-returns.index', compact('returns'));
+        $statusCounts = OrderReturn::query()
+            ->selectRaw('status, COUNT(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return view('admin.pages.order-returns.index', compact('returns', 'statusCounts'));
     }
 
     public function show(OrderReturn $orderReturn)

@@ -1,5 +1,5 @@
 <div class="page-hero">
-    <div class="page-hero-content container">
+    <div class="page-hero-content container-fluid px-3 px-lg-4 px-xl-5">
         <div class="page-hero-icon"><i class="fas fa-tachometer-alt"></i></div>
         <h1 class="page-hero-title">لوحة التحكم</h1>
         <p class="page-hero-subtitle">مرحباً {{ $user->name }}! تابع طلباتك وإعدادات حسابك من مكان واحد.</p>
