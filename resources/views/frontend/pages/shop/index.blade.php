@@ -3,7 +3,7 @@
 @section('content')
     @include('frontend.partials.shop-hero')
 
-    <main class="container shop-page py-3 py-md-4">
+    <main class="container shop-page py-3 py-md-4 section-fade-up visible">
         <div class="row g-3 g-lg-4 shop-page__layout">
             @include('frontend.partials.shop-sidebar')
 

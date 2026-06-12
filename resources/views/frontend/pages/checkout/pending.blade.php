@@ -7,25 +7,18 @@
     $hasReceipt = ! empty($payment?->metadata['payment_receipt_path']);
 @endphp
 
-<div class="page-hero page-hero--pending">
-    <div class="page-hero-content container">
-        <div class="page-hero-icon page-hero-icon--pending"><i class="fas fa-hourglass-half"></i></div>
-        <h1 class="page-hero-title">بانتظار تأكيد الدفع</h1>
-        <p class="page-hero-subtitle">طلبك مسجّل بنجاح — نراجع تفاصيل الدفع ونُعلمك فور التأكيد.</p>
-        <nav class="page-hero-breadcrumb" aria-label="breadcrumb">
-            <a href="{{ route('frontend.home') }}">الرئيسية</a>
-            <i class="fas fa-chevron-left sep"></i>
-            <a href="{{ route('frontend.account.orders.show', $order) }}">طلب #{{ $order->order_number }}</a>
-            <i class="fas fa-chevron-left sep"></i>
-            <span class="current">تأكيد الدفع</span>
-        </nav>
-    </div>
-    <div class="page-hero-wave">
-        <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,30 C360,65 1080,0 1440,30 L1440,65 L0,65 Z" style="fill:var(--page-bg)"/>
-        </svg>
-    </div>
-</div>
+@include('frontend.partials.page-hero', [
+    'title' => 'بانتظار تأكيد الدفع',
+    'subtitle' => 'طلبك مسجّل بنجاح — نراجع تفاصيل الدفع ونُعلمك فور التأكيد.',
+    'icon' => 'fa-hourglass-half',
+    'variant' => 'pending',
+    'iconClass' => 'page-hero-icon--pending',
+    'breadcrumbs' => [
+        ['label' => 'الرئيسية', 'url' => route('frontend.home')],
+        ['label' => 'طلب #' . $order->order_number, 'url' => route('frontend.account.orders.show', $order)],
+        ['label' => 'تأكيد الدفع'],
+    ],
+])
 
 <main class="checkout-pending-page container pb-5 section-fade-up">
     <div class="checkout-pending-status-bar">

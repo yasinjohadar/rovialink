@@ -1,25 +1,17 @@
 ﻿@extends('frontend.layouts.master')
 
 @section('content')
-<div class="page-hero">
-    <div class="page-hero-content container-fluid px-3 px-lg-4 px-xl-5">
-        <div class="page-hero-icon"><i class="fas fa-receipt"></i></div>
-        <h1 class="page-hero-title">طلب #{{ $order->order_number }}</h1>
-        <p class="page-hero-subtitle">{{ $order->created_at->translatedFormat('d F Y — H:i') }}</p>
-        <nav class="page-hero-breadcrumb" aria-label="breadcrumb">
-            <a href="{{ route('frontend.home') }}">الرئيسية</a>
-            <i class="fas fa-chevron-left sep"></i>
-            <a href="{{ route('frontend.account') }}">حسابي</a>
-            <i class="fas fa-chevron-left sep"></i>
-            <span class="current">تفاصيل الطلب</span>
-        </nav>
-    </div>
-    <div class="page-hero-wave">
-        <svg viewBox="0 0 1440 65" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,30 C360,65 1080,0 1440,30 L1440,65 L0,65 Z" style="fill:var(--page-bg)"/>
-        </svg>
-    </div>
-</div>
+@include('frontend.partials.page-hero', [
+    'title' => 'طلب #' . $order->order_number,
+    'subtitle' => $order->created_at->translatedFormat('d F Y — H:i'),
+    'icon' => 'fa-receipt',
+    'containerClass' => 'container-fluid px-3 px-lg-4 px-xl-5',
+    'breadcrumbs' => [
+        ['label' => 'الرئيسية', 'url' => route('frontend.home')],
+        ['label' => 'حسابي', 'url' => route('frontend.account')],
+        ['label' => 'تفاصيل الطلب'],
+    ],
+])
 
 <div class="container-fluid account-dashboard-page account-order-page px-3 px-lg-4 px-xl-5 py-4">
     @if(session('success'))

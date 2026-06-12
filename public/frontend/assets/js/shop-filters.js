@@ -166,12 +166,30 @@
   });
 
   const priceRange = form.querySelector('#price-range');
+  const priceFill = document.getElementById('price-range-fill');
+
+  function syncPriceUi() {
+    if (!priceRange) return;
+    const max = Number(priceRange.max) || 1;
+    const value = Number(priceRange.value) || 0;
+    const priceVal = document.getElementById('price-val');
+    if (priceVal) priceVal.textContent = String(value);
+    if (priceFill) {
+      priceFill.style.width = `${Math.min(100, Math.max(0, (value / max) * 100))}%`;
+    }
+  }
+
   if (priceRange) {
+    syncPriceUi();
     priceRange.addEventListener('input', () => {
+      syncPriceUi();
       clearTimeout(priceTimer);
       priceTimer = setTimeout(() => fetchFromForm({ scrollToResults: false }), 400);
     });
-    priceRange.addEventListener('change', () => fetchFromForm({ scrollToResults: false }));
+    priceRange.addEventListener('change', () => {
+      syncPriceUi();
+      fetchFromForm({ scrollToResults: false });
+    });
   }
 
   const searchInput = form.querySelector('#search-input');
@@ -194,9 +212,9 @@
       form.reset();
       if (sortSelect) sortSelect.value = 'popular';
       const priceVal = document.getElementById('price-val');
-      if (priceRange && priceVal) {
+      if (priceRange) {
         priceRange.value = priceRange.max;
-        priceVal.textContent = priceRange.max;
+        syncPriceUi();
       }
       fetchFromUrl(form.action, { replaceHistory: false });
     });
@@ -221,4 +239,8 @@
   }
 
   revealInjectedResults();
+
+  if (priceRange) {
+    syncPriceUi();
+  }
 })();
